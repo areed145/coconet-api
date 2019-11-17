@@ -1,0 +1,568 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="blips">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-deck mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title" align=center>BLIP Options</h5>
+          </div>
+          <br>
+          <div class="col-md">
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success" id="defaultOpen"
+                  style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
+                  onclick="open_tab(event, 'tuvbs')">Thermal
+                  Updraft &amp
+                  B/S</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
+                  onclick="open_tab(event, 'tuv')">Thermal Updraft
+                  Velocity</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
+                  onclick="open_tab(event, 'thv')">Thermal Height
+                  Variability</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
+                  onclick="open_tab(event, 'bs')">B/S Ratio</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
+                  onclick="open_tab(event, 'blwsh')">BL Wind
+                  Shear</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
+                  onclick="open_tab(event, 'relhum')">BL Relative
+                  Humidity</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
+                  onclick="open_tab(event, 'blwsd')">BL Wind
+                  Speed/Dir</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
+                  onclick="open_tab(event, 'blws')">BL
+                  Windspeed</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
+                  onclick="open_tab(event, 'blwd')">BL Wind
+                  Direction</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                  onclick="open_tab(event, 'blmot')">BL
+                  Motion</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                  onclick="open_tab(event, 'blh')">BL
+                  Height</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                  onclick="open_tab(event, 'bld')">BL
+                  Depth</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
+                  onclick="open_tab(event, 'cumpotcb')">Cumulus Potential /
+                  Cloudbase</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
+                  onclick="open_tab(event, 'cumpot')">Cumulus
+                  Potential</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
+                  onclick="open_tab(event, 'cumcb')">Cumulus Cloudbase</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
+                  onclick="open_tab(event, 'ovpotcb')">Overcast Potential /
+                  Cloudbase</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
+                  onclick="open_tab(event, 'ovpot')">Overcast
+                  Potential</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
+                  onclick="open_tab(event, 'ovcb')">Overcast Cloudbase</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
+                  onclick="open_tab(event, 'cape')">CAPE</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
+                  onclick="open_tab(event, 'dsurf')">Surface
+                  Dewpoint</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
+                  onclick="open_tab(event, 'hcrith')">Hcrit Height</button>
+              </div>
+            </div>
+            <br>
+            <div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                  onclick="open_tab(event, 'hsurf')">Surface Heating</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                  onclick="open_tab(event, 'tsurf')">Surface Temp</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                  onclick="open_tab(event, 'topoact')">Topo Actual</button>
+                <button class="btn btn-success"
+                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                  onclick="open_tab(event, 'topomod')">Topo Model</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title" align=center>BLIP Maps</h5>
+          </div>
+
+          <div id="tuvbs" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.wfpm_woustar.21z.PNG"
+                width="100%">
+              <h6>Thermal Updraft Velocity and Buoyancy/Shear Ratio</h6>
+            </p>
+            B/S Ratio stippling (dense=0-4 sparse=4-7) overlays Thermal Updraft Velocity contours to
+            indicate where strong thermals can be broken by vertical wind shear. See "Thermal Updraft Velocity" and
+            "Buoyancy/Shear Ratio" parameter descriptions below for more information.
+          </div>
+
+          <div id="tuv" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.wfpm.21z.PNG" width="100%">
+            </p>
+            <h6>Thermal Updraft Velocity (W*)</h6>
+            <p>
+              Average dry thermal updraft strength near mid-BL height. Subtract glider descent rate to get
+              average vario reading for cloudless thermals. Thermal strengths will be stronger if convective clouds are
+              present. W* depends upon both the BL depth and the surface heating.
+            </p>
+          </div>
+
+          <div id="bs" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.woustar.21z.PNG" width="100%">
+            </p>
+            <h6>Buoyancy/Shear Ratio (B/S)</h6>
+            <p>
+              Dry thermals may be broken up by vertical wind shear (i.e. wind changing with height) and
+              unworkable if B/S ratio is 5 or less. If convective clouds are present, the actual B/S ratio will be
+              larger than calculated here. [This parameter is truncated at 20 for plotting.]
+            </p>
+          </div>
+
+          <div id="blh" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.hft.21z.PNG" width="100%">
+            </p>
+            <h6>Height of Boundary Layer Top (TI=0 height)</h6>
+            <p>
+              Height of the average dry thermal tops, or Thermal Index TI=0 height. Over flat terrain maximum
+              thermalling heights will be lower due to the glider descent rate and other factors. However, thermal tops
+              will be higher over small-scale topography not resolved by the model and some pilots have reported that in
+              elevated terrain the heights they can reach over local terrain features correspond better with the TI=0
+              height than with Hcrit. In the presence of clouds the thermal top will increase, but the maximum
+              thermalling height will then be limited by the cloud base (see the "Cloud prediction parameters" section
+              below). [This parameter is truncated at 22,000 for plotting.]
+            </p>
+          </div>
+
+          <div id="hcrith" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.hwcritft.21z.PNG" width="100%">
+            </p>
+            <h6>Hcrit Height</h6>
+            <p>
+              This parameter estimates the height at which the average dry updraft strength drops below 225
+              fpm and over flat terrain is expected to give better quantitative numbers for the maximum cloudless
+              thermalling height than is the traditional TI=0 height given above, although the qualitative patterns
+              should be similar for both parameters. (Note: the present assumptions tend to underpredict the max.
+              thermalling height.) In the presence of clouds the maximum thermalling height may instead be limited by
+              the cloud base (see the "Cloud prediction parameters" section below). [This parameter is truncated at
+              22,000 for plotting.]
+            </p>
+          </div>
+
+          <div id="thv" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.htift.21z.PNG" width="100%">
+            </p>
+            <h6>Thermal Height Variability</h6>
+            <p>
+              This parameter estimates the variability (uncertainty) of the BL top (TI=0) height prediction
+              which can result from meteorological variations. Larger values indicate greater variability and thus
+              better thermalling over local "hot spots" or small-scale topography not resolved by the model. But larger
+              values also indicate greater sensitivity to error in the predicted surface temperature, so actual
+              conditions have a greater likelihood of differing from those predicted.
+            </p>
+          </div>
+
+          <div id="blwsd" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.blwindkt_blwinddeg.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Wind Speed and Direction in the Boundary Layer</h6>
+            <p>
+              BL Wind Direction streamlines overlay BL Wind Speed contours, See "Wind Speed in the Boundary
+              Layer" and "Wind Direction in the Boundary Layer" parameter descriptions below for more information.
+            </p>
+          </div>
+
+          <div id="blws" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.blwindkt.21z.PNG" width="100%">
+            </p>
+            <h6>Wind Speed in the Boundary Layer</h6>
+            <p>
+              The speed of the vector-averaged wind in the BL. This prediction can be misleading if there is a
+              large change in wind direction through the BL (for a complex wind profile, any single number is not an
+              adequate descriptor!).
+            </p>
+          </div>
+
+          <div id="blwd" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.blwinddeg.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Wind Direction in the Boundary Layer</h6>
+            <p>
+              The direction of the vector-averaged wind in the BL. This prediction can be misleading if there
+              is a large change in wind direction through the BL (for a complex wind profile, any single number is not
+              an adequate descriptor!). Note that there will be a abrupt artificial gradient at the "cross-over" between
+              0 and 360 degrees.
+            </p>
+          </div>
+
+          <div id="blwsh" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.blwindshearkt.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Wind Shear in the Boundary Layer</h6>
+            <p>
+              The magnitude of the vector wind difference between the top and bottom of the BL. Note that this
+              represents vertical wind shear and does not indicate "shear lines" (which are horizontal changes of wind
+              speed/direction).
+            </p>
+          </div>
+
+          <div id="blmot" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.wblmaxkt.21z.PNG" width="100%">
+            </p>
+            <h6>BL Max Up/Down Motion (BL Convergence)</h6>
+            <p>
+              Maximum grid-area-averaged extensive upward or downward motion within the BL as created by
+              horizontal wind convergence. Positive convergence is associated with local small-scale convergence lines
+              (often called "shear lines" by pilots, meaning horizontal changes of wind speed/direction) - however, the
+              actual size of such features is much smaller than can be resolved by the model so only stronger ones will
+              be forecast and their predictions are subject to much error. If CAPE is also large, thunderstorms can be
+              triggered. Negative convergence (divergence) produces subsiding vertical motion, creating low-level
+              inversions which limit thermalling heights. This parameter can be noisy, so users should be wary.
+            </p>
+          </div>
+
+          <div id="cumpotcb" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.zsfclclft_zsfclcldifft.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Cumulus Cloudbase for Cu Potential > 0</h6>
+            <p>
+              Cu Cloudbase Cloudbase contours are plotted only where that cloudbase is theoretically expected.
+              See
+              "Cumulus
+              Potential" and "Cumulus Cloudbase" parameter descriptions below for more information. This
+              composite
+              is
+              useful
+              only for locations where the actual potential threshold for cumulus cloud production agrees with
+              the
+              theoretically-predicted value of zero.
+            </p>
+          </div>
+
+          <div id="cumpot" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.zsfclcldifft.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Cumulus Potential</h6>
+            <p>
+              This evaluates the potential for small, non-extensive "puffy cloud" formation in the BL, being
+              the
+              height
+              difference between the surface-based LCL (see below) and the BL top. Small cumulus clouds are
+              (simply)
+              predicted
+              when the parameter positive, but it is quite possible that the threshold value is actually
+              greater
+              than
+              zero for
+              your location so empirical evaluation is advised. I would be interested in receiving
+              end-of-season
+              reports on
+              what threshold value worked for your site. Clouds can also occur with negative values if the air
+              is
+              lifted up
+              the indicated vertical distance by flow up a small-scale ridge not resolved by the model's
+              smoothed
+              topography.
+              [This parameter is truncated at -10,000 for plotting.]
+            </p>
+          </div>
+
+          <div id="cumcb" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.zsfclclft.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Cumulus Cloudbase (Sfc. LCL)</h6>
+            <p>
+              This height estimates the cloudbase for small, non-extensive "puffy" clouds in the BL, if such
+              exist
+              i.e. if the
+              Cumulus Potential parameter (above) is positive or greater than the threshold Cumulus Potential
+              empirically
+              determined for your site. The surface LCL (Lifting Condensation Level) is the level to which
+              humid
+              air
+              must
+              ascend before it cools enough to reach a dew point temperature based on the surface mixing ratio
+              and
+              is
+              therefore relevant only to small clouds - unlike the below BL-based CL which uses a BL-averaged
+              humidity.
+              However, this parameter has a theoretical difficulty (see "MoreInfo" link below) and quite
+              possibly
+              that
+              the
+              actual cloudbase will be higher than given here - so perhaps this should be considered a minimum
+              possible
+              cloudbase. I would be interested in receiving end-of-season reports on how well this parameter
+              worked
+              for your
+              site. [This parameter is truncated at 22,000 for plotting.]
+            </p>
+          </div>
+
+          <div id="ovpotcb" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.zblclft_zblcldifft.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Overcast Development Cloudbase for OD Potential > 0</h6>
+            <p>
+              OvercastDevelopment Cloudbase Cloudbase contours are plotted only where that cloudbase is
+              theoretically
+              expected. See "OvercastDevelopment Potential" and "OvercastDevelopment Cloudbase" parameter
+              descriptions
+              below
+              for more information. This composite is useful only for locations where the actual potential
+              threshold
+              for OD
+              cloud production agrees with the theoretically-predicted value of zero.
+            </p>
+          </div>
+
+          <div id="ovpot" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.zblcldifft.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Overcast Development Potential</h6>
+            <p>
+              This evaluates the potential for extensive cloud formation (OvercastDevelopment) at the BL top,
+              being
+              the height
+              difference between the BL CL (see below) and the BL top. Extensive clouds and likely
+              OvercastDevelopment
+              are
+              predicted when the parameter is positive, with OvercastDevelopment being increasingly more
+              likely
+              with
+              higher
+              positive values. OvercastDevelopment can also occur with negative values if the air is lifted up
+              the
+              indicated
+              vertical distance by flow up a small-scale ridge not resolved by the model's smoothed
+              topography.
+              [This
+              parameter is truncated at -10,000 for plotting.]
+            </p>
+          </div>
+
+          <div id="ovcb" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.zblclft.21z.PNG" width="100%">
+            </p>
+            <h6>Overcast Development Cloudbase (BL CL)</h6>
+            <p>
+              This height estimates the cloudbase for extensive BL clouds (OvercastDevelopment), if such
+              exist,
+              i.e.
+              if the
+              OvercastDevelopment Potential parameter (above) is positive. The BL CL (Condensation Level) is
+              based
+              upon the
+              humidity averaged through the BL and is therefore relevant only to extensive clouds
+              (OvercastDevelopment) -
+              unlike the above surface-based LCL which uses a surface humidity. [This parameter is truncated
+              at
+              22,000
+              for
+              plotting.]
+            </p>
+          </div>
+
+          <div id="relhum" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.maxblrh.21z.PNG" width="100%">
+            </p>
+            <h6>BL Max. Relative Humidity</h6>
+            <p>
+              This parameter provides an additional means of evaluating the formation of clouds within the BL
+              and
+              might be
+              used either in conjunction with or instead of the other cloud prediction parameters. Larger
+              values
+              indicate
+              greater cloud probability, but use of this parameter must be empirical since no theoretical
+              guidance
+              is
+              available - for example, pilots must determine by actual experience the percentage that
+              correlates
+              with
+              formation of clouds above local mountains. The cloud base height is not predicted, but is
+              expected
+              to
+              be
+              below
+              the TI=0 height.
+            </p>
+          </div>
+
+          <div id="cape" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RUC/CANV/FCST/previous.cape.21z.PNG" width="100%">
+            </p>
+            <h6>CAPE</h6>
+            <p>
+              Convective Available Potential Energy indicates the atmospheric stability affecting deep
+              convective
+              cloud
+              formation above the BL. A higher value indicates greater potential instability, larger updraft
+              velocities within
+              deep convective clouds, and greater potential for thunderstorm development (since a trigger is
+              needed
+              to
+              release
+              that potential). Note that thunderstorms may develop in regions of high CAPE and then get
+              transported
+              downwind
+              to regions of lower CAPE. Also, locations where both convergence and CAPE values are high can be
+              subject
+              to
+              explosive thunderstorm development.
+            </p>
+          </div>
+
+          <div id="dsurf" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.sfcdewptf.21z.PNG"
+                width="100%">
+            </p>
+            <h6>Surface Dew Point Temperature</h6>
+            <p>
+              This model-predicted surface dew point temperature can be compared to the actual dew point
+              temperature
+              at 2m
+              during the day to evaluate the accuracy of model moisture predictions.
+            </p>
+          </div>
+
+          <div id="bld" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.dft.21z.PNG" width="100%">
+            </p>
+            <h6>Boundary Layer Depth</h6>
+            <p>
+              Depth of the layer mixed by thermals. This parameter can be useful in determining which flight
+              direction
+              allows
+              better thermalling conditions when average surface elevations vary greatly in differing
+              directions.
+            </p>
+          </div>
+
+          <div id="hsurf" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RAP/CANV/FCST/previous.qswm2.21z.PNG" width="100%">
+            </p>
+            <h6>Surface Heating</h6>
+            <p>
+              Heat transferred into the atmosphere due to solar heating of the ground, i.e. the heating that
+              creates
+              thermals.
+              [This parameter is truncated at -100 and +1000 for plotting.]
+            </p>
+          </div>
+
+          <div id="tsurf" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RUC/CANV/FCST/previous.sfctempf.21z.PNG" width="100%">
+            </p>
+            <h6>Surface Temp</h6>
+            <p>
+              This model-predicted surface temperature can be compared to the actual temperature at 2m during
+              the
+              day
+              to
+              evaluate the accuracy of model heating predictions.
+            </p>
+          </div>
+
+          <div id="topoact" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RUC/CANV/actualtopo.png" width="100%"></p>
+            <h6>Actual Topographic Height</h6>
+          </div>
+
+          <div id="topomod" class="tabcontent">
+            <p align=center><img src="http://www.drjack.info/BLIP/RUC/CANV/modeltopo.png" width="100%"></p>
+            <h6>Model Topographic Height</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function open_tab(evt, Name) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("btn");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(Name).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+</script>
+{% endblock %}

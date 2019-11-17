@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="awc">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Property</h5>
+                    </div>
+                    <br>
+                    <div class="col-md">
+                        <select class="form-control" id='prop_awc'>
+                            <option value="flight_category">Flight Category</option>
+                            <option value="temp_c">Temperature</option>
+                            <option value="temp_c_var">Temperature Variance</option>
+                            <option value="temp_c_delta">Temperature Delta</option>
+                            <option value="dewpoint_c">Dewpoint</option>
+                            <option value="dewpoint_c_delta">Dewpoint Delta</option>
+                            <option value="temp_dewpoint_spread">Temp-Dewpoint Spread</option>
+                            <option value="altim_in_hg">Altimeter</option>
+                            <option value="altim_in_hg_var">Altimeter Variance</option>
+                            <option value="altim_in_hg_delta">Altimeter Delta</option>
+                            <option value="wind_dir_degrees">Wind Direction</option>
+                            <option value="wind_speed_kt">Wind Speed</option>
+                            <option value="wind_speed_kt_delta">Wind Speed Delta</option>
+                            <option value="wind_gust_kt">Wind Gust</option>
+                            <option value="wind_gust_kt_delta">Wind Gust Delta</option>
+                            <option value="visibility_statute_mi">Visibility</option>
+                            <option value="cloud_base_ft_agl_0">Cloud Base AGL</option>
+                            <option value="cloud_base_ft_agl_0_delta">Cloud Base AGL Delta</option>
+                            <option value="sky_cover_0">Sky Cover</option>
+                            <option value="precip_in">Precip</option>
+                            <option value="elevation_m">Elevation</option>
+                            <option value="age">Age</option>
+                        </select>
+                    </div>
+                    <br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Layers</h5>
+                    </div>
+                    <br>
+                    <div class="col-md">
+                        <button class="btn btn-success"
+                            style="--button-color: #ffffff; --button-background-color: #c53093; --button-background-color-dark: #8d1364;"
+                            id="temp">Temp</button>
+                        <button class="btn btn-success"
+                            style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
+                            id="satellite">Satellite</button>
+                        <button class="btn btn-success"
+                            style="--button-color: #ffffff; --button-background-color: #30c5a5; --button-background-color-dark: #1a7a66;"
+                            id="precip">Precip</button>
+                        <button class="btn btn-success"
+                            style="--button-color: #ffffff; --button-background-color: #91c530; --button-background-color-dark: #709e19;"
+                            id="radar">Radar</button>
+                        <button class="btn btn-success"
+                            style="--button-color: #ffffff; --button-background-color: #c5aa30; --button-background-color-dark: #9b8317;"
+                            id="lightning">Lightning</button>
+                        <button class="btn btn-success"
+                            style="--button-color: #ffffff; --button-background-color: #c54630; --button-background-color-dark: #8b2817;"
+                            id="watchwarn">Watches / Warnings</button>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="mapawc" id="map_awc">
+                        <script>
+                            var graphs = {{ plot | safe }};
+                            Plotly.plot('map_awc', graphs.data, graphs.layout, {
+                                displayModeBar: false, responsive: true
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="log-event"></div>
+    <div id="log-layout"></div>
+</div>
+{% endblock %}

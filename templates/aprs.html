@@ -1,0 +1,365 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="aprs">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>APRS</h5>
+                    </div>
+                    <p>My main interest in amateur radio has to do with APRS (Automatic Packet Reporting System), an <a
+                            href="https://en.wikipedia.org/wiki/Amateur_radio">amateur radio</a>-based system for real
+                        time tactical digital communications of information of immediate value in the local area.</p>
+                    <p>Below are maps generated from data reported from APRS beaconing, typically while flying. aprs.fi
+                        maintains historical daily logs of points and tracks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Type</h5>
+                    </div>
+                    <br>
+                    <div class="col-md">
+                        <select class="form-control" id='type_aprs'>
+                            <option value="prefix">Prefix</option>
+                            <option value="entry">Entry</option>
+                            <option value="radius" selected>Radius</option>
+                        </select>
+                    </div>
+                    <br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Property</h5>
+                    </div>
+                    <br>
+                    <div class="col-md">
+                        <select class="form-control" id='prop_aprs'>
+                            <option value="speed" selected>Speed</option>
+                            <option value="altitude">Altitude</option>
+                            <option value="course">Course</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+                    <br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Time</h5>
+                    </div>
+                    <br>
+                    <div class="col-md">
+                        <select class="form-control" id='time_aprs'>
+                            {%for time in times%}
+                            <option value="{{time}}">{{times[time]}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="chart" id="map_aprs">
+                        <script>
+                            var graphs = {{map_aprs|safe}};
+                            Plotly.plot('map_aprs', graphs.data, graphs.layout, {
+                                displayModeBar: false, responsive: true
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="chart" id="plot_speed">
+                        <script>
+                            var graphs = {{ plot_speed | safe }};
+                            Plotly.plot('plot_speed', graphs.data, graphs.layout, {
+                                displayModeBar: false, responsive: true
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="chart" id="plot_alt">
+                        <script>
+                            var graphs = {{ plot_alt | safe }};
+                            Plotly.plot('plot_alt', graphs.data, graphs.layout, {
+                                displayModeBar: false, responsive: true
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="chart" id="plot_course">
+                        <script>
+                            var graphs = {{ plot_course | safe }};
+                            Plotly.plot('plot_course', graphs.data, graphs.layout, {
+                                displayModeBar: false, responsive: true
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="table-responsive-md">
+                        <table class="table table-hover table-sm" id="table_full">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Timestamp</th>
+                                    <th scope="col">From</th>
+                                    <th scope="col">To</th>
+                                    <th scope="col">Latitude</th>
+                                    <th scope="col">Longitude</th>
+                                    <th scope="col">Speed</th>
+                                    <th scope="col">Altitude</th>
+                                    <th scope="col">Course</th>
+                                    <!-- <th scope="col">Raw</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in rows %}
+                                <tr>
+                                    <td>{{ row['timestamp_'] }}</td>
+                                    <td>{{ row['from'] }}</td>
+                                    <td>{{ row['to'] }}</td>
+                                    <td>{{ row['latitude'] }}</td>
+                                    <td>{{ row['longitude'] }}</td>
+                                    <td>{{ row['speed'] }}</td>
+                                    <td>{{ row['altitude'] }}</td>
+                                    <td>{{ row['course'] }}</td>
+                                    <!-- <td>{{ row['raw'] }}</td> -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="log-event"></div>
+            <div id="log-layout"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Bakersfield Area HAM Frequencies</h5>
+                    </div>
+                    <div class="table-responsive-md">
+                        <table class="table table-hover table-sm" id="table_static">
+                            <thead>
+                                <tr>
+                                    <td>Frequency</td>
+                                    <td>Offset</td>
+                                    <td>Tone</td>
+                                    <td>Location</td>
+                                    <td>Comment</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>145.150</td>
+                                    <td>-</td>
+                                    <td>100.0</td>
+                                    <td>Breckenridge Mt.</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>146.910</td>
+                                    <td>-</td>
+                                    <td>100.0</td>
+                                    <td>Grapevine Pk.</td>
+                                    <td>Temporary Antenna - Storm Damage</td>
+                                </tr>
+                                <tr>
+                                    <td>224.060</td>
+                                    <td>-</td>
+                                    <td>100.0</td>
+                                    <td>Breckenridge Mt.</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>443.900</td>
+                                    <td>+</td>
+                                    <td>100.0</td>
+                                    <td>Low level North of Town</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">52.780</td>
+                                    <td class="column-2">-</td>
+                                    <td class="column-3">82.5</td>
+                                    <td class="column-4">Grapevine Pk.</td>
+                                    <td class="column-5">Off the Air - Storm Damage</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">147.210</td>
+                                    <td class="column-2">+</td>
+                                    <td class="column-3">100.0</td>
+                                    <td class="column-4">Mt. Adelaide</td>
+                                    <td class="column-5">KC6EOC</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">145.050</td>
+                                    <td class="column-2"></td>
+                                    <td class="column-3"></td>
+                                    <td class="column-4">Packet @ County EOC</td>
+                                    <td class="column-5">PBBS: KC6EOC-1</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">147.150</td>
+                                    <td class="column-2">+</td>
+                                    <td class="column-3">100.0</td>
+                                    <td class="column-4"></td>
+                                    <td class="column-5">ARRG Echo Link 56555</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">224.520</td>
+                                    <td class="column-2">-</td>
+                                    <td class="column-3">100.0</td>
+                                    <td class="column-4"></td>
+                                    <td class="column-5">ARRG</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">444.425</td>
+                                    <td class="column-2">+</td>
+                                    <td class="column-3">100.0</td>
+                                    <td class="column-4">Tehachapi</td>
+                                    <td class="column-5">ARRG</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">51.880</td>
+                                    <td class="column-2">-</td>
+                                    <td class="column-3">114.8</td>
+                                    <td class="column-4"></td>
+                                    <td class="column-5">ARRG</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">146.670</td>
+                                    <td class="column-2">-</td>
+                                    <td class="column-3">100.0</td>
+                                    <td class="column-4">Mt. Adelaide</td>
+                                    <td class="column-5">IRLP 3714, Echo Link 983970</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">444.750</td>
+                                    <td class="column-2">+</td>
+                                    <td class="column-3">141.3</td>
+                                    <td class="column-4">Mt. Adelaide</td>
+                                    <td class="column-5">IRLP 3901</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">447.040</td>
+                                    <td class="column-2">-</td>
+                                    <td class="column-3">136.5</td>
+                                    <td class="column-4">Frazier Mt.</td>
+                                    <td class="column-5">IRLP 7814</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">52.525</td>
+                                    <td class="column-2">simplex</td>
+                                    <td class="column-3"></td>
+                                    <td class="column-4">Mt. Adelaide</td>
+                                    <td class="column-5">linked to 444.750</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">29.600</td>
+                                    <td class="column-2">simplex</td>
+                                    <td class="column-3"></td>
+                                    <td class="column-4">Mt. Adelaide</td>
+                                    <td class="column-5">linked to 444.750</td>
+                                </tr>
+                                <tr>
+                                    <td class="column-1">144.390</td>
+                                    <td class="column-2"></td>
+                                    <td class="column-3"></td>
+                                    <td class="column-4"></td>
+                                    <td class="column-5">N American APRS reporting frequency</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>HAM Equipment</h5>
+                    </div>
+                    <div class="table-responsive-md">
+                        <table class="table table-hover table-sm" id="table_static">
+                            <thead>
+                                <tr>
+                                    <td width="30%">Item</td>
+                                    <td width="40%">Description</td>
+                                    <td width="30%">Image</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="https://www.yaesu.com/indexVS.cfm?cmd=DisplayProducts&amp;ProdCatID=111&amp;encProdID=4A66D869E574453F343581B53E9FAB40"
+                                            target="_blank">Yaesu FT-2DR</a></td>
+                                    <td>Dual band, APRS, touchscreen</td>
+                                    <td><img src="static/images/yaesu.jpg" /></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://baofengradio.us/uv-5r-v2-2nd-gen/baofeng-uv5rv2-black-220.html"
+                                            target="_blank">Baofeng UV-5R</a></td>
+                                    <td>Cheap, easy to use</td>
+                                    <td><img src="static/images/baofeng.jpg" /></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="static/images/qsl.png" target="_blank">QSL Card</a></td>
+                                    <td>
+                                        <p align=center><a href="http://aprs.fi/info/a/KK6GPV">aprs.fi Station Data</a>
+                                        </p>
+                                        <p align=center><a
+                                                href="http://www.findu.com/cgi-bin/find.cgi?call=kk6gpv">findu
+                                                Station Data</a></p>
+                                        <p align=center><a href="http://www.qrz.com/db/kk6gpv">QRZ Lookup</a></p>
+                                    </td>
+                                    <td>
+                                        <p align=center><a href="static/images/qsl.png"><img src="static/images/qsl.png"
+                                                    width="100%"></a></p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

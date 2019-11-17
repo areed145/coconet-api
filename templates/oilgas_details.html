@@ -1,0 +1,248 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="oilgas_details">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-deck mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title" align=center>Well Detail: {{ header['api'] }}</h5>
+          </div>
+          <div class="table-responsive-md">
+            <table class="table table-sm" id="table_static">
+              <thead>
+                <tr>
+                  <td><h6>API</h6></td>
+                  <td><h6>Operator</h6></td>
+                  <td><h6>Field</h6></td>
+                  <td><h6>Lease</h6></td>
+                  <td><h6>Well Name</h6></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ header['api'] }}</td>
+                  <td>{{ header['operator'] }}</td>
+                  <td>{{ header['field'] }}</td>
+                  <td>{{ header['lease'] }}</td>
+                  <td>{{ header['well'] }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-sm" id="table_static">
+              <thead>
+                <tr>
+                  <td><h6>Area</h6></td>
+                  <td><h6>District</h6></td>
+                  <td><h6>County</h6></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ header['area'] }}</td>
+                  <td>{{ header['district'] }}</div>
+                  <td>{{ header['county'] }}</div>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-sm" id="table_static">
+              <thead>
+                <tr>
+                  <td><h6>Section</h6></td>
+                  <td><h6>Township</h6></td>
+                  <td><h6>Range</h6></td>
+                  <td><h6>BM</h6></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ header['section'] }}</td>
+                  <td>{{ header['township'] }}</div>
+                  <td>{{ header['rnge'] }}</div>
+                  <td>{{ header['bm'] }}</div>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-sm" id="table_static">
+              <thead>
+                <tr>
+                  <td><h6>Spud Date</h6></td>
+                  <td><h6>PWT</h6></td>
+                  <td><h6>Well Status</h6></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ header['spuddate'] }}</td>
+                  <td>{{ header['pwt'] }}</div>
+                  <td>{{ header['wellstatus'] }}</div>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-sm" id="table_static">
+              <thead>
+                <tr>
+                  <td><h6>Latitude</h6></td>
+                  <td><h6>Longitude</h6></td>
+                  <td><h6>Elevation</h6></td>
+                  <td><h6>GIS Source</h6></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ header['latitude'] }}</td>
+                  <td>{{ header['longitude'] }}</div>
+                  <td>{{ header['elev'] }}</div>
+                  <td>{{ header['gissrc'] }}</div>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-sm" id="table_static">
+              <thead>
+                <tr>
+                  <td><h6>Oil Cum</h6></td>
+                  <td><h6>Water Cum</h6></td>
+                  <td><h6>Gas Cum</h6></td>
+                  <td><h6>Water/Steam Cum</h6></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ header['oil_cum'] }}</td>
+                  <td>{{ header['water_cum'] }}</div>
+                  <td>{{ header['gas_cum'] }}</div>
+                  <td>{{ header['wtrstm_cum'] }}</div>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+              <h5 class="card-title" align=center>Well Location: {{ header['api'] }}</h5>
+            </div>
+            <div class="container-fluid" id="oilgas_mapbox">
+              <br>
+              <div class="mapog" id='map'></div>
+              <script>
+                  mapboxgl.accessToken =
+                      'pk.eyJ1IjoiYXJlZWQxNDUiLCJhIjoiY2phdzNsN2ZoMGh0bjMybzF3cTkycWYyciJ9.4aS7z-guI2VDlP3duMg2FA';
+                  
+                  var map = new mapboxgl.Map({
+                      container: 'map',
+                      style: 'mapbox://styles/areed145/ck2jlfnp03oiv1cpepd4js9k6',
+                      center: [{{ header['longitude']|float }}, {{ header['latitude']|float }}],
+                      zoom: 17
+                  });
+          
+                  map.addControl(new mapboxgl.GeolocateControl({
+                      positionOptions: {
+                          enableHighAccuracy: true
+                      },
+                      trackUserLocation: true
+                  }));
+          
+                  map.on('click', 'wells', function (e) {
+                      var coordinates = e.features[0].geometry.coordinates.slice();
+                      var field = e.features[0].properties.field;
+                      var lease = e.features[0].properties.lease;
+                      var well = e.features[0].properties.well;
+                      var operator = e.features[0].properties.operator;
+                      var api = e.features[0].properties.api;
+                      var text = "<strong>"+lease+" "+well+"</strong><br>"
+                      text += "<a href=\"/oilgas/details/"+api+"\" target=\"_blank\" title=\"Opens in a new window\">"+api+"</a><br>"
+                      text += operator+"<br>"
+                      text += field+"<br>"
+          
+                      // Ensure that if the map is zoomed out such that multiple
+                      // copies of the feature are visible, the popup appears
+                      // over the copy being pointed to.
+                      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                      }
+                      
+                      new mapboxgl.Popup()
+                      .setLngLat(coordinates)
+                      .setHTML(text)
+                      .addTo(map);
+                  });
+              </script>
+          </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-deck mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title" align=center>Production Detail: {{ header['api'] }}</h5>
+          </div>
+          <br>
+          <div class="chart" id="graph_oilgas">
+            <script>
+              var graphs = {{ plot | safe }};
+              Plotly.plot('graph_oilgas', graphs.data, graphs.layout, {
+                displayModeBar: false, responsive: true
+              });
+            </script>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <h6>X-axis:</h6>
+              <select class="form-control" id='plot_axis'>
+                <option value="normal">Normal</option>
+                <option value="log">Logarithmic</option>
+              </select>
+            </div>
+            <div class="col-md">
+              <h6>Y-axis:</h6>
+              <select class="form-control" id='plot_axis'>
+                <option value="normal">Normal</option>
+                <option value="log">Logarithmic</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+        <div class="card-deck mt-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title" align=center>Offset Peformance: {{ header['api'] }}</h5>
+            </div>
+            <br>
+            <div class="chart" id="graph_oilgas_offset_oil">
+              <script>
+                var graphs = {{ plot_offset_oil | safe }};
+                Plotly.plot('graph_oilgas_offset_oil', graphs.data, graphs.layout, {
+                  displayModeBar: false, responsive: true
+                });
+              </script>
+            </div>
+            <div class="chart" id="graph_oilgas_offset_stm">
+              <script>
+                var graphs = {{ plot_offset_stm | safe }};
+                Plotly.plot('graph_oilgas_offset_stm', graphs.data, graphs.layout, {
+                  displayModeBar: false, responsive: true
+                });
+              </script>
+            </div>
+            <div class="chart" id="graph_oilgas_offset_wtr">
+              <script>
+                var graphs = {{ plot_offset_wtr | safe }};
+                Plotly.plot('graph_oilgas_offset_wtr', graphs.data, graphs.layout, {
+                  displayModeBar: false, responsive: true
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

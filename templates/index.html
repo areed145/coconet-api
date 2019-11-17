@@ -1,0 +1,126 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="index">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                This site is currently under development. Stay tuned!
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="temp" val="{{wx['temp_f']}}">Temp</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_temp" width="100%"></div><br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="dewpt" val="{{wx['dewpoint_f']}}">Dewpoint</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_dewpt" width="100%"></div><br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="hum" val="{{wx['relative_humidity']}}">Humidity</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_hum" width="100%"></div><br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="pres" val="{{wx['pressure_in']}}">Pressure</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_pres" width="100%"></div><br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="winddeg" val="{{wx['wind_degrees']}}">Wind Degrees</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_winddeg" width="100%"></div><br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="wind" val1="{{wx['wind_mph']}}"
+                            val2="{{wx['wind_gust_mph']}}">Wind/Gust</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_windspd" width="100%"></div><br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="rain" val="{{wx['precip_today_in']}}">Daily Rain</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_rain" width="100%"></div><br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="solar" val="{{wx['solar_radiation']}}">Solar</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_solar" width="100%"></div><br>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center id="uv" val="{{wx['UV']}}">UV</h5>
+                    </div>
+                    <br>
+                    <div align=center id="gauge_uv" width="100%"></div><br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Coconut Barometer</h5>
+                    </div>
+                    <br>
+                    <p align=center>The Coconut Barometer station is a Ambient Weather WS-1400-IP connected to the
+                        ObserverIP, which communicates observation data exclusively to Weather Underground as KCABAKER38
+                    </p>
+                    <p align=center><a
+                            href="https://www.wunderground.com/personal-weather-station/dashboard?ID=KCABAKER64">Weather
+                            Underground PWS page</a></p>
+                    <p align=center>Observation data is then retrieved from Weather Underground and stored in MongoDB.
+                        The "Station Data" plots / graphs are created with plotly for this Python / Flask site all
+                        running on a cloud Kubernetes cluster. This site is an update of the previous PHP/MySQL cloud
+                        LEMP stack, which was an update to the earliest plots created by a headless Raspberry Pi 3
+                        running wx_scraper Python software I wrote for this purpose.</p>
+                    <p align=center><img border=0 width="60%" src="static/images/wxstation.jpg"></p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Radar</h5>
+                    </div>
+                    <div class="mapwx" id="map_wx">
+                        <script>
+                            var graphs = {{ wxmap | safe }};
+                            Plotly.plot('map_wx', graphs.data, graphs.layout, {
+                                displayModeBar: false, responsive: true
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

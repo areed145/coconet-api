@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid" id="new_blog">
+    <form id="new_blog" action="/blogs/new" method="post">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" class = "form-control" name="title">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" class = "form-control" name="description">
+        </div>
+
+        <button type="submit" class="btn btn-success">Create blog</button>
+    </form>
+</div>
+{% endblock %}

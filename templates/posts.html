@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid" id="posts">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>{{ blog_title }}</h5>
+                    </div>
+                    {% if posts|length > 0 %}
+                        {% for post in posts %}
+                            <h3>{{ post.title }}</h3>
+                            <p>{{ post.content|oembed(html=True) }}</p>
+                            <p>by {{ post.author }} at {{ post.created_date }}</p>
+                        <hr>
+                        {% endfor %}
+                    {% else %}
+                        <h4>There aren't any posts yet!</h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="image">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-deck mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title" align=center>{{title}}</h5>
+          </div>
+          <br>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                <a href="{{image['large']}}">
+                  <p align=center><img src="{{image['large']}}" alt="{{image['large']}}" width="100%"></p>
+                </a>
+                <p align=center>{{image['thumb']}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid" id="user_blogs">
+    <h2>{{ email }}'s blogs</h2>
+    {% for blog in blogs %}
+        <h3><a href="/posts/{{ blog_id }}">{{ blog.title }}</a></h3>
+        <p>{{ blog.description }}</p>
+        <hr>
+    {% endfor %}
+</div>
+{% endblock %}

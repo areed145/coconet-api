@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Coconut Barometer - KK6GPV - Adam Reeder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicons/favicon.ico') }}">
+
+    <!-- generics -->
+    <link rel="icon" href="{{ url_for('static', filename='favicons/favicon-16x16.png') }}" sizes="16x16">
+    <link rel="icon" href="{{ url_for('static', filename='favicons/favicon-32x32.png') }}" sizes="32x32">
+    <link rel="icon" href="{{ url_for('static', filename='favicons/favicon-96x96.png') }}" sizes="96x96">
+    <link rel="icon" href="{{ url_for('static', filename='favicons/apple-icon-144x144.png') }}" sizes="144x144">
+
+    <!-- Android -->
+    <link rel="shortcut icon" sizes="192x192"
+        href="{{ url_for('static', filename='favicons/android-icon-192x192.png') }}">
+
+    <!-- iOS -->
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicons/apple-icon-120x120.png') }}"
+        sizes="120x120">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicons/apple-icon-152x152.png') }}"
+        sizes="152x152">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicons/apple-icon-180x180.png') }}"
+        sizes="180x180">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicons/apple-icon-144x144.png') }}"
+        sizes="144x144">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicons/apple-icon.png') }}">
+
+    <!-- Windows 8 IE 10-->
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="{{ url_for('static', filename='favicons/ms-icon-144x144.png') }}">
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.plot.ly/plotly-latest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/footer.css') }}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #f0ffff;">
+        <a class="navbar-brand" href="/#">
+            <img id="logo" alt="logo" src="{{ url_for('static', filename='images/icon_transparent.png') }}" width="45"
+                height="45">Coconut Barometer</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Weather</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/awc">Aviation Weather</a>
+                        <a class="dropdown-item" href="/wx">Station Weather</a>
+                        <a class="dropdown-item" href="/blips">BLIP Maps</a>
+                        <a class="dropdown-item" href="/soundings">Soundings</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/iot">IoT</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/aprs">APRS</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Flying</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/aircraft">Aircraft</a>
+                        <a class="dropdown-item" href="/paragliding">Paragliding</a>
+                        <a class="dropdown-item" href="/soaring">Soaring</a>
+                        <a class="dropdown-item" href="/n5777v">N5777V</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Photos</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/galleries">Galleries</a>
+                        <a class="dropdown-item" href="/travel">Travel</a>
+                        <a class="dropdown-item" href="/scuba">Scuba</a>
+                        <a class="dropdown-item" href="/fishing">Fishing</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Oil & Gas</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/oilgas/summary">Summary</a>
+                        <a class="dropdown-item" href="/oilgas/mapbox">Map</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Blog</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/posts">Posts</a>
+                        <a class="dropdown-item" href="/login">Login</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% block body %}
+    {% endblock %}
+    <script src="{{ url_for('static', filename='js/plots.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gauges.js') }}"></script>
+</body>
+
+<!-- Footer -->
+<div class="margin">
+</div>
+<footer class="footer fixed-bottom" style="background-color:#f0ffff">
+    <div class="container">
+        <span class="text-muted">
+            <div class="footer-copyright text-center py-2">© 2019 Copyright
+                <a href="/about"> Adam Reeder</a>
+            </div>
+        </span>
+    </div>
+</footer>
+
+</html>

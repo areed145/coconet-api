@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="galleries">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-deck mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title" align=center>{{title}}</h5>
+          </div>
+          <br>
+          <div class="container-fluid">
+            {%for row in rows%}
+            <div class="row">
+              {%for gallery in row%}
+              <div class="col-md-2">
+                <a href="{{gallery['kk6gpv_link']}}">
+                  <p align=center><img src="{{gallery['thumb']}}" alt="{{gallery['caption']}}" width="100%"></p>
+                </a>
+                <p align=center>{{gallery['caption']}}</p>
+              </div>
+              {%endfor%}
+            </div>
+            {%endfor%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

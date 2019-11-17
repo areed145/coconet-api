@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-fluid" id="oilgas_summary">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" align=center>Oil & Gas Summary</h5>
+                    </div>
+                    <br>
+                    <div class="table-responsive-md">
+                        <table class="table table-hover table-sm" id="table_paged">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Field</th>
+                                    <th scope="col">Lease</th>
+                                    <th scope="col">Well</th>
+                                    <th scope="col">Operator</th>
+                                    <th scope="col">API</th>
+                                    <th scope="col">Oil</th>
+                                    <th scope="col">Water</th>
+                                    <th scope="col">Gas</th>
+                                    <th scope="col">Water / Steam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in rows %}
+                                <tr>
+                                    <td>{{ row['field'] }}</td>
+                                    <td>{{ row['lease'] }}</td>
+                                    <td>{{ row['well'] }}</td>
+                                    <td>{{ row['operator'] }}</td>
+                                    <td><a href="./details/{{ row['api'] }}">{{ row['api'] }}</a></td>
+                                    <td>{{ row['oil_cum'] }}</td>
+                                    <td>{{ row['water_cum'] }}</td>
+                                    <td>{{ row['gas_cum'] }}</td>
+                                    <td>{{ row['wtrstm_cum'] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="log-event"></div>
+            <div id="log-layout"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

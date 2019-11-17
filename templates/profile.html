@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>Hello {{ email }}</h1>
+    {% for blog in blogs %}
+        <h3><a href="/posts/{{ blog._id }}">{{ blog.title }}</a></h3>
+        <p>{{ blog.description }}</p>
+        <a href="/posts/new/{{ blog._id }}"><button class="btn btn-primary">New post</button></a>
+        <hr>
+    {% endfor %}
+{% endblock %}
