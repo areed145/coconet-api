@@ -68,7 +68,7 @@ def index():
     g.track_var['page'] = 'home'
     wx = figs.get_wx_latest(sid)
     wxmap = figs.create_map_awc(
-        'flight_category', 29.780880, -95.420410, 6, '0', '1', '1', '0', '1', '0')
+        'flight_category', 29.780880, -95.420410, zoom=6, radar="1", lightning="1")
     return render_template('index.html', wx=wx, wxmap=wxmap)
 
 
