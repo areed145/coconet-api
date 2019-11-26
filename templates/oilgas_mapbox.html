@@ -19,8 +19,6 @@
         trackUserLocation: true
     }));
 
-    map.addControl(new mapboxgl.FullscreenControl());
-
     map.on('click', 'wells', function (e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var field = e.features[0].properties.field;
