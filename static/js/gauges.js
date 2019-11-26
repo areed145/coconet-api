@@ -335,7 +335,7 @@ if ($('#index').length > 0) {
 
     // PRES
     var level = document.getElementById('pres').attributes.val.value;
-    var gmin = 29.7;
+    var gmin = 29.3;
     var gmax = 30.5;
     var leveldisp = level;
     if (level > gmax) {
