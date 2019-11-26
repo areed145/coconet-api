@@ -141,6 +141,8 @@
                     },
                     trackUserLocation: true
                 }));
+              
+                map.addControl(new mapboxgl.FullscreenControl());
         
                 map.on('click', 'wells', function (e) {
                     var coordinates = e.features[0].geometry.coordinates.slice();
