@@ -121,7 +121,7 @@
           <div class="card-header">
             <h5 class="card-title" align=center>Well Location: {{ header['api'] }}</h5>
           </div>
-          <div class="container-fluid" id="oilgas_mapbox" style="position:relative;">
+          <div class="container-fluid" id="oilgas_mapbox">
             <br>
             <div class="mapogsm" id='map'></div>
             <script>
@@ -142,7 +142,7 @@
                     trackUserLocation: true
                 }));
               
-//                 map.addControl(new mapboxgl.FullscreenControl());
+                map.addControl(new mapboxgl.FullscreenControl());
               
                 map.on('load', function () {
                     map.resize();
