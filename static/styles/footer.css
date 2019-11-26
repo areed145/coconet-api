@@ -36,7 +36,11 @@ img {
   /* padding-top: 60px; */
   /* bottom: 0; */
   width: 100%;
-  
+}
+
+.mapogsm {
+  height: 100%;
+  width: 100%;
 }
 
 .btn.btn-success {
