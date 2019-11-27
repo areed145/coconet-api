@@ -8,9 +8,11 @@
         {%for gallery in row%}
         <div class="card border-0 shadow">
           <a href="{{gallery['kk6gpv_link']}}">
-            <p align=center><img src="{{gallery['thumb']}}" alt="{{gallery['caption']}}" width="100%"></p>
+            <img src="{{gallery['thumb']}}" alt="{{gallery['caption']}}" width="100%">
           </a>
+          {% if 'caption' in gallery %}
           <p align=center>{{gallery['caption']}}</p>
+          {% endif %}
         </div>
         {%endfor%}
       </div>
