@@ -9,7 +9,7 @@ body {
 }  */
 
 body {
-  font-family: Ubuntu;
+  font-family: "Ubuntu";
   background-color: #f0ffff;
 }
 
@@ -43,6 +43,7 @@ img {
   top: 0;
   left: 0;
   height: 100%;
+  min-height: 300px;
   width: 100%;
 }
 
