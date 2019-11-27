@@ -8,138 +8,135 @@
           <div class="card-header">
             <h5 class="card-title" align=center>BLIP Options</h5>
           </div>
-          <br>
-          <div class="col-md">
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success" id="defaultOpen"
-                  style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
-                  onclick="open_tab(event, 'tuvbs')">Thermal
-                  Updraft &amp
-                  B/S</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
-                  onclick="open_tab(event, 'tuv')">Thermal Updraft
-                  Velocity</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
-                  onclick="open_tab(event, 'thv')">Thermal Height
-                  Variability</button>
-              </div>
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg" id="defaultOpen"
+                style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
+                onclick="open_tab(event, 'tuvbs')">Thermal
+                Updraft &amp
+                B/S</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
+                onclick="open_tab(event, 'tuv')">Thermal Updraft
+                Velocity</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #8a30c5; --button-background-color-dark: #531d77;"
+                onclick="open_tab(event, 'thv')">Thermal Height
+                Variability</button>
             </div>
-            <br>
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
-                  onclick="open_tab(event, 'bs')">B/S Ratio</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
-                  onclick="open_tab(event, 'blwsh')">BL Wind
-                  Shear</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
-                  onclick="open_tab(event, 'relhum')">BL Relative
-                  Humidity</button>
-              </div>
+          </div>
+          <!-- <br> -->
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
+                onclick="open_tab(event, 'bs')">B/S Ratio</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
+                onclick="open_tab(event, 'blwsh')">BL Wind
+                Shear</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2e43b8; --button-background-color-dark: #1d2d88;"
+                onclick="open_tab(event, 'relhum')">BL Relative
+                Humidity</button>
             </div>
-            <br>
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
-                  onclick="open_tab(event, 'blwsd')">BL Wind
-                  Speed/Dir</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
-                  onclick="open_tab(event, 'blws')">BL
-                  Windspeed</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
-                  onclick="open_tab(event, 'blwd')">BL Wind
-                  Direction</button>
-              </div>
+          </div>
+          <!-- <br> -->
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
+                onclick="open_tab(event, 'blwsd')">BL Wind
+                Speed/Dir</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
+                onclick="open_tab(event, 'blws')">BL
+                Windspeed</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2e91b8; --button-background-color-dark: #1d7388;"
+                onclick="open_tab(event, 'blwd')">BL Wind
+                Direction</button>
             </div>
-            <br>
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, 'blmot')">BL
-                  Motion</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, 'blh')">BL
-                  Height</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, 'bld')">BL
-                  Depth</button>
-              </div>
+          </div>
+          <!-- <br> -->
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, 'blmot')">BL
+                Motion</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, 'blh')">BL
+                Height</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, 'bld')">BL
+                Depth</button>
             </div>
-            <br>
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
-                  onclick="open_tab(event, 'cumpotcb')">Cumulus Potential /
-                  Cloudbase</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
-                  onclick="open_tab(event, 'cumpot')">Cumulus
-                  Potential</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
-                  onclick="open_tab(event, 'cumcb')">Cumulus Cloudbase</button>
-              </div>
+          </div>
+          <!-- <br> -->
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
+                onclick="open_tab(event, 'cumpotcb')">Cumulus Potential /
+                Cloudbase</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
+                onclick="open_tab(event, 'cumpot')">Cumulus
+                Potential</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #2eb86c; --button-background-color-dark: #1d8838;"
+                onclick="open_tab(event, 'cumcb')">Cumulus Cloudbase</button>
             </div>
-            <br>
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
-                  onclick="open_tab(event, 'ovpotcb')">Overcast Potential /
-                  Cloudbase</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
-                  onclick="open_tab(event, 'ovpot')">Overcast
-                  Potential</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
-                  onclick="open_tab(event, 'ovcb')">Overcast Cloudbase</button>
-              </div>
+          </div>
+          <!-- <br> -->
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
+                onclick="open_tab(event, 'ovpotcb')">Overcast Potential /
+                Cloudbase</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
+                onclick="open_tab(event, 'ovpot')">Overcast
+                Potential</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #4eb82e; --button-background-color-dark: #44881d;"
+                onclick="open_tab(event, 'ovcb')">Overcast Cloudbase</button>
             </div>
-            <br>
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
-                  onclick="open_tab(event, 'cape')">CAPE</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
-                  onclick="open_tab(event, 'dsurf')">Surface
-                  Dewpoint</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
-                  onclick="open_tab(event, 'hcrith')">Hcrit Height</button>
-              </div>
+          </div>
+          <!-- <br> -->
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
+                onclick="open_tab(event, 'cape')">CAPE</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
+                onclick="open_tab(event, 'dsurf')">Surface
+                Dewpoint</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #93b82e; --button-background-color-dark: #71881d;"
+                onclick="open_tab(event, 'hcrith')">Hcrit Height</button>
             </div>
-            <br>
-            <div>
-              <div class="btn-group" role="group">
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
-                  onclick="open_tab(event, 'hsurf')">Surface Heating</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
-                  onclick="open_tab(event, 'tsurf')">Surface Temp</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
-                  onclick="open_tab(event, 'topoact')">Topo Actual</button>
-                <button class="btn btn-success"
-                  style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
-                  onclick="open_tab(event, 'topomod')">Topo Model</button>
-              </div>
+          </div>
+          <!-- <br> -->
+          <div>
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                onclick="open_tab(event, 'hsurf')">Surface Heating</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                onclick="open_tab(event, 'tsurf')">Surface Temp</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                onclick="open_tab(event, 'topoact')">Topo Actual</button>
+              <button class="btn btn-success btn-lg"
+                style="--button-color: #ffffff; --button-background-color: #b6b82e; --button-background-color-dark: #887d1d;"
+                onclick="open_tab(event, 'topomod')">Topo Model</button>
             </div>
           </div>
         </div>
