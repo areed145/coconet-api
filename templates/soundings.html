@@ -2,150 +2,155 @@
 {% block body %}
 <div class="container-fluid" id="soundings">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
       <div class="card-deck mt-4">
         <div class="card border-0 shadow">
           <div class="card-header border-0">
             <h5 class="card-title" align=center>Sounding Options</h5>
           </div>
-            <div>
-              <div class="btn-group d-flex" role="group">
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
-                  id="OAK" onClick="reply_click(this.id)">OAK</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
-                  id="REV" onClick="reply_click(this.id)">REV</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
-                  id="LKN" onClick="reply_click(this.id)">LKN</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
-                  id="SLC" onClick="reply_click(this.id)">SLC</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
-                  id="GJT" onClick="reply_click(this.id)">GJT</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
-                  id="DNR" onClick="reply_click(this.id)">DNR</button>
-              </div>
-            </div>
-            <div>
-              <div class="btn-group d-flex" role="group">
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
-                  id="VBG" onClick="reply_click(this.id)">VBG</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
-                  id="EDW" onClick="reply_click(this.id)">EDW</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
-                  id="DRA" onClick="reply_click(this.id)">DRA</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
-                  id="FGZ" onClick="reply_click(this.id)">FGZ</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
-                  id="ABQ" onClick="reply_click(this.id)">ABQ</button>
-                <button class="btn btn-success btn-lg sd"
-                  style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
-                  id="AMA" onClick="reply_click(this.id)">AMA</button>
-              </div>
-            </div>
-            <div>
-              <div class="btn-group d-flex" role="group">
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
-                  id="NKX" onClick="reply_click(this.id)">NKX</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
-                  id="TUS" onClick="reply_click(this.id)">TUS</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
-                  id="EPZ" onClick="reply_click(this.id)">EPZ</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
-                  id="MAF" onClick="reply_click(this.id)">MAF</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
-                  id="FWD" onClick="reply_click(this.id)">FWD</button>
-              </div>
-            </div>
-            <div>
-              <div class="btn-group d-flex" role="group">
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
-                  id="925" onClick="reply_click(this.id)">925</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
-                  id="850" onClick="reply_click(this.id)">850</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
-                  id="700" onClick="reply_click(this.id)">700</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
-                  id="500" onClick="reply_click(this.id)">500</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
-                  id="300" onClick="reply_click(this.id)">300</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
-                  id="250" onClick="reply_click(this.id)">250</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
-                  id="200" onClick="reply_click(this.id)">200</button>
-              </div>
-            <div>
-              <div class="btn-group d-flex" role="group">
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, '925c')">925</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, '850c')">850</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, '700c')">700</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, '500c')">500</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, '300c')">300</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, '250c')">250</button>
-                <button class="btn btn-success btn-lg"
-                  style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
-                  onclick="open_tab(event, '200c')">200</button>
-              </div>
-            </div>
-            <br>
-            <div>
-              <p align=center><img src="static/images/imap_skewt.png" width="100%"></p>
+          <br>
+          <div class="col-md">
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
+                id="OAK" onClick="reply_click(this.id)">OAK</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
+                id="REV" onClick="reply_click(this.id)">REV</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
+                id="LKN" onClick="reply_click(this.id)">LKN</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
+                id="SLC" onClick="reply_click(this.id)">SLC</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
+                id="GJT" onClick="reply_click(this.id)">GJT</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f4416e; --button-background-color-dark: #992341;"
+                id="DNR" onClick="reply_click(this.id)">DNR</button>
             </div>
           </div>
+          <div class="col-md">
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
+                id="VBG" onClick="reply_click(this.id)">VBG</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
+                id="EDW" onClick="reply_click(this.id)">EDW</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
+                id="DRA" onClick="reply_click(this.id)">DRA</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
+                id="FGZ" onClick="reply_click(this.id)">FGZ</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
+                id="ABQ" onClick="reply_click(this.id)">ABQ</button>
+              <button class="btn btn-success sd"
+                style="--button-color: #ffffff; --button-background-color: #f45e41; --button-background-color-dark: #aa351e;"
+                id="AMA" onClick="reply_click(this.id)">AMA</button>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
+                id="NKX" onClick="reply_click(this.id)">NKX</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
+                id="TUS" onClick="reply_click(this.id)">TUS</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
+                id="EPZ" onClick="reply_click(this.id)">EPZ</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
+                id="MAF" onClick="reply_click(this.id)">MAF</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #f4af41; --button-background-color-dark: #af761a;"
+                id="FWD" onClick="reply_click(this.id)">FWD</button>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
+                id="925" onClick="reply_click(this.id)">925</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
+                id="850" onClick="reply_click(this.id)">850</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
+                id="700" onClick="reply_click(this.id)">700</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
+                id="500" onClick="reply_click(this.id)">500</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
+                id="300" onClick="reply_click(this.id)">300</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
+                id="250" onClick="reply_click(this.id)">250</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #c7f441; --button-background-color-dark: #81a318;"
+                id="200" onClick="reply_click(this.id)">200</button>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="btn-group d-flex" role="group">
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, '925c')">925</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, '850c')">850</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, '700c')">700</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, '500c')">500</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, '300c')">300</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, '250c')">250</button>
+              <button class="btn btn-success"
+                style="--button-color: #ffffff; --button-background-color: #2eb8a6; --button-background-color-dark: #1d8876;"
+                onclick="open_tab(event, '200c')">200</button>
+            </div>
+          </div>
+          <br>
+          <div class="col-md">
+            <p align=center><img src="static/images/imap_skewt.png" width="100%"></p>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-deck mt-4">
         <div class="card border-0 shadow">
           <div class="card-header border-0">
             <h5 class="card-title" align=center>Sounding Plots</h5>
           </div>
           <div id="sounding">
-              {{ img|oembed(html=True) }}
+            {{ img|oembed(html=True) }}
           </div>
           <script>
             function reply_click(clicked_id) {
               $.ajax({
-                  url: "/soundings/update",
-                  type: "GET",
-                  contentType: 'application/json;charset=UTF-8',
-                  data: {
-                      'sid': clicked_id,
-                  },
-                  dataType: "json",
-                  success: function (img) {
-                    document.getElementById("sounding").innerHTML = img;
-                  }
+                url: "/soundings/update",
+                type: "GET",
+                contentType: 'application/json;charset=UTF-8',
+                data: {
+                  'sid': clicked_id,
+                },
+                dataType: "json",
+                success: function (img) {
+                  document.getElementById("sounding").innerHTML = img;
+                }
               });
             };
 
