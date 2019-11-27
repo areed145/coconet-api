@@ -17,8 +17,8 @@ body {
   background-color: #f1f1f1;
 }
 
-.card-header:first-child {
-  border-radius: 0;
+.card, .card-header, .card-body, .card-footer{
+    border-radius:0px !important;
 }
 
 img {
