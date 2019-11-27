@@ -15,15 +15,17 @@ body {
 
 .card-header {
   background-color: #f1f1f1;
+  border-radius: 0px 0px 0px 0px !important;
 }
 
-.card, .card-header, .card-body, .card-footer{
-    border-radius:0px !important;
+.card {
+  border-radius: 0px 0px 0px 0px !important;
 }
 
 img {
     max-width: 100%;
     max-height: 100%;
+    border-radius: 0px 0px 0px 0px !important;
 }
 
 .margin {

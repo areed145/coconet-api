@@ -75,11 +75,7 @@
                 <div class="card border-0 shadow">
                     <div class="mapawc" id="map_awc">
                         <script>
-                            var graphs = {
-                                {
-                                    plot | safe
-                                }
-                            };
+                            var graphs = {{ plot | safe }};
                             Plotly.plot('map_awc', graphs.data, graphs.layout, {
                                 displayModeBar: false,
                                 responsive: true
