@@ -128,6 +128,7 @@ if ($('#iot').length > 0) {
 
 if ($('#aprs').length > 0) {
     var time_aprs = document.getElementById('time_aprs').value;
+    console.log(type_aprs);
     var time_int = 15;
     if (time_aprs == 'm_5') {
         time_int = 1;
@@ -168,34 +169,13 @@ if ($('#aprs').length > 0) {
         $('#table_full tbody').html(content);
     }
 
-    $('#type_aprs').on('change', function () {
-        $.ajax({
-            url: "/aprs/map",
-            type: "GET",
-            contentType: 'application/json;charset=UTF-8',
-            data: {
-                'type_aprs': document.getElementById('type_aprs').value,
-                'prop_aprs': document.getElementById('prop_aprs').value,
-                'time_aprs': document.getElementById('time_aprs').value,
-            },
-            dataType: "json",
-            success: function (data) {
-                Plotly.react('map_aprs', data.map_aprs);
-                Plotly.react('plot_speed', data.plot_speed);
-                Plotly.react('plot_alt', data.plot_alt);
-                Plotly.react('plot_course', data.plot_course);
-                Proc(data.rows);
-            }
-        });
-    });
-
     $('#prop_aprs').on('change', function () {
         $.ajax({
             url: "/aprs/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
-                'type_aprs': document.getElementById('type_aprs').value,
+                'type_aprs': type_aprs,
                 'prop_aprs': document.getElementById('prop_aprs').value,
                 'time_aprs': document.getElementById('time_aprs').value,
             },
@@ -236,7 +216,7 @@ if ($('#aprs').length > 0) {
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
-                'type_aprs': document.getElementById('type_aprs').value,
+                'type_aprs': type_aprs,
                 'prop_aprs': document.getElementById('prop_aprs').value,
                 'time_aprs': document.getElementById('time_aprs').value,
             },
@@ -255,7 +235,7 @@ if ($('#aprs').length > 0) {
                     type: "GET",
                     contentType: 'application/json;charset=UTF-8',
                     data: {
-                        'type_aprs': document.getElementById('type_aprs').value,
+                        'type_aprs': type_aprs,
                         'prop_aprs': document.getElementById('prop_aprs').value,
                         'time_aprs': document.getElementById('time_aprs').value,
                     },
@@ -277,7 +257,7 @@ if ($('#aprs').length > 0) {
                 type: "GET",
                 contentType: 'application/json;charset=UTF-8',
                 data: {
-                    'type_aprs': document.getElementById('type_aprs').value,
+                    'type_aprs': type_aprs,
                     'prop_aprs': document.getElementById('prop_aprs').value,
                     'time_aprs': document.getElementById('time_aprs').value,
                 },

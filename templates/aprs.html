@@ -42,6 +42,7 @@
                 <div class="card border-0 shadow">
                     <div class="chart" id="map_aprs">
                         <script>
+                            var type_aprs = "{{type_aprs}}";
                             var graphs = {{map_aprs|safe}};
                             Plotly.plot('map_aprs', graphs.data, graphs.layout, {
                                 displayModeBar: false, responsive: true

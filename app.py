@@ -145,7 +145,7 @@ def aprs(type_aprs):
             time_aprs = 'd_7'
         map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
             type_aprs, prop_aprs, time_aprs)
-        return render_template('aprs.html', times=times, map_aprs=map_aprs, plot_speed=plot_speed, plot_alt=plot_alt, plot_course=plot_course, rows=rows)
+        return render_template('aprs.html', type_aprs=type_aprs, times=times, map_aprs=map_aprs, plot_speed=plot_speed, plot_alt=plot_alt, plot_course=plot_course, rows=rows)
 
 
 @cache.cached(timeout=60)
