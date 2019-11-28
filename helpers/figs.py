@@ -9,7 +9,7 @@ import json
 from datetime import datetime, timedelta
 import base64
 import re
-    
+
 
 client = MongoClient(os.environ['MONGODB_CLIENT'], maxPoolSize=10000)
 
@@ -253,13 +253,14 @@ def create_graph_iot(sensor, time):
                            cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
+
 def get_prodinj(wells):
     db = client.petroleum
     df = pd.DataFrame()
     try:
         df_ = pd.DataFrame(list(db.doggr.aggregate([
             {'$unwind': '$prod'},
-            {'$match': {'api': {'$in':wells}}},
+            {'$match': {'api': {'$in': wells}}},
             {'$project': {
                 'api': 1,
                 'prod.date': 1,
@@ -275,15 +276,17 @@ def get_prodinj(wells):
         df_prod = pd.DataFrame(list(df_['prod']))
         df_prod['api'] = df_['api']
         df_prod = df_prod.replace(0, np.nan)
-        df_prod.dropna(subset=['oil', 'water', 'gas', 'oilgrav', 'pcsg', 'ptbg', 'btu'], how='all', inplace=True)
-        df_prod = df_prod.groupby(by=['api','date']).agg({'oil': 'sum', 'water': 'sum', 'gas': 'sum', 'oilgrav': 'mean', 'pcsg': 'max', 'ptbg': 'max', 'btu': 'mean'}).reset_index()
+        df_prod.dropna(subset=['oil', 'water', 'gas', 'oilgrav',
+                               'pcsg', 'ptbg', 'btu'], how='all', inplace=True)
+        df_prod = df_prod.groupby(by=['api', 'date']).agg(
+            {'oil': 'sum', 'water': 'sum', 'gas': 'sum', 'oilgrav': 'mean', 'pcsg': 'max', 'ptbg': 'max', 'btu': 'mean'}).reset_index()
         df = df.append(df_prod)
     except:
         pass
     try:
         df_ = pd.DataFrame(list(db.doggr.aggregate([
             {'$unwind': '$inj'},
-            {'$match': {'api': {'$in':wells}}},
+            {'$match': {'api': {'$in': wells}}},
             {'$project': {
                 'api': 1,
                 'inj.date': 1,
@@ -295,10 +298,12 @@ def get_prodinj(wells):
         df_inj = pd.DataFrame(list(df_['inj']))
         df_inj['api'] = df_['api']
         df_inj = df_inj.replace(0, np.nan)
-        df_inj.dropna(subset=['wtrstm', 'gasair', 'pinjsurf'], how='all', inplace=True)
-        df_inj = df_inj.groupby(by=['api','date']).agg({'wtrstm': 'sum', 'gasair': 'sum', 'pinjsurf': 'max'}).reset_index()
+        df_inj.dropna(subset=['wtrstm', 'gasair',
+                              'pinjsurf'], how='all', inplace=True)
+        df_inj = df_inj.groupby(by=['api', 'date']).agg(
+            {'wtrstm': 'sum', 'gasair': 'sum', 'pinjsurf': 'max'}).reset_index()
         try:
-            df = pd.merge(df, df_inj, how='outer', on=['api','date'])
+            df = pd.merge(df, df_inj, how='outer', on=['api', 'date'])
         except:
             df = df.append(df_inj)
     except:
@@ -331,7 +336,8 @@ def get_offsets_oilgas(header, rad):
     dists = df[:25]['dist'].tolist()
 
     df_offsets = get_prodinj(offsets)
-    df_offsets['api'] = df_offsets['api'].apply(lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
+    df_offsets['api'] = df_offsets['api'].apply(
+        lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
     df_offsets.sort_values(by='api', inplace=True)
     data_offset_oil = [
         go.Heatmap(
@@ -365,13 +371,13 @@ def get_offsets_oilgas(header, rad):
                        yaxis=dict(autorange='reversed'),
                        )
     graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
-                                   cls=plotly.utils.PlotlyJSONEncoder)
+                                      cls=plotly.utils.PlotlyJSONEncoder)
 
     graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
-                                   cls=plotly.utils.PlotlyJSONEncoder)
+                                      cls=plotly.utils.PlotlyJSONEncoder)
 
     graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
-                                   cls=plotly.utils.PlotlyJSONEncoder)
+                                      cls=plotly.utils.PlotlyJSONEncoder)
 
     map_offsets = []
     return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, map_offsets, offsets
@@ -387,139 +393,109 @@ def get_graph_oilgas(api):
         except:
             pass
 
-    # data_loc = [go.Scattermapbox(lat=df_header['latitude'].values,
-    #                              lon=df_header['longitude'].values,
-    #                              mode='markers',
-    #                              text=df_header['api'].values,
-    #                              name='wells',
-    #                              visible=True,
-    #                              marker=dict(
-    #                                  size=12,
-    #                                  color='purple',
-    #                                  ),
-    #                             ),
-    #             ]
-
-    # layout_loc = go.Layout(autosize=True,
-    #                        hovermode='closest',
-    #                        showlegend=False,
-    #                        margin=dict(r=0, t=0, b=0, l=0, pad=0),
-    #                        mapbox=dict(bearing=0,
-    #                                    center=dict(
-    #                                        lat=df_header['latitude'].values[0], lon=df_header['longitude'].values[0]),
-    #                                    accesstoken=mapbox_access_token,
-    #                                    style='satellite-streets',
-    #                                    pitch=0,
-    #                                    zoom=16
-    #                                    )
-    #                        )
-
-    # graphJSON_loc = json.dumps(
-    #     dict(data=data_loc, layout=layout_loc), cls=plotly.utils.PlotlyJSONEncoder)
-
     df = get_prodinj([api])
 
     data = [go.Scatter(x=df['date'],
                        y=df['oil'],
                        name='oil',
                        line=dict(
-                color='#50bf37',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['water'],
-                    name='water',
-                    line=dict(
-                color='#4286f4',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['gas'],
-                    name='gas',
-                    line=dict(
-                color='#ef2626',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['wtrstm'],
-                    name='wtrstm',
-                    line=dict(
-                color='#fcd555',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['gasair'],
-                    name='gasair',
-                    line=dict(
-                color='#e32980',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['oilgrav'],
-                    name='oilgrav',
-                    line=dict(
-                color='#81d636',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['pcsg'],
-                    name='pcsg',
-                    line=dict(
-                color='#4136d6',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['ptbg'],
-                    name='ptbg',
-                    line=dict(
-                color='#7636d6',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['btu'],
-                    name='btu',
-                    line=dict(
-                color='#d636d1',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                    y=df['pinjsurf'],
-                    name='pinjsurf',
-                    line=dict(
-                color='#e38f29',
-                shape='spline',
-                smoothing=0.3,
-                width=3
-            ),
-            mode='lines'),
-        ]
+        color='#50bf37',
+        shape='spline',
+        smoothing=0.3,
+        width=3
+    ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['water'],
+                   name='water',
+                   line=dict(
+            color='#4286f4',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['gas'],
+                   name='gas',
+                   line=dict(
+            color='#ef2626',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['wtrstm'],
+                   name='wtrstm',
+                   line=dict(
+            color='#fcd555',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['gasair'],
+                   name='gasair',
+                   line=dict(
+            color='#e32980',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['oilgrav'],
+                   name='oilgrav',
+                   line=dict(
+            color='#81d636',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['pcsg'],
+                   name='pcsg',
+                   line=dict(
+            color='#4136d6',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['ptbg'],
+                   name='ptbg',
+                   line=dict(
+            color='#7636d6',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['btu'],
+                   name='btu',
+                   line=dict(
+            color='#d636d1',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['pinjsurf'],
+                   name='pinjsurf',
+                   line=dict(
+            color='#e38f29',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+    ]
 
     layout = go.Layout(autosize=True,
                        hovermode='closest',
@@ -654,7 +630,7 @@ def create_map_oilgas():
                        mapbox=dict(bearing=0,
                                    center=dict(lat=36, lon=-119),
                                    accesstoken=mapbox_access_token,
-                                   style='satellite-streets',
+                                   style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
                                    pitch=0,
                                    zoom=5
                                    )
@@ -918,7 +894,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', ligh
                        mapbox=dict(bearing=0,
                                    center=dict(lat=lat, lon=lon),
                                    accesstoken=mapbox_access_token,
-                                   style='satellite-streets',
+                                   style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
                                    pitch=0,
                                    layers=layers,
                                    zoom=zoom))
@@ -992,7 +968,7 @@ def create_map_aprs(script, prop, time):
                            mapbox=dict(bearing=0,
                                        center=dict(lat=30, lon=-95),
                                        accesstoken=mapbox_access_token,
-                                       style='satellite-streets',
+                                       style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
                                        pitch=0,
                                        zoom=6
                                        )
