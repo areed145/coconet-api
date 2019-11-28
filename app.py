@@ -173,7 +173,7 @@ def n5777v():
 @app.route('/galleries')
 def galleries():
     g.track_var['page'] = 'galleries'
-    rows = flickr.get_gal_rows(6)
+    rows = flickr.get_gal_rows(5)
     return render_template('galleries.html', rows=rows, title='Galleries')
 
 
@@ -183,7 +183,7 @@ def galleries():
 def gallery(id):
     g.track_var['page'] = 'gallery'
     g.track_var['gallery'] = str(id)
-    rows, gals = flickr.get_photo_rows(id, 6)
+    rows, gals = flickr.get_photo_rows(id, 5)
     return render_template('galleries.html', rows=rows, title=gals[id]['title'])
 
 
