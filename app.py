@@ -8,17 +8,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, session, g, redirect, render_template_string, make_response
 from helpers import figs, flickr
 from helpers.blog import Database, Blog, Post, User
-
 from micawber.providers import bootstrap_basic
 from micawber.contrib.mcflask import add_oembed_filters
-
 from werkzeug.middleware.proxy_fix import ProxyFix
-
 from pymongo import MongoClient
 from helpers.tracker import TrackUsage
 from helpers.tracker.storage.mongo import MongoPiggybackStorage
 from flask_caching import Cache
-
 import json
 import feather
 import pandas as pd
@@ -100,14 +96,6 @@ def wx():
 def blips():
     g.track_var['page'] = 'blips'
     return render_template('blips.html')
-
-
-# @cache.cached(timeout=60)
-# @t.include
-# @app.route('/soundings')
-# def soundings():
-#     g.track_var['page'] = 'soundings'
-#     return render_template('soundings.html')
 
 
 @cache.cached(timeout=60)
@@ -310,7 +298,6 @@ def login_template():
 def login_user():
     email = request.form['email']
     password = request.form['password']
-
     if User.login_valid(email, password):
         User.login(email)
         user = User.get_by_email(email)
@@ -327,9 +314,7 @@ def user_blogs(user_id=None):
         user = User.get_by_id(user_id)
     else:
         user = User.get_by_email(session['email'])
-
     blogs = user.get_blogs()
-
     return render_template("user_blogs.html", blogs=blogs, email=user.email)
 
 
@@ -338,7 +323,6 @@ def user_blogs(user_id=None):
 def blog_posts(blog_id='bca7359faed442669aa888a2657b331f'):
     blog = Blog.from_mongo(blog_id)
     posts = blog.get_posts()
-
     return render_template('posts.html', posts=posts, blog_title=blog.title, blog_id=blog._id)
 
 
@@ -350,10 +334,8 @@ def create_new_blog():
         title = request.form['title']
         description = request.form['description']
         user = User.get_by_email(session['email'])
-
         new_blog = Blog(user.email, title, description, user._id)
         new_blog.save_to_mongo()
-
         return make_response(user_blogs(user._id))
 
 
@@ -362,15 +344,11 @@ def create_new_post(blog_id):
     if request.method == 'GET':
         return render_template('new_post.html', blog_id=blog_id)
     else:
-        print(request.form['title'])
-        print(request.form['content'])
         title = request.form['title']
         content = request.form['content']
         user = User.get_by_email(session['email'])
-
         new_post = Post(blog_id, title, content, user.email)
         new_post.save_to_mongo()
-
         return make_response(blog_posts(blog_id))
 
 

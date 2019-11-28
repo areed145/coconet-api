@@ -188,7 +188,6 @@ class TrackUsage(object):
             clean_ip = quote_plus(str(ctx.request.headers.get('X-Forwarded-For', None)))
             if clean_ip == None:
                 clean_ip = quote_plus(str(ctx.request.remote_addr))
-            print(clean_ip)
             if '{ip}' in self._freegeoip_endpoint:
                 url = self._freegeoip_endpoint.format(ip=clean_ip)
             else:

@@ -15,11 +15,15 @@ body {
 
 .card-header {
   background-color: #f1f1f1;
-  border-radius: 0px 0px 0px 0px !important;
+  border-radius: 10px 10px 0px 0px !important;
 }
 
 .card {
-  border-radius: 0px 0px 0px 0px !important;
+  border-radius: 10px 10px 10px 10px !important;
+}
+
+.card-body {
+  padding: 10px !important;
 }
 
 img {

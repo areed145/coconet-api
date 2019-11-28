@@ -8,8 +8,7 @@
                     <div class="card-header border-0">
                         <h5 class="card-title" align=center>Property</h5>
                     </div>
-                    <br>
-                    <div class="col-md">
+                    <div class="card-body">
                         <select class="form-control" id='prop_aprs'>
                             <option value="speed" selected>Speed</option>
                             <option value="altitude">Altitude</option>
@@ -17,21 +16,18 @@
                             <option value="none">None</option>
                         </select>
                     </div>
-                    <br>
                 </div>
                 <div class="card border-0 shadow">
                     <div class="card-header border-0">
                         <h5 class="card-title" align=center>Time</h5>
                     </div>
-                    <br>
-                    <div class="col-md">
+                    <div class="card-body">
                         <select class="form-control" id='time_aprs'>
                             {%for time in times%}
                             <option value="{{time}}">{{times[time]}}</option>
                             {%endfor%}
                         </select>
                     </div>
-                    <br>
                 </div>
             </div>
         </div>
@@ -40,14 +36,17 @@
         <div class="col-md-12">
             <div class="card-deck mt-4">
                 <div class="card border-0 shadow">
-                    <div class="chart" id="map_aprs">
-                        <script>
-                            var type_aprs = "{{type_aprs}}";
-                            var graphs = {{map_aprs|safe}};
-                            Plotly.plot('map_aprs', graphs.data, graphs.layout, {
-                                displayModeBar: false, responsive: true
-                            });
-                        </script>
+                    <div class="card-body">
+                        <div class="chart" id="map_aprs">
+                            <script>
+                                var type_aprs = "{{type_aprs}}";
+                                var graphs = {{ map_aprs | safe }};
+                                Plotly.plot('map_aprs', graphs.data, graphs.layout, {
+                                    displayModeBar: false,
+                                    responsive: true
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,13 +56,16 @@
         <div class="col-md-12">
             <div class="card-deck mt-4">
                 <div class="card border-0 shadow">
-                    <div class="chart" id="plot_speed">
-                        <script>
-                            var graphs = {{ plot_speed | safe }};
-                            Plotly.plot('plot_speed', graphs.data, graphs.layout, {
-                                displayModeBar: false, responsive: true
-                            });
-                        </script>
+                    <div class="card-body">
+                        <div class="chart" id="plot_speed">
+                            <script>
+                                var graphs = {{ plot_speed | safe }};
+                                Plotly.plot('plot_speed', graphs.data, graphs.layout, {
+                                    displayModeBar: false,
+                                    responsive: true
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,13 +75,16 @@
         <div class="col-md-12">
             <div class="card-deck mt-4">
                 <div class="card border-0 shadow">
-                    <div class="chart" id="plot_alt">
-                        <script>
-                            var graphs = {{ plot_alt | safe }};
-                            Plotly.plot('plot_alt', graphs.data, graphs.layout, {
-                                displayModeBar: false, responsive: true
-                            });
-                        </script>
+                    <div class="card-body">
+                        <div class="chart" id="plot_alt">
+                            <script>
+                                var graphs = {{ plot_alt | safe }};
+                                Plotly.plot('plot_alt', graphs.data, graphs.layout, {
+                                    displayModeBar: false,
+                                    responsive: true
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -89,13 +94,16 @@
         <div class="col-md-12">
             <div class="card-deck mt-4">
                 <div class="card border-0 shadow">
-                    <div class="chart" id="plot_course">
-                        <script>
-                            var graphs = {{ plot_course | safe }};
-                            Plotly.plot('plot_course', graphs.data, graphs.layout, {
-                                displayModeBar: false, responsive: true
-                            });
-                        </script>
+                    <div class="card-body">
+                        <div class="chart" id="plot_course">
+                            <script>
+                                var graphs = {{ plot_course | safe }};
+                                Plotly.plot('plot_course', graphs.data, graphs.layout, {
+                                    displayModeBar: false,
+                                    responsive: true
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,37 +113,39 @@
         <div class="col-md-12">
             <div class="card-deck mt-4">
                 <div class="card border-0 shadow">
-                    <div class="table-responsive-md">
-                        <table class="table table-hover table-sm" id="table_full">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Timestamp</th>
-                                    <th scope="col">From</th>
-                                    <th scope="col">To</th>
-                                    <th scope="col">Latitude</th>
-                                    <th scope="col">Longitude</th>
-                                    <th scope="col">Speed</th>
-                                    <th scope="col">Altitude</th>
-                                    <th scope="col">Course</th>
-                                    <!-- <th scope="col">Raw</th> -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for row in rows %}
-                                <tr>
-                                    <td>{{ row['timestamp_'] }}</td>
-                                    <td>{{ row['from'] }}</td>
-                                    <td>{{ row['to'] }}</td>
-                                    <td>{{ row['latitude'] }}</td>
-                                    <td>{{ row['longitude'] }}</td>
-                                    <td>{{ row['speed'] }}</td>
-                                    <td>{{ row['altitude'] }}</td>
-                                    <td>{{ row['course'] }}</td>
-                                    <!-- <td>{{ row['raw'] }}</td> -->
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        <div class="table-responsive-md">
+                            <table class="table table-hover table-sm" id="table_full">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Timestamp</th>
+                                        <th scope="col">From</th>
+                                        <th scope="col">To</th>
+                                        <th scope="col">Latitude</th>
+                                        <th scope="col">Longitude</th>
+                                        <th scope="col">Speed</th>
+                                        <th scope="col">Altitude</th>
+                                        <th scope="col">Course</th>
+                                        <!-- <th scope="col">Raw</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in rows %}
+                                    <tr>
+                                        <td>{{ row['timestamp_'] }}</td>
+                                        <td>{{ row['from'] }}</td>
+                                        <td>{{ row['to'] }}</td>
+                                        <td>{{ row['latitude'] }}</td>
+                                        <td>{{ row['longitude'] }}</td>
+                                        <td>{{ row['speed'] }}</td>
+                                        <td>{{ row['altitude'] }}</td>
+                                        <td>{{ row['course'] }}</td>
+                                        <!-- <td>{{ row['raw'] }}</td> -->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

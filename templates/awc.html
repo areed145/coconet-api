@@ -8,8 +8,7 @@
                     <div class="card-header border-0">
                         <h5 class="card-title" align=center>Property</h5>
                     </div>
-                    <br>
-                    <div class="col-md">
+                    <div class="card-body">
                         <select class="form-control" id='prop_awc'>
                             <option value="flight_category">Flight Category</option>
                             <option value="temp_c">Temperature</option>
@@ -35,14 +34,12 @@
                             <option value="age">Age</option>
                         </select>
                     </div>
-                    <br>
                 </div>
                 <div class="card border-0 shadow">
                     <div class="card-header border-0">
                         <h5 class="card-title" align=center>Layers</h5>
                     </div>
-                    <br>
-                    <div class="col-md">
+                    <div class="card-body">
                         <div class="btn-group d-flex" role="group">
                             <button class="btn btn-success"
                                 style="--button-color: #ffffff; --button-background-color: #c53093; --button-background-color-dark: #8d1364;"
@@ -66,7 +63,6 @@
                                 id="watchwarn">Watches / Warnings</button>
                         </div>
                     </div>
-                    <br>
                 </div>
             </div>
         </div>
@@ -75,14 +71,16 @@
         <div class="col-md-12">
             <div class="card-deck mt-4">
                 <div class="card border-0 shadow">
-                    <div class="mapawc" id="map_awc">
-                        <script>
-                            var graphs = {{ plot | safe }};
-                            Plotly.plot('map_awc', graphs.data, graphs.layout, {
-                                displayModeBar: false,
-                                responsive: true
-                            });
-                        </script>
+                    <div class="card-body">
+                        <div class="mapawc" id="map_awc">
+                            <script>
+                                var graphs = {{ plot | safe }};
+                                Plotly.plot('map_awc', graphs.data, graphs.layout, {
+                                    displayModeBar: false,
+                                    responsive: true
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -10,8 +10,12 @@
                     <div class="card-header border-0">
                         <h5 class="card-title" align=center>{{ post.title }}</h5>
                     </div>
-                    <p>{{ post.content|oembed(html=True) }}</p>
-                    <p>by {{ post.author }} at {{ post.created_date }}</p>
+                    <div class="card-body">
+                        <p class="card-text">{{ post.content|oembed(html=True) }}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        by {{ post.author }} at {{ post.created_date }}
+                    </div>
                 </div>
             </div>
             {% endfor %}
