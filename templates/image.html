@@ -1,27 +1,27 @@
 {% extends 'layout.html' %}
 {% block body %}
 <div class="container-fluid" id="image">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card-deck mt-4">
-        <div class="card border-0 shadow">
-          <div class="card-header border-0">
-            <h5 class="card-title" align=center>{{title}}</h5>
-          </div>
-          <br>
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-12">
-                <a href="{{image['large']}}">
-                  <p class="card-text" align=center><img src="{{image['large']}}" alt="{{image['large']}}" width="100%"></p>
-                </a>
-                <p class="card-text" align=center>{{image['thumb']}}</p>
-              </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-deck mt-4">
+                <div class="card border-0 shadow">
+                    <div class="card-header border-0">
+                        <h5 class="card-title" align=center>{{title}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{image['large']}}">
+                            <img src="{{image['large']}}" alt="{{image['large']}}" width="100%">
+                        </a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        {{image['thumb']}}
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
+</div>
+</div>
 </div>
 {% endblock %}
