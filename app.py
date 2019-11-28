@@ -1,3 +1,4 @@
+import base64
 import os
 import time
 import atexit
@@ -131,15 +132,20 @@ def iot():
 
 @cache.cached(timeout=6)
 @t.include
-@app.route('/aprs')
-def aprs():
-    g.track_var['page'] = 'aprs'
-    type_aprs = 'radius'
-    prop_aprs = 'speed'
-    time_aprs = 'm_5'
-    map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
-        type_aprs, prop_aprs, time_aprs)
-    return render_template('aprs.html', times=times, map_aprs=map_aprs, plot_speed=plot_speed, plot_alt=plot_alt, plot_course=plot_course, rows=rows)
+@app.route('/aprs_<type_aprs>')
+def aprs(type_aprs):
+    g.track_var['page'] = type_aprs
+    if type_aprs == 'info':
+        return render_template('aprs_info.html')
+    else:
+        prop_aprs = 'speed'
+        if type_aprs == 'radius':
+            time_aprs = 'm_5'
+        else:
+            time_aprs = 'd_7'
+        map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
+            type_aprs, prop_aprs, time_aprs)
+        return render_template('aprs.html', times=times, map_aprs=map_aprs, plot_speed=plot_speed, plot_alt=plot_alt, plot_course=plot_course, rows=rows)
 
 
 @cache.cached(timeout=60)
@@ -274,7 +280,8 @@ def oilgas_detail(api):
     g.track_var['page'] = 'oilgas/details'
     g.track_var['api'] = str(api)
     graph_oilgas, header = figs.get_graph_oilgas(str(api))
-    graph_offset_oil, graph_offset_stm, graph_offset_wtr, map_offsets, offsets  = figs.get_offsets_oilgas(header, 0.25)
+    graph_offset_oil, graph_offset_stm, graph_offset_wtr, map_offsets, offsets = figs.get_offsets_oilgas(
+        header, 0.25)
     return render_template('oilgas_details.html', plot=graph_oilgas, header=header, plot_offset_oil=graph_offset_oil, plot_offset_stm=graph_offset_stm, plot_offset_wtr=graph_offset_wtr, offsets=offsets)
 
 
@@ -416,7 +423,7 @@ def graph_wx_change():
     data['fig_thp'] = json.loads(fig_thp)
     return json.dumps(data, default=myconverter)
 
-import base64
+
 @app.route('/soundings/update', methods=['GET', 'POST'])
 def sounding_update():
     sid = request.args['sid']
