@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+<g>
+	<path fill="#F44336" d="M14,8H4c-1.104,0-2,0.896-2,2v27c0,1.104,0.896,2,2,2h10V8z"/>
+	<path fill="#F44336" d="M34,8h10c1.104,0,2,0.896,2,2v27c0,1.104-0.896,2-2,2H34V8z"/>
+</g>
+<rect x="4" y="11" fill="#FFF8E1" width="10" height="25"/>
+<g>
+	<rect x="7" y="13" fill="#37474F" width="7" height="3"/>
+	<rect x="7" y="18" fill="#37474F" width="7" height="3"/>
+	<rect x="7" y="23" fill="#37474F" width="7" height="3"/>
+	<rect x="7" y="30" fill="#37474F" width="7" height="3"/>
+</g>
+<path fill="#455A64" d="M46,12h-7c-1.104,0-2,0.896-2,2v19c0,1.104,0.896,2,2,2h7V12z"/>
+<g>
+	<circle fill="#FFF8E1" cx="40" cy="16" r="1"/>
+	<circle fill="#FFF8E1" cx="43" cy="18" r="1"/>
+	<circle fill="#FFF8E1" cx="40" cy="20" r="1"/>
+	<circle fill="#FFF8E1" cx="43" cy="22" r="1"/>
+	<circle fill="#FFF8E1" cx="40" cy="24" r="1"/>
+	<circle fill="#FFF8E1" cx="43" cy="26" r="1"/>
+	<circle fill="#FFF8E1" cx="40" cy="28" r="1"/>
+	<circle fill="#FFF8E1" cx="40" cy="32" r="1"/>
+	<circle fill="#FFF8E1" cx="43" cy="30" r="1"/>
+</g>
+<g>
+	<path fill="#5D4037" d="M14,8.002v31.012C14,40.659,16,42,16,42V5.002C16,5.002,14,6.356,14,8.002z"/>
+	<path fill="#5D4037" d="M22,8.002v31.012C22,40.659,24,42,24,42V5.002C24,5.002,22,6.356,22,8.002z"/>
+	<path fill="#5D4037" d="M18,8.002v31.012C18,40.659,20,42,20,42V5.002C20,5.002,18,6.356,18,8.002z"/>
+	<path fill="#5D4037" d="M30,8.002v31.012C30,40.659,32,42,32,42V5.002C32,5.002,30,6.356,30,8.002z"/>
+	<path fill="#5D4037" d="M26,8.002v31.012C26,40.659,28,42,28,42V5.002C28,5.002,26,6.356,26,8.002z"/>
+</g>
+<g>
+	<path fill="#A1887F" d="M17.986,39.014L18,8.002C18,6.352,16.014,5,16.014,5L16,5.002v35.997V42C16,42,17.986,40.663,17.986,39.014
+		z"/>
+	<path fill="#A1887F" d="M25.986,39.014L26,8.002C26,6.352,24.014,5,24.014,5L24,5.002v35.997V42C24,42,25.986,40.663,25.986,39.014
+		z"/>
+	<path fill="#A1887F" d="M21.986,39.014L22,8.002C22,6.352,20.014,5,20.014,5L20,5.002v35.997V42C20,42,21.986,40.663,21.986,39.014
+		z"/>
+	<path fill="#A1887F" d="M33.986,39.014L34,8.002C34,6.352,32.014,5,32.014,5L32,5.002v35.997V42C32,42,33.986,40.663,33.986,39.014
+		z"/>
+	<path fill="#A1887F" d="M29.986,39.014L30,8.002C30,6.352,28.014,5,28.014,5L28,5.002v35.997V42C28,42,29.986,40.663,29.986,39.014
+		z"/>
+</g>
+</svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+<path fill="#DD2C00" d="M23,31c0-8-10-12-2-25C11,10,4.566,18.115,4.056,30.486C4.021,30.82,4,31.157,4,31.5
+	c0,5.246,4.253,9.5,9.5,9.5s9.5-4.254,9.5-9.5c0-0.169-0.017-0.334-0.025-0.5H23z"/>
+<g>
+	<circle fill="#FF5722" cx="15.5" cy="32.5" r="6.5"/>
+	<path fill="#FF5722" d="M9.05,33c0,0-2.05-10,6-17c0,0-2.503,8,3.44,10.739"/>
+</g>
+<line fill="#FF9100" stroke="#FFB74D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="16.219" y1="34.073" x2="42" y2="20"/>
+<ellipse transform="matrix(-0.4637 -0.886 0.886 -0.4637 -5.3209 64.1954)" fill="#3E2723" cx="16.768" cy="33.708" rx="2.752" ry="3.727"/>
+</svg>

@@ -3,6 +3,11 @@ body {
     background-color: #f0ffff;
 }
 
+a.custom-card,
+a.custom-card:hover {
+  color: inherit;
+}
+
 .card-header {
     background-color: #f1f1f1;
     border-radius: 10px 10px 0px 0px !important;
