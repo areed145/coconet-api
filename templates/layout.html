@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Coconut Barometer - KK6GPV - Adam Reeder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicons/favicon.ico') }}">
 
     <!-- generics -->
@@ -65,10 +64,18 @@
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">Weather</a>
+                        aria-haspopup="true" aria-expanded="false">Station Weather</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/station_live">Live</a>
+                        <a class="dropdown-item" href="/station_history">Historical</a>
+                        <a class="dropdown-item" href="/station_info">Station Info</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">U.S. Weather</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="/awc">Aviation Weather</a>
-                        <a class="dropdown-item" href="/wx">Station Weather</a>
                         <a class="dropdown-item" href="/blips">BLIP Maps</a>
                         <a class="dropdown-item" href="/soundings">Soundings</a>
                     </div>

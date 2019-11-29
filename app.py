@@ -79,15 +79,33 @@ def awc():
     return render_template('awc.html', plot=map_awc)
 
 
+@t.include
+@app.route('/station_live')
+def station_live():
+    g.track_var['page'] = 'station_live'
+    wx = figs.get_wx_latest(sid)
+    wxmap = figs.create_map_awc(
+        'flight_category', 29.780880, -95.420410, zoom=6, radar="1", lightning="1")
+    return render_template('station_live.html', wx=wx, wxmap=wxmap)
+
+
 @cache.cached(timeout=60)
 @t.include
-@app.route('/wx')
-def wx():
-    g.track_var['page'] = 'wx'
+@app.route('/station_history')
+def station_history():
+    g.track_var['page'] = 'station_history'
     time_wx = 'd_1'
     fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
         time_wx, sid)
-    return render_template('wx.html', times=times, fig_td=fig_td, fig_pr=fig_pr, fig_cb=fig_cb, fig_pc=fig_pc, fig_wd=fig_wd, fig_su=fig_su, fig_wr=fig_wr, fig_thp=fig_thp)
+    return render_template('station_history.html', times=times, fig_td=fig_td, fig_pr=fig_pr, fig_cb=fig_cb, fig_pc=fig_pc, fig_wd=fig_wd, fig_su=fig_su, fig_wr=fig_wr, fig_thp=fig_thp)
+
+
+@cache.cached(timeout=60)
+@t.include
+@app.route('/station_info')
+def station_info():
+    g.track_var['page'] = 'station_info'
+    return render_template('station_info.html')
 
 
 @cache.cached(timeout=60)

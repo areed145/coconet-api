@@ -1,4 +1,4 @@
-if ($('#index').length > 0) {
+if ($('#station_live').length > 0) {
     var ws = 70;
     var ls = 25;
     var gs = 360 - ws - (2 * ls);

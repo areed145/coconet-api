@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+<path fill="#80CBC4" d="M6,10c0-2.209,1.791-4,4-4h28c2.209,0,4,1.791,4,4v28c0,2.209-1.791,4-4,4H10c-2.209,0-4-1.791-4-4V10z"/>
+<g>
+	<rect x="6" y="13" fill="#BEE5E1" width="36" height="1"/>
+	<rect x="6" y="20" fill="#BEE5E1" width="36" height="1"/>
+	<rect x="6" y="34" fill="#BEE5E1" width="36" height="2"/>
+	<rect x="34" y="6" fill="#BEE5E1" width="1" height="36"/>
+	<rect x="13" y="6" fill="#BEE5E1" width="1" height="22"/>
+	<rect x="13" y="34" fill="#BEE5E1" width="1" height="8"/>
+	<rect x="6" y="27" fill="#BEE5E1" width="14" height="1"/>
+	<rect x="22" y="27" fill="#BEE5E1" width="20" height="1"/>
+	<rect x="20" y="6" fill="#BEE5E1" width="1" height="18"/>
+	<rect x="20" y="34" fill="#BEE5E1" width="1" height="8"/>
+	<rect x="27" y="34" fill="#BEE5E1" width="1" height="8"/>
+	<rect x="27" y="6" fill="#BEE5E1" width="1" height="25"/>
+</g>
+<path fill="none" stroke="#00695C" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M7,32.969h4l2-8L15.07,33
+	L19,32.969l2-15l2,15h4.091l1.909-10l2,10h4l2-4l2,4h2"/>
+</svg>
