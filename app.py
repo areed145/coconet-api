@@ -378,12 +378,13 @@ def map_awc_update():
     zoom = request.args['zoom']
     satellite = request.args['satellite']
     radar = request.args['radar']
+    analysis = request.args['analysis']
     lightning = request.args['lightning']
     precip = request.args['precip']
     watchwarn = request.args['watchwarn']
     temp = request.args['temp']
     graphJSON = figs.create_map_awc(
-        prop_awc, lat, lon, zoom, satellite, radar, lightning, precip, watchwarn, temp)
+        prop_awc, lat, lon, zoom, satellite, radar, lightning, analysis, precip, watchwarn, temp)
     return graphJSON
 
 

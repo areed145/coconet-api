@@ -644,7 +644,7 @@ def create_map_oilgas():
     return graphJSON, df_wells
 
 
-def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', lightning='0', precip='0', watchwarn='0', temp='0'):
+def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', lightning='0', analysis='0', precip='0', watchwarn='0', temp='0'):
     params = {'flight_category': [0, 0, 0, 0, ''],
               'temp_c': [0, 100, 1.8, 32, 'F'],
               'temp_c_var': [0, 100, 1.8, 0, 'F'],
@@ -874,6 +874,9 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', ligh
     if satellite == '1':
         layers.append(dict(below='traces', opacity=0.5, sourcetype='raster', source=[
                       'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png8&layers=16&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+    if analysis == '1':
+        layers.append(dict(below='traces', sourcetype='raster', source=[
+                      'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/natl_fcst_wx_chart/MapServer/export?transparent=true&format=png8&layers=16&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
     if radar == '1':
         layers.append(dict(below='traces', sourcetype='raster', source=[
                       'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer/export?transparent=true&format=png8&layers=show%3A3&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
