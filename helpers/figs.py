@@ -1216,7 +1216,7 @@ def create_wx_figs(time, sid):
         go.Scatter(x=df_wx_raw.index,
                    y=df_wx_raw['dewpoint_f'],
                    name='Dewpoint (F)',
-                   line=dict(color='rgb(255, 127, 63)', width=3, shape='spline',
+                   line=dict(color='rgb(63, 127, 255)', width=3, shape='spline',
                              smoothing=0.7),
                    xaxis='x', yaxis='y2',
                    mode='lines'),
@@ -1236,7 +1236,7 @@ def create_wx_figs(time, sid):
                                       side='right',
                                       range=[td_min, td_max],
                                       fixedrange=True,
-                                      titlefont=dict(color='rgb(255, 127, 63)')
+                                      titlefont=dict(color='rgb(63, 127, 255)')
                                       ),
                           xaxis=dict(type='date',
                                      # fixedrange=True,
@@ -1250,14 +1250,14 @@ def create_wx_figs(time, sid):
         go.Scatter(x=df_wx_raw.index,
                    y=df_wx_raw['pressure_in'],
                    name='Pressure (inHg)',
-                   line=dict(color='rgb(127, 255, 63)', width=3, shape='spline',
+                   line=dict(color='rgb(255, 127, 63)', width=3, shape='spline',
                              smoothing=0.7),
                    xaxis='x', yaxis='y',
                    mode='lines'),
         go.Scatter(x=df_wx_raw.index,
                    y=df_wx_raw['relative_humidity'],
                    name='Humidity (%)',
-                   line=dict(color='rgb(63, 127, 255)', width=3, shape='spline',
+                   line=dict(color='rgb(127, 255, 63)', width=3, shape='spline',
                              smoothing=0.7),
                    xaxis='x', yaxis='y2',
                    mode='lines'),
@@ -1269,7 +1269,7 @@ def create_wx_figs(time, sid):
                                      title='Pressure (inHg)',
                                      # range=[0,120],
                                      fixedrange=True,
-                                     titlefont=dict(color='rgb(127, 255, 63)')
+                                     titlefont=dict(color='rgb(255, 127, 63)')
                                      ),
                           yaxis2=dict(domain=[0.02, 0.98],
                                       title='Humidity (%)',
@@ -1277,7 +1277,7 @@ def create_wx_figs(time, sid):
                                       side='right',
                                       # range=[0,120],
                                       fixedrange=True,
-                                      titlefont=dict(color='rgb(63, 127, 255)')
+                                      titlefont=dict(color='rgb(127, 255, 63)')
                                       ),
                           xaxis=dict(type='date',
                                      # fixedrange=True,
