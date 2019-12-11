@@ -198,8 +198,8 @@ if ($('#iot').length > 0) {
 
     setTimeout(function iter() {
         iot_fetch();
-        timerId = setTimeout(iter, 1000 * time_int);
-    }, 1000 * time_int);
+        timerId = setTimeout(iter, 1000 * 5);
+    }, 1000 * 5);
 
 }
 
