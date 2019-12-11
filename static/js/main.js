@@ -4,7 +4,7 @@ function wx_fetch() {
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
-                'time_wx': document.getElementById('time_wx').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
         })
@@ -35,7 +35,7 @@ function iot_fetch() {
             contentType: 'application/json;charset=UTF-8',
             data: {
                 'sensor_iot': selections,
-                'time_iot': document.getElementById('time_iot').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
         })
@@ -52,7 +52,7 @@ function aprs_fetch() {
             data: {
                 'type_aprs': type_aprs,
                 'prop_aprs': document.getElementById('prop_aprs').value,
-                'time_aprs': document.getElementById('time_aprs').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
         })
@@ -120,13 +120,13 @@ if ($('#table_paged').length > 0) {
 
 if ($('#station_history').length > 0) {
 
-    $('#time_wx').on('change', function () {
+    $('#time_int').on('change', function () {
         $.ajax({
             url: "/wx/graph",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
-                'time_wx': document.getElementById('time_wx').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
             success: function (data) {
@@ -164,7 +164,7 @@ if ($('#iot').length > 0) {
             contentType: 'application/json;charset=UTF-8',
             data: {
                 'sensor_iot': selections,
-                'time_iot': document.getElementById('time_iot').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
             success: function (data) {
@@ -173,7 +173,7 @@ if ($('#iot').length > 0) {
         });
     });
 
-    $('#time_iot').on('change', function () {
+    $('#time_int').on('change', function () {
         var selections = [];
         $('#sensor_iot option').each(function (i) {
             if (this.selected == true) {
@@ -187,7 +187,7 @@ if ($('#iot').length > 0) {
             contentType: 'application/json;charset=UTF-8',
             data: {
                 'sensor_iot': selections,
-                'time_iot': document.getElementById('time_iot').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
             success: function (data) {
@@ -204,28 +204,28 @@ if ($('#iot').length > 0) {
 }
 
 if ($('#aprs').length > 0) {
-    var time_aprs = document.getElementById('time_aprs').value;
+    var time_int = document.getElementById('time_int').value;
     var time_int = 15;
 
-    if (time_aprs == 'm_5') {
+    if (time_int == 'm_5') {
         time_int = 1;
     }
-    if (time_aprs == 'h_1') {
+    if (time_int == 'h_1') {
         time_int = 20;
     }
-    if (time_aprs == 'h_6') {
+    if (time_int == 'h_6') {
         time_int = 60;
     }
-    if (time_aprs == 'd_1') {
+    if (time_int == 'd_1') {
         time_int = 60;
     }
-    if (time_aprs == 'd_2') {
+    if (time_int == 'd_2') {
         time_int = 60;
     }
-    if (time_aprs == 'd_7') {
+    if (time_int == 'd_7') {
         time_int = 60;
     }
-    if (time_aprs == 'd_30') {
+    if (time_int == 'd_30') {
         time_int = 60;
     }
 
@@ -237,7 +237,7 @@ if ($('#aprs').length > 0) {
             data: {
                 'type_aprs': type_aprs,
                 'prop_aprs': document.getElementById('prop_aprs').value,
-                'time_aprs': document.getElementById('time_aprs').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
             success: function (data) {
@@ -246,28 +246,28 @@ if ($('#aprs').length > 0) {
         });
     });
 
-    $('#time_aprs').on('change', function () {
-        var time_aprs = document.getElementById('time_aprs').value;
+    $('#time_int').on('change', function () {
+        var time_int = document.getElementById('time_int').value;
         var time_int = 15;
-        if (time_aprs == 'm_5') {
+        if (time_int == 'm_5') {
             time_int = 1;
         }
-        if (time_aprs == 'h_1') {
+        if (time_int == 'h_1') {
             time_int = 20;
         }
-        if (time_aprs == 'h_6') {
+        if (time_int == 'h_6') {
             time_int = 60;
         }
-        if (time_aprs == 'd_1') {
+        if (time_int == 'd_1') {
             time_int = 60;
         }
-        if (time_aprs == 'd_2') {
+        if (time_int == 'd_2') {
             time_int = 60;
         }
-        if (time_aprs == 'd_7') {
+        if (time_int == 'd_7') {
             time_int = 60;
         }
-        if (time_aprs == 'd_30') {
+        if (time_int == 'd_30') {
             time_int = 60;
         }
         $.ajax({
@@ -277,7 +277,7 @@ if ($('#aprs').length > 0) {
             data: {
                 'type_aprs': type_aprs,
                 'prop_aprs': document.getElementById('prop_aprs').value,
-                'time_aprs': document.getElementById('time_aprs').value,
+                'time_int': document.getElementById('time_int').value,
             },
             dataType: "json",
             success: function (data) {
