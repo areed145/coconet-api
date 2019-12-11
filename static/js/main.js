@@ -146,9 +146,6 @@ if ($('#wx').length > 0) {
         wx_fetch();
         timerId = setTimeout(iter, 1000 * time_int);
       }, 1000 * time_int);
-
-    // var timer = setTimeout(wx_fetch, 1000 * 30);
-
 }
 
 if ($('#iot').length > 0) {
@@ -203,8 +200,6 @@ if ($('#iot').length > 0) {
         iot_fetch();
         timerId = setTimeout(iter, 1000 * time_int);
       }, 1000 * time_int);
-
-    // var timer = setTimeout(iot_fetch, 1000 * 5);
 
 }
 
@@ -291,10 +286,11 @@ if ($('#aprs').length > 0) {
                 Plotly.react('plot_alt', data.plot_alt);
                 Plotly.react('plot_course', data.plot_course);
                 Proc(data.rows);
-                // setTimeout(function iter() {
-                //     aprs_fetch();
-                //     timerId = setTimeout(iter, 1000 * time_int);
-                //   }, 1000 * time_int);
+                clearTimeout(timerId);
+                setTimeout(function iter() {
+                    aprs_fetch();
+                    timerId = setTimeout(iter, 1000 * time_int);
+                  }, 1000 * time_int);
             }
         });
     });
