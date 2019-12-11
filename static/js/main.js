@@ -1,3 +1,117 @@
+function wx_fetch() {
+    $.ajax({
+            url: "/wx/graph",
+            type: "GET",
+            contentType: 'application/json;charset=UTF-8',
+            data: {
+                'time_wx': document.getElementById('time_wx').value,
+            },
+            dataType: "json",
+        })
+        .done(function (data) {
+            Plotly.react('fig_td', data.fig_td);
+            Plotly.react('fig_pr', data.fig_pr);
+            Plotly.react('fig_cb', data.fig_cb);
+            Plotly.react('fig_pc', data.fig_pc);
+            Plotly.react('fig_wd', data.fig_wd);
+            Plotly.react('fig_su', data.fig_su);
+            Plotly.react('fig_wr', data.fig_wr);
+            Plotly.newPlot('fig_thp', data.fig_thp);
+
+        });
+}
+
+function iot_fetch() {
+    var selections = [];
+    $('#sensor_iot option').each(function (i) {
+        if (this.selected == true) {
+            selections.push(this.value);
+        }
+    });
+
+    $.ajax({
+            url: "/iot/graph",
+            type: "GET",
+            contentType: 'application/json;charset=UTF-8',
+            data: {
+                'sensor_iot': selections,
+                'time_iot': document.getElementById('time_iot').value,
+            },
+            dataType: "json",
+        })
+        .done(function (data) {
+            Plotly.react('graph_iot', data);
+        });
+}
+
+function aprs_fetch() {
+    $.ajax({
+            url: "/aprs/map",
+            type: "GET",
+            contentType: 'application/json;charset=UTF-8',
+            data: {
+                'type_aprs': type_aprs,
+                'prop_aprs': document.getElementById('prop_aprs').value,
+                'time_aprs': document.getElementById('time_aprs').value,
+            },
+            dataType: "json",
+        })
+        .done(function (data) {
+            Plotly.react('map_aprs', data.map_aprs);
+            Plotly.react('plot_speed', data.plot_speed);
+            Plotly.react('plot_alt', data.plot_alt);
+            Plotly.react('plot_course', data.plot_course);
+            Proc(data.rows);
+        });
+}
+
+function awc_fetch() {
+    var map_awc = document.getElementById('map_awc');
+    var lat = map_awc.layout.mapbox.center.lat;
+    var lon = map_awc.layout.mapbox.center.lon;
+    var zoom = map_awc.layout.mapbox.zoom;
+
+    $.ajax({
+            url: "/awc/update",
+            type: "GET",
+            contentType: 'application/json;charset=UTF-8',
+            data: {
+                'prop_awc': document.getElementById('prop_awc').value,
+                'lat': lat,
+                'lon': lon,
+                'zoom': zoom,
+                'satellite': satellite,
+                'radar': radar,
+                'lightning': lightning,
+                'analysis': analysis,
+                'precip': precip,
+                'watchwarn': watchwarn,
+                'temp': temp,
+            },
+            dataType: "json",
+        })
+        .done(function (data) {
+            Plotly.react('map_awc', data);
+        });
+}
+
+function Proc(rows) {
+    var content = '';
+    for (var i = 0; i < rows.length; i++) {
+        content += '<tr>';
+        content += '<td>' + rows[i].timestamp_ + '</td>';
+        content += '<td>' + rows[i].from + '</td>';
+        content += '<td>' + rows[i].to + '</td>';
+        content += '<td>' + rows[i].latitude + '</td>';
+        content += '<td>' + rows[i].longitude + '</td>';
+        content += '<td>' + rows[i].speed + '</td>';
+        content += '<td>' + rows[i].altitude + '</td>';
+        content += '<td>' + rows[i].course + '</td>';
+        content += '</tr>';
+    }
+    $('#table_full tbody').html(content);
+}
+
 if ($('#table_paged').length > 0) {
     $(document).ready(function () {
         $('#table_paged').DataTable();
@@ -28,28 +142,12 @@ if ($('#wx').length > 0) {
         });
     });
 
-    var timer = setTimeout(function () {
-        $.ajax({
-                url: "/wx/graph",
-                type: "GET",
-                contentType: 'application/json;charset=UTF-8',
-                data: {
-                    'time_wx': document.getElementById('time_wx').value,
-                },
-                dataType: "json",
-            })
-            .done(function (data) {
-                Plotly.react('fig_td', data.fig_td);
-                Plotly.react('fig_pr', data.fig_pr);
-                Plotly.react('fig_cb', data.fig_cb);
-                Plotly.react('fig_pc', data.fig_pc);
-                Plotly.react('fig_wd', data.fig_wd);
-                Plotly.react('fig_su', data.fig_su);
-                Plotly.react('fig_wr', data.fig_wr);
-                Plotly.newPlot('fig_thp', data.fig_thp);
+    setTimeout(function iter() {
+        wx_fetch();
+        timerId = setTimeout(iter, 1000 * time_int);
+      }, 1000 * time_int);
 
-            });
-    }, 1000 * 30);
+    // var timer = setTimeout(wx_fetch, 1000 * 30);
 
 }
 
@@ -101,46 +199,13 @@ if ($('#iot').length > 0) {
         });
     });
 
-    var timer = setTimeout(function () {
-        var selections = [];
-        $('#sensor_iot option').each(function (i) {
-            if (this.selected == true) {
-                selections.push(this.value);
-            }
-        });
+    setTimeout(function iter() {
+        iot_fetch();
+        timerId = setTimeout(iter, 1000 * time_int);
+      }, 1000 * time_int);
 
-        $.ajax({
-                url: "/iot/graph",
-                type: "GET",
-                contentType: 'application/json;charset=UTF-8',
-                data: {
-                    'sensor_iot': selections,
-                    'time_iot': document.getElementById('time_iot').value,
-                },
-                dataType: "json",
-            })
-            .done(function (data) {
-                Plotly.react('graph_iot', data);
-            });
-    }, 1000 * 5);
+    // var timer = setTimeout(iot_fetch, 1000 * 5);
 
-}
-
-function Proc(rows) {
-    var content = '';
-    for (var i = 0; i < rows.length; i++) {
-        content += '<tr>';
-        content += '<td>' + rows[i].timestamp_ + '</td>';
-        content += '<td>' + rows[i].from + '</td>';
-        content += '<td>' + rows[i].to + '</td>';
-        content += '<td>' + rows[i].latitude + '</td>';
-        content += '<td>' + rows[i].longitude + '</td>';
-        content += '<td>' + rows[i].speed + '</td>';
-        content += '<td>' + rows[i].altitude + '</td>';
-        content += '<td>' + rows[i].course + '</td>';
-        content += '</tr>';
-    }
-    $('#table_full tbody').html(content);
 }
 
 if ($('#aprs').length > 0) {
@@ -226,50 +291,19 @@ if ($('#aprs').length > 0) {
                 Plotly.react('plot_alt', data.plot_alt);
                 Plotly.react('plot_course', data.plot_course);
                 Proc(data.rows);
+                // setTimeout(function iter() {
+                //     aprs_fetch();
+                //     timerId = setTimeout(iter, 1000 * time_int);
+                //   }, 1000 * time_int);
             }
         });
-        var timer = setTimeout(function () {
-            $.ajax({
-                    url: "/aprs/map",
-                    type: "GET",
-                    contentType: 'application/json;charset=UTF-8',
-                    data: {
-                        'type_aprs': type_aprs,
-                        'prop_aprs': document.getElementById('prop_aprs').value,
-                        'time_aprs': document.getElementById('time_aprs').value,
-                    },
-                    dataType: "json",
-                })
-                .done(function (data) {
-                    Plotly.react('map_aprs', data.map_aprs);
-                    Plotly.react('plot_speed', data.plot_speed);
-                    Plotly.react('plot_alt', data.plot_alt);
-                    Plotly.react('plot_course', data.plot_course);
-                    Proc(data.rows);
-                });
-        }, 1000 * time_int);
     });
 
-    var timer = setTimeout(function () {
-        $.ajax({
-                url: "/aprs/map",
-                type: "GET",
-                contentType: 'application/json;charset=UTF-8',
-                data: {
-                    'type_aprs': type_aprs,
-                    'prop_aprs': document.getElementById('prop_aprs').value,
-                    'time_aprs': document.getElementById('time_aprs').value,
-                },
-                dataType: "json",
-            })
-            .done(function (data) {
-                Plotly.react('map_aprs', data.map_aprs);
-                Plotly.react('plot_speed', data.plot_speed);
-                Plotly.react('plot_alt', data.plot_alt);
-                Plotly.react('plot_course', data.plot_course);
-                Proc(data.rows);
-            });
-    }, 1000 * time_int);
+    setTimeout(function iter() {
+        aprs_fetch();
+        timerId = setTimeout(iter, 1000 * time_int);
+      }, 1000 * time_int);
+
 }
 
 if ($('#awc').length > 0) {
@@ -560,34 +594,11 @@ if ($('#awc').length > 0) {
         });
     });
 
-    var timer = setTimeout(function () {
-        var map_awc = document.getElementById('map_awc');
-        var lat = map_awc.layout.mapbox.center.lat;
-        var lon = map_awc.layout.mapbox.center.lon;
-        var zoom = map_awc.layout.mapbox.zoom;
+    setTimeout(function iter() {
+        awc_fetch();
+        timerId = setTimeout(iter, 1000 * 60);
+      }, 1000 * 60);
 
-        $.ajax({
-                url: "/awc/update",
-                type: "GET",
-                contentType: 'application/json;charset=UTF-8',
-                data: {
-                    'prop_awc': document.getElementById('prop_awc').value,
-                    'lat': lat,
-                    'lon': lon,
-                    'zoom': zoom,
-                    'satellite': satellite,
-                    'radar': radar,
-                    'lightning': lightning,
-                    'analysis': analysis,
-                    'precip': precip,
-                    'watchwarn': watchwarn,
-                    'temp': temp,
-                },
-                dataType: "json",
-            })
-            .done(function (data) {
-                Plotly.react('map_awc', data);
-            });
-    }, 1000 * 60);
+    // var timer = setTimeout(awc_fetch, 1000 * 60);
 
 }
