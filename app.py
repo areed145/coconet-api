@@ -94,9 +94,9 @@ def station_live():
 @app.route('/station_history')
 def station_history():
     g.track_var['page'] = 'station_history'
-    time_wx = 'd_1'
+    time_int = 'd_1'
     fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
-        time_wx, sid)
+        time_int, sid)
     return render_template('station_history.html', times=times, fig_td=fig_td, fig_pr=fig_pr, fig_cb=fig_cb, fig_pc=fig_pc, fig_wd=fig_wd, fig_su=fig_su, fig_wr=fig_wr, fig_thp=fig_thp)
 
 
@@ -131,8 +131,8 @@ def soundings():
 def iot():
     g.track_var['page'] = 'iot'
     sensor_iot = ['sensor.load_1m']
-    time_iot = 'm_5'
-    graph_iot = figs.create_graph_iot(sensor_iot, time_iot)
+    time_int = 'm_5'
+    graph_iot = figs.create_graph_iot(sensor_iot, time_int)
     return render_template('iot.html', times=times, plot=graph_iot)
 
 
@@ -146,11 +146,11 @@ def aprs(type_aprs):
     else:
         prop_aprs = 'speed'
         if type_aprs == 'radius':
-            time_aprs = 'm_5'
+            time_int = 'm_5'
         else:
-            time_aprs = 'd_7'
+            time_int = 'd_7'
         map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
-            type_aprs, prop_aprs, time_aprs)
+            type_aprs, prop_aprs, time_int)
         return render_template('aprs.html', type_aprs=type_aprs, times=times, map_aprs=map_aprs, plot_speed=plot_speed, plot_alt=plot_alt, plot_course=plot_course, rows=rows)
 
 
@@ -392,9 +392,9 @@ def map_awc_update():
 def map_aprs_change():
     type_aprs = request.args['type_aprs']
     prop_aprs = request.args['prop_aprs']
-    time_aprs = request.args['time_aprs']
+    time_int = request.args['time_int']
     map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
-        type_aprs, prop_aprs, time_aprs)
+        type_aprs, prop_aprs, time_int)
     data = {}
     data['map_aprs'] = json.loads(map_aprs)
     data['plot_speed'] = json.loads(plot_speed)
@@ -406,9 +406,9 @@ def map_aprs_change():
 
 @app.route('/wx/graph', methods=['GET', 'POST'])
 def graph_wx_change():
-    time_wx = request.args['time_wx']
+    time_int = request.args['time_int']
     fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
-        time_wx, sid)
+        time_int, sid)
     data = {}
     data['fig_td'] = json.loads(fig_td)
     data['fig_pr'] = json.loads(fig_pr)
@@ -431,8 +431,8 @@ def sounding_update():
 @app.route('/iot/graph', methods=['GET', 'POST'])
 def graph_iot_change():
     sensor_iot = request.args.getlist("sensor_iot[]")
-    time_iot = request.args['time_iot']
-    graphJSON = figs.create_graph_iot(sensor_iot, time_iot)
+    time_int = request.args['time_int']
+    graphJSON = figs.create_graph_iot(sensor_iot, time_int)
     return graphJSON
 
 
