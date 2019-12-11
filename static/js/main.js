@@ -144,8 +144,8 @@ if ($('#station_history').length > 0) {
 
     setTimeout(function iter() {
         wx_fetch();
-        timerId = setTimeout(iter, 1000 * time_int);
-    }, 1000 * time_int);
+        timerId = setTimeout(iter, 1000 * 60);
+    }, 1000 * 60);
 }
 
 if ($('#iot').length > 0) {
