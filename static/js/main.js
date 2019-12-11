@@ -118,7 +118,7 @@ if ($('#table_paged').length > 0) {
     });
 }
 
-if ($('#wx').length > 0) {
+if ($('#station_history').length > 0) {
 
     $('#time_wx').on('change', function () {
         $.ajax({
