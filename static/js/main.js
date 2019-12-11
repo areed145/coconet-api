@@ -28,7 +28,7 @@ if ($('#wx').length > 0) {
         });
     });
 
-    setInterval(function () {
+    var timer = setInterval(function () {
         $.ajax({
                 url: "/wx/graph",
                 type: "GET",
@@ -101,7 +101,7 @@ if ($('#iot').length > 0) {
         });
     });
 
-    setInterval(function () {
+    var timer = setInterval(function () {
         var selections = [];
         $('#sensor_iot option').each(function (i) {
             if (this.selected == true) {
@@ -126,10 +126,27 @@ if ($('#iot').length > 0) {
 
 }
 
+function Proc(rows) {
+    var content = '';
+    for (var i = 0; i < rows.length; i++) {
+        content += '<tr>';
+        content += '<td>' + rows[i].timestamp_ + '</td>';
+        content += '<td>' + rows[i].from + '</td>';
+        content += '<td>' + rows[i].to + '</td>';
+        content += '<td>' + rows[i].latitude + '</td>';
+        content += '<td>' + rows[i].longitude + '</td>';
+        content += '<td>' + rows[i].speed + '</td>';
+        content += '<td>' + rows[i].altitude + '</td>';
+        content += '<td>' + rows[i].course + '</td>';
+        content += '</tr>';
+    }
+    $('#table_full tbody').html(content);
+}
+
 if ($('#aprs').length > 0) {
     var time_aprs = document.getElementById('time_aprs').value;
-    console.log(type_aprs);
     var time_int = 15;
+
     if (time_aprs == 'm_5') {
         time_int = 1;
     }
@@ -150,23 +167,6 @@ if ($('#aprs').length > 0) {
     }
     if (time_aprs == 'd_30') {
         time_int = 60;
-    }
-
-    function Proc(rows) {
-        var content = '';
-        for (var i = 0; i < rows.length; i++) {
-            content += '<tr>';
-            content += '<td>' + rows[i].timestamp_ + '</td>';
-            content += '<td>' + rows[i].from + '</td>';
-            content += '<td>' + rows[i].to + '</td>';
-            content += '<td>' + rows[i].latitude + '</td>';
-            content += '<td>' + rows[i].longitude + '</td>';
-            content += '<td>' + rows[i].speed + '</td>';
-            content += '<td>' + rows[i].altitude + '</td>';
-            content += '<td>' + rows[i].course + '</td>';
-            content += '</tr>';
-        }
-        $('#table_full tbody').html(content);
     }
 
     $('#prop_aprs').on('change', function () {
@@ -210,7 +210,6 @@ if ($('#aprs').length > 0) {
         if (time_aprs == 'd_30') {
             time_int = 60;
         }
-        console.log(time_int);
         $.ajax({
             url: "/aprs/map",
             type: "GET",
@@ -229,7 +228,7 @@ if ($('#aprs').length > 0) {
                 Proc(data.rows);
             }
         });
-        setInterval(function () {
+        var timer = setInterval(function () {
             $.ajax({
                     url: "/aprs/map",
                     type: "GET",
@@ -251,7 +250,7 @@ if ($('#aprs').length > 0) {
         }, 1000 * time_int);
     });
 
-    setInterval(function () {
+    var timer = setInterval(function () {
         $.ajax({
                 url: "/aprs/map",
                 type: "GET",
@@ -561,7 +560,7 @@ if ($('#awc').length > 0) {
         });
     });
 
-    setInterval(function () {
+    var timer = setInterval(function () {
         var map_awc = document.getElementById('map_awc');
         var lat = map_awc.layout.mapbox.center.lat;
         var lon = map_awc.layout.mapbox.center.lon;
