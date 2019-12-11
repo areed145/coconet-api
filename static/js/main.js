@@ -145,7 +145,7 @@ if ($('#wx').length > 0) {
     setTimeout(function iter() {
         wx_fetch();
         timerId = setTimeout(iter, 1000 * time_int);
-      }, 1000 * time_int);
+    }, 1000 * time_int);
 }
 
 if ($('#iot').length > 0) {
@@ -199,7 +199,7 @@ if ($('#iot').length > 0) {
     setTimeout(function iter() {
         iot_fetch();
         timerId = setTimeout(iter, 1000 * time_int);
-      }, 1000 * time_int);
+    }, 1000 * time_int);
 
 }
 
@@ -286,19 +286,19 @@ if ($('#aprs').length > 0) {
                 Plotly.react('plot_alt', data.plot_alt);
                 Plotly.react('plot_course', data.plot_course);
                 Proc(data.rows);
-                clearTimeout(timerId);
-                setTimeout(function iter() {
-                    aprs_fetch();
-                    timerId = setTimeout(iter, 1000 * time_int);
-                  }, 1000 * time_int);
             }
         });
+        clearTimeout(timerId);
+        setTimeout(function iter() {
+            aprs_fetch();
+            timerId = setTimeout(iter, 1000 * time_int);
+        }, 1000 * time_int);
     });
 
     setTimeout(function iter() {
         aprs_fetch();
         timerId = setTimeout(iter, 1000 * time_int);
-      }, 1000 * time_int);
+    }, 1000 * time_int);
 
 }
 
@@ -593,7 +593,7 @@ if ($('#awc').length > 0) {
     setTimeout(function iter() {
         awc_fetch();
         timerId = setTimeout(iter, 1000 * 60);
-      }, 1000 * 60);
+    }, 1000 * 60);
 
     // var timer = setTimeout(awc_fetch, 1000 * 60);
 
