@@ -28,7 +28,7 @@ if ($('#wx').length > 0) {
         });
     });
 
-    var timer = setInterval(function () {
+    var timer = setTimeout(function () {
         $.ajax({
                 url: "/wx/graph",
                 type: "GET",
@@ -101,7 +101,7 @@ if ($('#iot').length > 0) {
         });
     });
 
-    var timer = setInterval(function () {
+    var timer = setTimeout(function () {
         var selections = [];
         $('#sensor_iot option').each(function (i) {
             if (this.selected == true) {
@@ -228,7 +228,7 @@ if ($('#aprs').length > 0) {
                 Proc(data.rows);
             }
         });
-        var timer = setInterval(function () {
+        var timer = setTimeout(function () {
             $.ajax({
                     url: "/aprs/map",
                     type: "GET",
@@ -250,7 +250,7 @@ if ($('#aprs').length > 0) {
         }, 1000 * time_int);
     });
 
-    var timer = setInterval(function () {
+    var timer = setTimeout(function () {
         $.ajax({
                 url: "/aprs/map",
                 type: "GET",
@@ -560,7 +560,7 @@ if ($('#awc').length > 0) {
         });
     });
 
-    var timer = setInterval(function () {
+    var timer = setTimeout(function () {
         var map_awc = document.getElementById('map_awc');
         var lat = map_awc.layout.mapbox.center.lat;
         var lon = map_awc.layout.mapbox.center.lon;
