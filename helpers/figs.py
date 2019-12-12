@@ -256,64 +256,23 @@ def create_graph_iot(sensor, time):
 
 def get_prodinj(wells):
     db = client.petroleum
-    df = pd.DataFrame()
-    try:
-        df_ = pd.DataFrame(list(db.doggr.aggregate([
-            {'$unwind': '$prod'},
-            {'$match': {'api': {'$in': wells}}},
-            {'$project': {
-                'api': 1,
-                'prod.date': 1,
-                'prod.oil': 1,
-                'prod.water': 1,
-                'prod.gas': 1,
-                'prod.oilgrav': 1,
-                'prod.pcsg': 1,
-                'prod.ptbg': 1,
-                'prod.btu': 1,
-            }}
-        ])))
-        df_prod = pd.DataFrame(list(df_['prod']))
-        df_prod['api'] = df_['api']
-        df_prod = df_prod.replace(0, np.nan)
-        df_prod.dropna(subset=['oil', 'water', 'gas', 'oilgrav',
-                               'pcsg', 'ptbg', 'btu'], how='all', inplace=True)
-        df_prod = df_prod.groupby(by=['api', 'date']).agg(
-            {'oil': 'sum', 'water': 'sum', 'gas': 'sum', 'oilgrav': 'mean', 'pcsg': 'max', 'ptbg': 'max', 'btu': 'mean'}).reset_index()
-        df = df.append(df_prod)
-    except:
-        pass
-    try:
-        df_ = pd.DataFrame(list(db.doggr.aggregate([
-            {'$unwind': '$inj'},
-            {'$match': {'api': {'$in': wells}}},
-            {'$project': {
-                'api': 1,
-                'inj.date': 1,
-                'inj.wtrstm': 1,
-                'inj.gasair': 1,
-                'inj.pinjsurf': 1,
-            }}
-        ])))
-        df_inj = pd.DataFrame(list(df_['inj']))
-        df_inj['api'] = df_['api']
-        df_inj = df_inj.replace(0, np.nan)
-        df_inj.dropna(subset=['wtrstm', 'gasair',
-                              'pinjsurf'], how='all', inplace=True)
-        df_inj = df_inj.groupby(by=['api', 'date']).agg(
-            {'wtrstm': 'sum', 'gasair': 'sum', 'pinjsurf': 'max'}).reset_index()
-        try:
-            df = pd.merge(df, df_inj, how='outer', on=['api', 'date'])
-        except:
-            df = df.append(df_inj)
-    except:
-        pass
+
+    df = pd.DataFrame(list(db.doggr.aggregate([
+        {'$unwind': '$prodinj'},
+        {'$match': {'api': {'$in': wells}}},
+    ])))
+
+    for row in df.iterrows():
+        df_ = pd.DataFrame(row[1]['prodinj']).T
+        df_['api'] = row[1]['api']
+    df_['date'] = pd.to_datetime(df_['date'])
+    df = df_
 
     df.sort_values(by=['api', 'date'], inplace=True)
     df.reset_index(drop=True, inplace=True)
     df.fillna(0, inplace=True)
 
-    for col in ['date', 'oil', 'water', 'gas', 'oilgrav', 'pcsg', 'ptbg', 'btu', 'wtrstm', 'gasair', 'pinjsurf']:
+    for col in ['date', 'oil', 'water', 'gas', 'oilgrav', 'pcsg', 'ptbg', 'btu', 'steam', 'water_i', 'cyclic', 'gas_i', 'air', 'pinjsurf']:
         if col not in df:
             df[col] = 0
         if col not in ['date']:
@@ -350,7 +309,7 @@ def get_offsets_oilgas(header, rad):
 
     data_offset_stm = [
         go.Heatmap(
-            z=df_offsets['wtrstm'],
+            z=df_offsets['steam'],
             x=df_offsets['date'],
             y=df_offsets['api'],
             colorscale=scl_stm_log,
@@ -426,10 +385,30 @@ def get_graph_oilgas(api):
         ),
         mode='lines'),
         go.Scatter(x=df['date'],
-                   y=df['wtrstm'],
-                   name='wtrstm',
+                   y=df['steam'],
+                   name='steam',
+                   line=dict(
+            color='#e32980',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['cyclic'],
+                   name='cyclic',
                    line=dict(
             color='#fcd555',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+        mode='lines'),
+        go.Scatter(x=df['date'],
+                   y=df['water_i'],
+                   name='water_inj',
+                   line=dict(
+            color='#03b6fc',
             shape='spline',
             smoothing=0.3,
             width=3
@@ -439,7 +418,7 @@ def get_graph_oilgas(api):
                    y=df['gasair'],
                    name='gasair',
                    line=dict(
-            color='#e32980',
+            color='#fc7703',
             shape='spline',
             smoothing=0.3,
             width=3
