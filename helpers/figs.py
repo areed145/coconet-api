@@ -291,9 +291,9 @@ def get_offsets_oilgas(header, rad):
         lat = header['latitude']
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
-                                            'longitude': {'$gt': lon-r, '$lt': lon+r}})))
+                                              'longitude': {'$gt': lon-r, '$lt': lon+r}})))
         df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
-                            * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
+                               * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
         df = df[df['dist'] <= rad]
         df.sort_values(by='dist', inplace=True)
         offsets = df['api'].tolist()
@@ -341,15 +341,15 @@ def get_offsets_oilgas(header, rad):
         ]
 
         layout = go.Layout(autosize=True,
-                        margin=dict(r=10, t=10, b=30, l=150, pad=0),
-                        yaxis=dict(autorange='reversed'),
-                        )
+                           margin=dict(r=10, t=10, b=30, l=150, pad=0),
+                           yaxis=dict(autorange='reversed'),
+                           )
         graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
-                                        cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
-                                        cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
-                                        cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
 
     except:
         graphJSON_offset_oil = None
@@ -428,141 +428,144 @@ def get_graph_oilgas(api):
             header[col] = df_header[col][0]
         except:
             pass
+    try:
+        df = get_prodinj([api])
 
-    df = get_prodinj([api])
-
-    data = [go.Scatter(x=df['date'],
-                       y=df['oil'],
-                       name='oil',
+        data = [go.Scatter(x=df['date'],
+                           y=df['oil'],
+                           name='oil',
+                           line=dict(
+            color='#50bf37',
+            shape='spline',
+            smoothing=0.3,
+            width=3
+        ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['water'],
+                       name='water',
                        line=dict(
-        color='#50bf37',
-        shape='spline',
-        smoothing=0.3,
-        width=3
-    ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['water'],
-                   name='water',
-                   line=dict(
-            color='#4286f4',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['gas'],
-                   name='gas',
-                   line=dict(
-            color='#ef2626',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['steam'],
-                   name='steam',
-                   line=dict(
-            color='#e32980',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['cyclic'],
-                   name='cyclic',
-                   line=dict(
-            color='#fcd555',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['water_i'],
-                   name='water_inj',
-                   line=dict(
-            color='#03b6fc',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['gasair'],
-                   name='gasair',
-                   line=dict(
-            color='#fc7703',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['oilgrav'],
-                   name='oilgrav',
-                   line=dict(
-            color='#81d636',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['pcsg'],
-                   name='pcsg',
-                   line=dict(
-            color='#4136d6',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['ptbg'],
-                   name='ptbg',
-                   line=dict(
-            color='#7636d6',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['btu'],
-                   name='btu',
-                   line=dict(
-            color='#d636d1',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-        go.Scatter(x=df['date'],
-                   y=df['pinjsurf'],
-                   name='pinjsurf',
-                   line=dict(
-            color='#e38f29',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-        mode='lines'),
-    ]
+                color='#4286f4',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['gas'],
+                       name='gas',
+                       line=dict(
+                color='#ef2626',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['steam'],
+                       name='steam',
+                       line=dict(
+                color='#e32980',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['cyclic'],
+                       name='cyclic',
+                       line=dict(
+                color='#fcd555',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['water_i'],
+                       name='water_inj',
+                       line=dict(
+                color='#03b6fc',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['gasair'],
+                       name='gasair',
+                       line=dict(
+                color='#fc7703',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['oilgrav'],
+                       name='oilgrav',
+                       line=dict(
+                color='#81d636',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['pcsg'],
+                       name='pcsg',
+                       line=dict(
+                color='#4136d6',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['ptbg'],
+                       name='ptbg',
+                       line=dict(
+                color='#7636d6',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['btu'],
+                       name='btu',
+                       line=dict(
+                color='#d636d1',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+            go.Scatter(x=df['date'],
+                       y=df['pinjsurf'],
+                       name='pinjsurf',
+                       line=dict(
+                color='#e38f29',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'),
+        ]
 
-    layout = go.Layout(autosize=True,
-                       hovermode='closest',
-                       showlegend=True,
-                       legend=dict(orientation='h'),
-                       yaxis=dict(type='log'),
-                       uirevision=True,
-                       margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                       )
-    graphJSON = json.dumps(dict(data=data, layout=layout),
-                           cls=plotly.utils.PlotlyJSONEncoder)
+        layout = go.Layout(autosize=True,
+                           hovermode='closest',
+                           showlegend=True,
+                           legend=dict(orientation='h'),
+                           yaxis=dict(type='log'),
+                           uirevision=True,
+                           margin=dict(r=50, t=30, b=30, l=60, pad=0),
+                           )
+        graphJSON = json.dumps(dict(data=data, layout=layout),
+                               cls=plotly.utils.PlotlyJSONEncoder)
+    except:
+        graphJSON = None
+
     return graphJSON, header
 
 

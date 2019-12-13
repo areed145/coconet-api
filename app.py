@@ -289,7 +289,7 @@ def oilgas_detail(api):
     graph_cyclic_jobs = figs.get_cyclic_jobs(header)
     graph_offset_oil, graph_offset_stm, graph_offset_wtr, map_offsets, offsets = figs.get_offsets_oilgas(
         header, 0.1)
-    return render_template('oilgas_details.html', plot=graph_oilgas, header=header, plot_offset_oil=graph_offset_oil, plot_offset_stm=graph_offset_stm, plot_offset_wtr=graph_offset_wtr, plot_cyclic_jobs=graph_cyclic_jobs, offsets=offsets)
+    return render_template('oilgas_details.html', header=header, plot=graph_oilgas, plot_offset_oil=graph_offset_oil, plot_offset_stm=graph_offset_stm, plot_offset_wtr=graph_offset_wtr, plot_cyclic_jobs=graph_cyclic_jobs, offsets=offsets)
 
 
 @cache.cached(timeout=60)
