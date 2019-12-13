@@ -260,17 +260,14 @@ def create_graph_iot(sensor, time):
 
 def get_prodinj(wells):
     db = client.petroleum
-
-    df = pd.DataFrame(list(db.doggr.aggregate([
-        {'$unwind': '$prodinj'},
-        {'$match': {'api': {'$in': wells}}},
-    ])))
-
-    for row in df.iterrows():
-        df_ = pd.DataFrame(row[1]['prodinj']).T
-        df_['api'] = row[1]['api']
-    df_['date'] = pd.to_datetime(df_['date'])
-    df = df_
+    docs = db.doggr.aggregate(
+        [{'$unwind': '$prodinj'}, {'$match': {'api': {'$in': wells}}}, ])
+    df = pd.DataFrame()
+    for x in docs:
+        doc = dict(x)
+        df_ = pd.DataFrame(doc['prodinj'])
+        df_['api'] = doc['api']
+        df = df.append(df_)
 
     df.sort_values(by=['api', 'date'], inplace=True)
     df.reset_index(drop=True, inplace=True)
@@ -279,31 +276,33 @@ def get_prodinj(wells):
     for col in ['date', 'oil', 'water', 'gas', 'oilgrav', 'pcsg', 'ptbg', 'btu', 'steam', 'water_i', 'cyclic', 'gas_i', 'air', 'pinjsurf']:
         if col not in df:
             df[col] = 0
-        if col not in ['date']:
+        if col not in ['date', 'oilgrav', 'pcsg', 'ptbg', 'btu', 'pinjsurf']:
             df[col] = df[col]/30.45
     return df
 
 
 def get_offsets_oilgas(header, rad):
+    db = client.petroleum
     try:
-        db = client.petroleum
-        r = rad/50
+        r = rad/100
         lat = header['latitude']
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
                                               'longitude': {'$gt': lon-r, '$lt': lon+r}})))
+        print(len(df))
         df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
                                * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
         df = df[df['dist'] <= rad]
+        print(len(df))
         df.sort_values(by='dist', inplace=True)
         offsets = df['api'].tolist()
         dists = df['dist'].tolist()
 
         df_offsets = pd.DataFrame()
-        for row in df.iterrows():
+        for idx in range(len(df)):
             try:
-                df_ = pd.DataFrame(row[1]['prodinj']).T
-                df_['api'] = row[1]['api']
+                df_ = pd.DataFrame(df['prodinj'].iloc[idx])
+                df_['api'] = df['api'].iloc[idx]
                 df_['date'] = pd.to_datetime(df_['date'])
                 df_offsets = df_offsets.append(df_)
             except:
@@ -355,6 +354,7 @@ def get_offsets_oilgas(header, rad):
         graphJSON_offset_oil = None
         graphJSON_offset_stm = None
         graphJSON_offset_wtr = None
+        offsets = None
 
     map_offsets = None
 
@@ -365,7 +365,6 @@ def get_cyclic_jobs(header):
     try:
         df_cyclic = pd.DataFrame(header['cyclic_jobs'])
         fig_cyclic_jobs = make_subplots(rows=1, cols=2)
-
         total = len(df_cyclic)
         c0 = np.array([245/256, 200/256, 66/256, 1])
         c1 = np.array([245/256, 218/256, 66/256, 1])
@@ -376,13 +375,15 @@ def get_cyclic_jobs(header):
         cm = LinearSegmentedColormap.from_list(
             'custom', [c0, c1, c2, c3, c4, c5], N=total)
         df_cyclic.sort_values(by='number', inplace=True)
-        for row in df_cyclic.iterrows():
-            color = rgb2hex(cm(row[1]['number']/total))
-            oil = (np.array(row[1]['oil'])-row[1]['oil_pre'])/30.45
+        # for row in df_cyclic.iterrows():
+        for idx in range(len(df_cyclic)):
+            color = rgb2hex(cm(df_cyclic['number'][idx]/total))
+            prod = pd.DataFrame(df_cyclic['prod'][idx])
             fig_cyclic_jobs.add_trace(
                 go.Scatter(
-                    y=oil,
-                    name=row[1]['start'][:10],
+                    x=prod.index,
+                    y=prod['oil']-prod['oil'].loc['0'],
+                    name=df_cyclic['start'][idx][:10],
                     mode='lines',
                     line=dict(
                         color=color,
@@ -390,18 +391,18 @@ def get_cyclic_jobs(header):
                         smoothing=0.3,
                         width=3
                     ),
-                    legendgroup=str(row[1]['number']),
+                    legendgroup=str(df_cyclic['number'][idx]),
                 ),
                 row=1, col=1,
             )
             fig_cyclic_jobs.add_trace(
                 go.Scatter(
-                    x=[row[1]['total']],
-                    y=[row[1]['oil_post']/30.45-row[1]['oil_pre']/30.45],
-                    name=row[1]['start'][:10],
+                    x=[df_cyclic['total'][idx]],
+                    y=[prod['oil'].loc['0']],
+                    name=df_cyclic['start'][idx][:10],
                     mode='markers',
                     marker=dict(color=color, size=10),
-                    legendgroup=str(row[1]['number']),
+                    legendgroup=str(df_cyclic['number'][idx]),
                     showlegend=False,
                 ),
                 row=1, col=2,
@@ -421,13 +422,11 @@ def get_cyclic_jobs(header):
 
 def get_graph_oilgas(api):
     db = client.petroleum
-    df_header = pd.DataFrame(list(db.doggr.find({'api': api})))
-    header = {}
-    for col in ['lease', 'well', 'county', 'countycode', 'district', 'operator', 'operatorcode', 'field', 'fieldcode', 'area', 'areacode', 'section', 'township', 'rnge', 'bm', 'wellstatus', 'pwt', 'spuddate', 'gissrc', 'elev', 'latitude', 'longitude', 'api', 'gas_cum', 'oil_cum', 'water_cum', 'wtrstm_cum', 'cyclic_jobs']:
-        try:
-            header[col] = df_header[col][0]
-        except:
-            pass
+
+    docs = db.doggr.find({'api': api})
+    for x in docs:
+        header = dict(x)
+
     try:
         df = get_prodinj([api])
 
