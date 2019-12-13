@@ -289,11 +289,9 @@ def get_offsets_oilgas(header, rad):
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
                                               'longitude': {'$gt': lon-r, '$lt': lon+r}})))
-        print(len(df))
         df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
                                * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
         df = df[df['dist'] <= rad]
-        print(len(df))
         df.sort_values(by='dist', inplace=True)
         offsets = df['api'].tolist()
         dists = df['dist'].tolist()
