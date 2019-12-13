@@ -166,17 +166,19 @@
                                     "type": "circle",
                                     "source": "source_circle_500",
                                     "paint": {
-                                    "circle-radius": {
-                                        stops: [
-                                        [0, 0],
-                                        [20, metersToPixelsAtMaxZoom(241.4016, lat_c)]
-                                        ],
-                                        base: 2
-                                    },
-                                    "circle-color": "gray",
-                                    "circle-opacity": 0.4
+                                        "circle-radius": {
+                                            stops: [
+                                            [0, 0],
+                                            [20, metersToPixelsAtMaxZoom(160.934, lat_c)]
+                                            ],
+                                            base: 2
+                                        },
+                                    "circle-color": "red",
+                                    "circle-opacity": 0.1,
+                                    "circle-stroke-width": 2,
+                                    "circle-stroke-color": "red",
                                     }
-                                });
+                                },"connections");
                             });
 
                             map.on('click', 'wells', function (e) {
