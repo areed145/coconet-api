@@ -352,61 +352,61 @@ def get_offsets_oilgas(header, rad):
     graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
                                       cls=plotly.utils.PlotlyJSONEncoder)
 
-    # try:
-    df_cyclic = pd.DataFrame(header['cyclic_jobs'])
-    fig_cyclic_jobs = make_subplots(rows=2, cols=1)
+    try:
+        df_cyclic = pd.DataFrame(header['cyclic_jobs'])
+        fig_cyclic_jobs = make_subplots(rows=2, cols=1)
 
-    total = len(df_cyclic)
-    c0 = np.array([245/256, 200/256, 66/256, 1])
-    c1 = np.array([245/256, 218/256, 66/256, 1])
-    c2 = np.array([188/256, 245/256, 66/256, 1])
-    c3 = np.array([108/256, 201/256, 46/256, 1])
-    c4 = np.array([82/256, 138/256, 45/256, 1])
-    c5 = np.array([24/256, 110/256, 45/256, 1])
-    cm = LinearSegmentedColormap.from_list(
-        'custom', [c0, c1, c2, c3, c4, c5], N=total)
-    df_cyclic.sort_values(by='number', inplace=True)
-    for row in df_cyclic.iterrows():
-        color = rgb2hex(cm(row[1]['number']/total))
-        oil = (np.array(row[1]['oil'])-row[1]['oil_pre'])/30.45
-        fig_cyclic_jobs.add_trace(
-            go.Scatter(
-                y=oil,
-                name=row[1]['start'][:10],
-                mode='lines',
-                line=dict(
-                    color=color,
-                    shape='spline',
-                    smoothing=0.3,
-                    width=3
+        total = len(df_cyclic)
+        c0 = np.array([245/256, 200/256, 66/256, 1])
+        c1 = np.array([245/256, 218/256, 66/256, 1])
+        c2 = np.array([188/256, 245/256, 66/256, 1])
+        c3 = np.array([108/256, 201/256, 46/256, 1])
+        c4 = np.array([82/256, 138/256, 45/256, 1])
+        c5 = np.array([24/256, 110/256, 45/256, 1])
+        cm = LinearSegmentedColormap.from_list(
+            'custom', [c0, c1, c2, c3, c4, c5], N=total)
+        df_cyclic.sort_values(by='number', inplace=True)
+        for row in df_cyclic.iterrows():
+            color = rgb2hex(cm(row[1]['number']/total))
+            oil = (np.array(row[1]['oil'])-row[1]['oil_pre'])/30.45
+            fig_cyclic_jobs.add_trace(
+                go.Scatter(
+                    y=oil,
+                    name=row[1]['start'][:10],
+                    mode='lines',
+                    line=dict(
+                        color=color,
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    legendgroup=str(row[1]['number']),
                 ),
-                legendgroup=str(row[1]['number']),
-            ),
-            row=1, col=1,
+                row=1, col=1,
+            )
+            fig_cyclic_jobs.add_trace(
+                go.Scatter(
+                    x=[row[1]['total']],
+                    y=[row[1]['oil_post']/30.45-row[1]['oil_pre']/30.45],
+                    name=row[1]['start'][:10],
+                    mode='markers',
+                    marker=dict(color=color, size=10),
+                    legendgroup=str(row[1]['number']),
+                    showlegend=False,
+                ),
+                row=2, col=1,
+            )
+
+        fig_cyclic_jobs.update_layout(
+            margin={'l': 0, 't': 0, 'b': 0, 'r': 0},
         )
-        fig_cyclic_jobs.add_trace(
-            go.Scatter(
-                x=[row[1]['total']],
-                y=[row[1]['oil_post']/30.45-row[1]['oil_pre']/30.45],
-                name=row[1]['start'][:10],
-                mode='markers',
-                marker=dict(color=color, size=10),
-                legendgroup=str(row[1]['number']),
-                showlegend=False,
-            ),
-            row=2, col=1,
-        )
 
-    fig_cyclic_jobs.update_layout(
-        margin={'l': 0, 't': 0, 'b': 0, 'r': 0},
-    )
+        graphJSON_cyclic_jobs = json.dumps(
+            fig_cyclic_jobs, cls=plotly.utils.PlotlyJSONEncoder)
+    except:
+        graphJSON_cyclic_jobs = None
 
-    graphJSON_cyclic_jobs = json.dumps(
-        fig_cyclic_jobs, cls=plotly.utils.PlotlyJSONEncoder)
-    # except:
-    #     graphJSON_cyclic_jobs = []
-
-    map_offsets = []
+    map_offsets = None
     return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, graphJSON_cyclic_jobs, map_offsets, offsets
 
 
