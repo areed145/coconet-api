@@ -285,73 +285,83 @@ def get_prodinj(wells):
 
 
 def get_offsets_oilgas(header, rad):
-    db = client.petroleum
-    r = rad/50
-    lat = header['latitude']
-    lon = header['longitude']
-    df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
-                                          'longitude': {'$gt': lon-r, '$lt': lon+r}})))
-    df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
-                           * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
-    df = df[df['dist'] <= rad]
-    df.sort_values(by='dist', inplace=True)
-    offsets = df['api'].tolist()
-    dists = df['dist'].tolist()
+    try:
+        db = client.petroleum
+        r = rad/50
+        lat = header['latitude']
+        lon = header['longitude']
+        df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
+                                            'longitude': {'$gt': lon-r, '$lt': lon+r}})))
+        df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
+                            * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
+        df = df[df['dist'] <= rad]
+        df.sort_values(by='dist', inplace=True)
+        offsets = df['api'].tolist()
+        dists = df['dist'].tolist()
 
-    df_offsets = pd.DataFrame()
-    for row in df.iterrows():
-        try:
-            df_ = pd.DataFrame(row[1]['prodinj']).T
-            df_['api'] = row[1]['api']
-            df_['date'] = pd.to_datetime(df_['date'])
-            df_offsets = df_offsets.append(df_)
-        except:
-            pass
+        df_offsets = pd.DataFrame()
+        for row in df.iterrows():
+            try:
+                df_ = pd.DataFrame(row[1]['prodinj']).T
+                df_['api'] = row[1]['api']
+                df_['date'] = pd.to_datetime(df_['date'])
+                df_offsets = df_offsets.append(df_)
+            except:
+                pass
 
-    df_offsets['api'] = df_offsets['api'].apply(
-        lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
-    df_offsets.sort_values(by='api', inplace=True)
+        df_offsets['api'] = df_offsets['api'].apply(
+            lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
+        df_offsets.sort_values(by='api', inplace=True)
 
-    data_offset_oil = [
-        go.Heatmap(
-            z=df_offsets['oil']/30.45,
-            x=df_offsets['date'],
-            y=df_offsets['api'],
-            colorscale=scl_oil_log,
-        ),
-    ]
+        data_offset_oil = [
+            go.Heatmap(
+                z=df_offsets['oil']/30.45,
+                x=df_offsets['date'],
+                y=df_offsets['api'],
+                colorscale=scl_oil_log,
+            ),
+        ]
 
-    data_offset_stm = [
-        go.Heatmap(
-            z=df_offsets['steam']/30.45,
-            x=df_offsets['date'],
-            y=df_offsets['api'],
-            colorscale=scl_stm_log,
-        ),
-    ]
+        data_offset_stm = [
+            go.Heatmap(
+                z=df_offsets['steam']/30.45,
+                x=df_offsets['date'],
+                y=df_offsets['api'],
+                colorscale=scl_stm_log,
+            ),
+        ]
 
-    data_offset_wtr = [
-        go.Heatmap(
-            z=df_offsets['water']/30.45,
-            x=df_offsets['date'],
-            y=df_offsets['api'],
-            colorscale=scl_wtr_log,
-        ),
-    ]
+        data_offset_wtr = [
+            go.Heatmap(
+                z=df_offsets['water']/30.45,
+                x=df_offsets['date'],
+                y=df_offsets['api'],
+                colorscale=scl_wtr_log,
+            ),
+        ]
 
-    layout = go.Layout(autosize=True,
-                       margin=dict(r=10, t=10, b=30, l=150, pad=0),
-                       yaxis=dict(autorange='reversed'),
-                       )
-    graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
-                                      cls=plotly.utils.PlotlyJSONEncoder)
+        layout = go.Layout(autosize=True,
+                        margin=dict(r=10, t=10, b=30, l=150, pad=0),
+                        yaxis=dict(autorange='reversed'),
+                        )
+        graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
+                                        cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
+                                        cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
+                                        cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
-                                      cls=plotly.utils.PlotlyJSONEncoder)
+    except:
+        graphJSON_offset_oil = None
+        graphJSON_offset_stm = None
+        graphJSON_offset_wtr = None
 
-    graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
-                                      cls=plotly.utils.PlotlyJSONEncoder)
+    map_offsets = None
 
+    return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, map_offsets, offsets
+
+
+def get_cyclic_jobs(header):
     try:
         df_cyclic = pd.DataFrame(header['cyclic_jobs'])
         fig_cyclic_jobs = make_subplots(rows=2, cols=1)
@@ -406,8 +416,7 @@ def get_offsets_oilgas(header, rad):
     except:
         graphJSON_cyclic_jobs = None
 
-    map_offsets = None
-    return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, graphJSON_cyclic_jobs, map_offsets, offsets
+    return graphJSON_cyclic_jobs
 
 
 def get_graph_oilgas(api):

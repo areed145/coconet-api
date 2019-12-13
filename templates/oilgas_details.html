@@ -129,12 +129,14 @@
 
                             var lat_c = {{ header['latitude'] | float }};
                             var lon_c = {{ header['longitude'] | float }};
+                            const metersToPixelsAtMaxZoom = (meters, latitude) =>
+                                meters / 0.075 / Math.cos(latitude * Math.PI / 180);
 
                             var map = new mapboxgl.Map({
                                 container: 'map',
                                 style: 'mapbox://styles/areed145/ck2jlfnp03oiv1cpepd4js9k6',
                                 center: [lon_c, lat_c],
-                                zoom: 17
+                                zoom: 16
                             });
 
                             map.addControl(new mapboxgl.GeolocateControl({
@@ -144,9 +146,38 @@
                                 trackUserLocation: true
                             }));
 
-                            // map.on('load', function () {
-                            //     map.resize();
-                            // });
+                            map.on('load', function() {
+                                map.addSource("source_circle_500", {
+                                    "type": "geojson",
+                                    "data": {
+                                    "type": "FeatureCollection",
+                                    "features": [{
+                                        "type": "Feature",
+                                        "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [lon_c, lat_c]
+                                        }
+                                    }]
+                                    }
+                                });
+
+                                map.addLayer({
+                                    "id": "circle500",
+                                    "type": "circle",
+                                    "source": "source_circle_500",
+                                    "paint": {
+                                    "circle-radius": {
+                                        stops: [
+                                        [0, 0],
+                                        [20, metersToPixelsAtMaxZoom(241.4016, lat_c)]
+                                        ],
+                                        base: 2
+                                    },
+                                    "circle-color": "gray",
+                                    "circle-opacity": 0.4
+                                    }
+                                });
+                            });
 
                             map.on('click', 'wells', function (e) {
                                 var coordinates = e.features[0].geometry.coordinates.slice();
@@ -213,6 +244,7 @@
                 </div>
             </div>
         </div>
+        {% if plot_offset_oil is not none %}
         <div class="card-deck mt-4">
             <div class="card border-0 shadow">
                 <div class="card-header border-0">
@@ -249,6 +281,7 @@
                 </div>
             </div>
         </div>
+        {%endif %}
         {% if plot_cyclic_jobs is not none %}
         <div class="card-deck mt-4">
             <div class="card border-0 shadow">
