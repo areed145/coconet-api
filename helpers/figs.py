@@ -364,7 +364,7 @@ def get_offsets_oilgas(header, rad):
 def get_cyclic_jobs(header):
     try:
         df_cyclic = pd.DataFrame(header['cyclic_jobs'])
-        fig_cyclic_jobs = make_subplots(rows=2, cols=1)
+        fig_cyclic_jobs = make_subplots(rows=1, cols=2)
 
         total = len(df_cyclic)
         c0 = np.array([245/256, 200/256, 66/256, 1])
@@ -404,7 +404,7 @@ def get_cyclic_jobs(header):
                     legendgroup=str(row[1]['number']),
                     showlegend=False,
                 ),
-                row=2, col=1,
+                row=1, col=2,
             )
 
         fig_cyclic_jobs.update_layout(
