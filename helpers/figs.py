@@ -396,7 +396,7 @@ def get_cyclic_jobs(header):
             fig_cyclic_jobs.add_trace(
                 go.Scatter(
                     x=[df_cyclic['total'][idx]],
-                    y=[prod['oil'].loc['0']],
+                    y=[prod['oil'].loc['1']-prod['oil'].loc['-1']],
                     name=df_cyclic['start'][idx][:10],
                     mode='markers',
                     marker=dict(color=color, size=10),
@@ -405,6 +405,14 @@ def get_cyclic_jobs(header):
                 ),
                 row=1, col=2,
             )
+
+        fig_cyclic_jobs.update_xaxes(title_text='Month', row=1, col=1)
+        fig_cyclic_jobs.update_xaxes(
+            title_text='Cyclic Volume (bbls)', row=1, col=2)
+        fig_cyclic_jobs.update_yaxes(
+            title_text='Incremental Oil (bbls)', row=1, col=1)
+        fig_cyclic_jobs.update_yaxes(
+            title_text='Incremental Oil (bbls)', row=1, col=2)
 
         fig_cyclic_jobs.update_layout(
             margin={'l': 0, 't': 0, 'b': 0, 'r': 0},
