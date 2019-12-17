@@ -360,70 +360,70 @@ def get_offsets_oilgas(header, rad):
 
 
 def get_cyclic_jobs(header):
-    # try:
-    df_cyclic = pd.DataFrame(header['cyclic_jobs'])
-    fig_cyclic_jobs = make_subplots(rows=1, cols=2)
-    total = len(df_cyclic)
-    c0 = np.array([245/256, 200/256, 66/256, 1])
-    c1 = np.array([245/256, 218/256, 66/256, 1])
-    c2 = np.array([188/256, 245/256, 66/256, 1])
-    c3 = np.array([108/256, 201/256, 46/256, 1])
-    c4 = np.array([82/256, 138/256, 45/256, 1])
-    c5 = np.array([24/256, 110/256, 45/256, 1])
-    cm = LinearSegmentedColormap.from_list(
-        'custom', [c0, c1, c2, c3, c4, c5], N=total)
-    df_cyclic.sort_values(by='number', inplace=True)
-    for idx in range(len(df_cyclic)):
-        try:
-            color = rgb2hex(cm(df_cyclic['number'][idx]/total))
-            prod = pd.DataFrame(df_cyclic['prod'][idx])
-            fig_cyclic_jobs.add_trace(
-                go.Scatter(
-                    x=prod.index,
-                    y=prod['oil']-prod['oil'].loc['0'],
-                    name=df_cyclic['start'][idx][:10],
-                    mode='lines',
-                    line=dict(
-                        color=color,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
+    try:
+        df_cyclic = pd.DataFrame(header['cyclic_jobs'])
+        fig_cyclic_jobs = make_subplots(rows=1, cols=2)
+        total = len(df_cyclic)
+        c0 = np.array([245/256, 200/256, 66/256, 1])
+        c1 = np.array([245/256, 218/256, 66/256, 1])
+        c2 = np.array([188/256, 245/256, 66/256, 1])
+        c3 = np.array([108/256, 201/256, 46/256, 1])
+        c4 = np.array([82/256, 138/256, 45/256, 1])
+        c5 = np.array([24/256, 110/256, 45/256, 1])
+        cm = LinearSegmentedColormap.from_list(
+            'custom', [c0, c1, c2, c3, c4, c5], N=total)
+        df_cyclic.sort_values(by='number', inplace=True)
+        for idx in range(len(df_cyclic)):
+            try:
+                color = rgb2hex(cm(df_cyclic['number'][idx]/total))
+                prod = pd.DataFrame(df_cyclic['prod'][idx])
+                fig_cyclic_jobs.add_trace(
+                    go.Scatter(
+                        x=prod.index,
+                        y=prod['oil']-prod['oil'].loc['0'],
+                        name=df_cyclic['start'][idx][:10],
+                        mode='lines',
+                        line=dict(
+                            color=color,
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        legendgroup=str(df_cyclic['number'][idx]),
                     ),
-                    legendgroup=str(df_cyclic['number'][idx]),
-                ),
-                row=1, col=1,
-            )
-            fig_cyclic_jobs.add_trace(
-                go.Scatter(
-                    x=[df_cyclic['total'][idx]],
-                    y=[prod['oil'].loc['1']-prod['oil'].loc['-1']],
-                    name=df_cyclic['start'][idx][:10],
-                    mode='markers',
-                    marker=dict(color=color, size=10),
-                    legendgroup=str(df_cyclic['number'][idx]),
-                    showlegend=False,
-                ),
-                row=1, col=2,
-            )
-        except:
-            pass
+                    row=1, col=1,
+                )
+                fig_cyclic_jobs.add_trace(
+                    go.Scatter(
+                        x=[df_cyclic['total'][idx]],
+                        y=[prod['oil'].loc['1']-prod['oil'].loc['-1']],
+                        name=df_cyclic['start'][idx][:10],
+                        mode='markers',
+                        marker=dict(color=color, size=10),
+                        legendgroup=str(df_cyclic['number'][idx]),
+                        showlegend=False,
+                    ),
+                    row=1, col=2,
+                )
+            except:
+                pass
 
-    fig_cyclic_jobs.update_xaxes(title_text='Month', row=1, col=1)
-    fig_cyclic_jobs.update_xaxes(
-        title_text='Cyclic Volume (bbls)', row=1, col=2)
-    fig_cyclic_jobs.update_yaxes(
-        title_text='Incremental Oil (bbls)', row=1, col=1)
-    fig_cyclic_jobs.update_yaxes(
-        title_text='Incremental Oil (bbls)', row=1, col=2)
+        fig_cyclic_jobs.update_xaxes(title_text='Month', row=1, col=1)
+        fig_cyclic_jobs.update_xaxes(
+            title_text='Cyclic Volume (bbls)', row=1, col=2)
+        fig_cyclic_jobs.update_yaxes(
+            title_text='Incremental Oil (bbls)', row=1, col=1)
+        fig_cyclic_jobs.update_yaxes(
+            title_text='Incremental Oil (bbls)', row=1, col=2)
 
-    fig_cyclic_jobs.update_layout(
-        margin={'l': 0, 't': 0, 'b': 0, 'r': 0},
-    )
+        fig_cyclic_jobs.update_layout(
+            margin={'l': 0, 't': 0, 'b': 0, 'r': 0},
+        )
 
-    graphJSON_cyclic_jobs = json.dumps(
-        fig_cyclic_jobs, cls=plotly.utils.PlotlyJSONEncoder)
-    # except:
-    #     graphJSON_cyclic_jobs = None
+        graphJSON_cyclic_jobs = json.dumps(
+            fig_cyclic_jobs, cls=plotly.utils.PlotlyJSONEncoder)
+    except:
+        graphJSON_cyclic_jobs = None
 
     return graphJSON_cyclic_jobs
 
