@@ -377,6 +377,7 @@ def get_cyclic_jobs(header):
             try:
                 color = rgb2hex(cm(df_cyclic['number'][idx]/total))
                 prod = pd.DataFrame(df_cyclic['prod'][idx])
+                prod = prod/30.45
                 fig_cyclic_jobs.add_trace(
                     go.Scatter(
                         x=prod.index,
