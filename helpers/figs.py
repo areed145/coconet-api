@@ -930,8 +930,6 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', ligh
 
     layers = []
 
-    layers.append()
-
     if temp == '1':
         layers.append(dict(below='traces', sourcetype='raster', source=[
                       'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/NDFD_temp/MapServer/export?transparent=true&format=png8&layers=8&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
