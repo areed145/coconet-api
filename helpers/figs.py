@@ -941,7 +941,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', ligh
                       'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/export?transparent=true&format=png8&layers=1&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
     if satellite == '1':
         layers.append(dict(below='traces', opacity=0.5, sourcetype='raster', source=[
-                      'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png8&layers=8&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+                      'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png8&layers=show:8&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
     # if satellite == '1':
     #     layers.append(dict(below='traces', opacity=0.5, sourcetype='raster', source=[
     #                   'https://earthlive.maptiles.arcgis.com/arcgis/rest/services/GOES/GOES31/MapServer/export?transparent=true&format=png8&layers=1&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
