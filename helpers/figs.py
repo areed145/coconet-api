@@ -314,6 +314,7 @@ def get_offsets_oilgas(header, rad):
             df_ci = df_offsets.pivot_table(
                 index='date', columns='api', values=prop)
             df_ci = df_ci.replace(0, pd.np.nan)
+            df_ci = df_ci / 30.45
             # df_mean = df_ci.mean(axis=1)
             # df_std = df_ci.std(axis=1)
             # ci_lb = df_mean - df_std
