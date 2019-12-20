@@ -306,15 +306,65 @@ def get_offsets_oilgas(header, rad):
             except:
                 pass
 
-        df_offsets['api'] = df_offsets['api'].apply(
+        df_offsets['distapi'] = df_offsets['api'].apply(
             lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
-        df_offsets.sort_values(by='api', inplace=True)
+        df_offsets.sort_values(by='distapi', inplace=True)
+
+        def ci_plot(df_offsets, prop, api, c1, c2):
+            df_ci = df_offsets.pivot_table(
+                index='date', columns='api', values=prop)
+            df_ci = df_ci.replace(0, pd.np.nan)
+            # df_mean = df_ci.mean(axis=1)
+            # df_std = df_ci.std(axis=1)
+            # ci_lb = df_mean - df_std
+            # ci_ub = df_mean + df_std
+            ci_lb = df_ci.quantile(0.25, axis=1).fillna(0)
+            ci_ub = df_ci.quantile(0.75, axis=1).fillna(0)
+            val = df_ci[api]
+
+            return [
+                go.Scatter(
+                    x=df_ci.index,
+                    y=ci_ub,
+                    fill=None,
+                    mode='lines',
+                    line=dict(
+                        color=c1,
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                ),
+                go.Scatter(
+                    x=df_ci.index,
+                    y=ci_lb,
+                    fill='tonexty',
+                    mode='lines',
+                    line=dict(
+                        color=c1,
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                ),
+                go.Scatter(
+                    x=df_ci.index,
+                    y=val,
+                    mode='lines',
+                    line=dict(
+                        color=c2,
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                )
+            ]
 
         data_offset_oil = [
             go.Heatmap(
                 z=df_offsets['oil']/30.45,
                 x=df_offsets['date'],
-                y=df_offsets['api'],
+                y=df_offsets['distapi'],
                 colorscale=scl_oil_log,
             ),
         ]
@@ -323,7 +373,7 @@ def get_offsets_oilgas(header, rad):
             go.Heatmap(
                 z=df_offsets['steam']/30.45,
                 x=df_offsets['date'],
-                y=df_offsets['api'],
+                y=df_offsets['distapi'],
                 colorscale=scl_stm_log,
             ),
         ]
@@ -332,7 +382,7 @@ def get_offsets_oilgas(header, rad):
             go.Heatmap(
                 z=df_offsets['water']/30.45,
                 x=df_offsets['date'],
-                y=df_offsets['api'],
+                y=df_offsets['distapi'],
                 colorscale=scl_wtr_log,
             ),
         ]
@@ -341,22 +391,38 @@ def get_offsets_oilgas(header, rad):
                            margin=dict(r=10, t=10, b=30, l=150, pad=0),
                            yaxis=dict(autorange='reversed'),
                            )
+        layout_ = go.Layout(autosize=True,
+                            showlegend=False,
+                            # legend=dict(orientation='h'),
+                            yaxis=dict(type='log'),
+                            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+                            )
+
         graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
                                           cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
                                           cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
                                           cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], '#d6ed42', '#50bf37'), layout=layout_),
+                                             cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], '#caf0f7', '#4286f4'), layout=layout_),
+                                             cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], '#edb6d7', '#e32980'), layout=layout_),
+                                             cls=plotly.utils.PlotlyJSONEncoder)
 
     except:
         graphJSON_offset_oil = None
         graphJSON_offset_stm = None
         graphJSON_offset_wtr = None
+        graphJSON_offset_oil_ci = None
+        graphJSON_offset_stm_ci = None
+        graphJSON_offset_wtr_ci = None
         offsets = None
 
     map_offsets = None
 
-    return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, map_offsets, offsets
+    return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, graphJSON_offset_oil_ci, graphJSON_offset_stm_ci, graphJSON_offset_wtr_ci, map_offsets, offsets
 
 
 def get_cyclic_jobs(header):

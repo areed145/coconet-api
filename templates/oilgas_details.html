@@ -248,11 +248,49 @@
             </div>
         </div>
         {%endif %}
-        {% if plot_offset_oil is not none %}
+        {% if plot_offset_oil_ci is not none %}
         <div class="card-deck mt-4">
             <div class="card border-0 shadow">
                 <div class="card-header border-0">
                     <h5 class="card-title" align=center>Offset Peformance: {{ header['api'] }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart" id="graph_oilgas_offset_oil_ci">
+                        <script>
+                            var graphs = {{ plot_offset_oil_ci | safe }};
+                            Plotly.plot('graph_oilgas_offset_oil_ci', graphs.data, graphs.layout, {
+                                displayModeBar: false,
+                                responsive: true
+                            });
+                        </script>
+                    </div>
+                    <div class="chart" id="graph_oilgas_offset_stm_ci">
+                        <script>
+                            var graphs = {{ plot_offset_stm_ci | safe }};
+                            Plotly.plot('graph_oilgas_offset_stm_ci', graphs.data, graphs.layout, {
+                                displayModeBar: false,
+                                responsive: true
+                            });
+                        </script>
+                    </div>
+                    <div class="chart" id="graph_oilgas_offset_wtr_ci">
+                        <script>
+                            var graphs = {{ plot_offset_wtr_ci | safe }};
+                            Plotly.plot('graph_oilgas_offset_wtr_ci', graphs.data, graphs.layout, {
+                                displayModeBar: false,
+                                responsive: true
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endif %}
+        {% if plot_offset_oil is not none %}
+        <div class="card-deck mt-4">
+            <div class="card border-0 shadow">
+                <div class="card-header border-0">
+                    <h5 class="card-title" align=center>Offset Peformance Heatmap: {{ header['api'] }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="chart" id="graph_oilgas_offset_oil">
