@@ -1589,6 +1589,7 @@ def create_wx_figs(time, sid):
     layout_su = go.Layout(autosize=True,
                           height=200,
                           font=dict(family='Ubuntu'),
+                          hoverlabel=dict(font=dict(family='Ubuntu')),
                           yaxis=dict(domain=[0.02, 0.98],
                                      title='Solar Radiation (W/m<sup>2</sup>)',
                                      # range=[0,120],
@@ -1646,6 +1647,7 @@ def create_wx_figs(time, sid):
 
     layout_wr = go.Layout(
         font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
         polar=dict(
             radialaxis=dict(
                 # visible = False,
@@ -1659,9 +1661,6 @@ def create_wx_figs(time, sid):
                 direction="clockwise",
             )
         ),
-        # showlegend = False,
-        # height=400,
-        # width=500,
     )
 
     graphJSON_td = json.dumps(dict(data=data_td, layout=layout_td),
