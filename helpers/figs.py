@@ -200,20 +200,20 @@ def create_3d_plot(df, x, y, z, cs, x_name, y_name, z_name, x_color, y_color, z_
                        scene={'aspectmode': 'cube',
                               'xaxis': {
                                   'title': x_name,
-                                  'tickfont': {'size': 10},
-                                  'titlefont': {'color': x_color},
+                                  'tickfont': {'family': 'Ubuntu', 'size': 10},
+                                  'titlefont': {'family': 'Ubuntu', 'color': x_color},
                                   'type': 'linear'
                               },
                               'yaxis': {
                                   'title': y_name,
-                                  'tickfont': {'size': 10},
-                                  'titlefont': {'color': y_color},
+                                  'tickfont': {'family': 'Ubuntu', 'size': 10},
+                                  'titlefont': {'family': 'Ubuntu', 'color': y_color},
                                   'tickangle': 1
                               },
                               'zaxis': {
                                   'title': z_name,
-                                  'tickfont': {'size': 10},
-                                  'titlefont': {'color': z_color},
+                                  'tickfont': {'family': 'Ubuntu', 'size': 10},
+                                  'titlefont': {'family': 'Ubuntu', 'color': z_color},
                               },
                               }
                        )
@@ -246,6 +246,7 @@ def create_graph_iot(sensor, time):
         )
 
     layout = go.Layout(autosize=True,
+                       font=dict(family='Ubuntu'),
                        showlegend=True,
                        legend=dict(orientation='h'),
                        xaxis=dict(range=[start, now]),
@@ -389,10 +390,12 @@ def get_offsets_oilgas(header, rad):
         ]
 
         layout = go.Layout(autosize=True,
+                           font=dict(family='Ubuntu'),
                            margin=dict(r=10, t=10, b=30, l=150, pad=0),
                            yaxis=dict(autorange='reversed'),
                            )
         layout_ = go.Layout(autosize=True,
+                            font=dict(family='Ubuntu'),
                             showlegend=False,
                             # legend=dict(orientation='h'),
                             yaxis=dict(type='log'),
