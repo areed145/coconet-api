@@ -6,6 +6,7 @@ import json
 import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, session, g, redirect, render_template_string, make_response
+from flask_cors import CORS
 from helpers import figs, flickr
 from helpers.blog import Database, Blog, Post, User
 from micawber.providers import bootstrap_basic
@@ -20,6 +21,7 @@ import feather
 import pandas as pd
 
 app = Flask(__name__)
+CORS(app)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
