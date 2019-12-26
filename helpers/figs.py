@@ -762,6 +762,7 @@ def create_map_oilgas():
 
     layout = go.Layout(autosize=True,
                        font=dict(family='Ubuntu'),
+                       textfont=dict(family='Ubuntu'),
                        hovermode='closest',
                        uirevision=True,
                        showlegend=True,
@@ -1031,6 +1032,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', ligh
 
     layout = go.Layout(autosize=True,
                        font=dict(family='Ubuntu'),
+                       textfont=dict(family='Ubuntu'),
                        legend=dict(orientation='h'),
                        showlegend=legend,
                        hovermode='closest',
