@@ -197,6 +197,7 @@ def create_3d_plot(df, x, y, z, cs, x_name, y_name, z_name, x_color, y_color, z_
 
     layout = go.Layout(autosize=True,
                        margin=dict(r=10, t=10, b=10, l=10, pad=0),
+                       hoverlabel=dict(font=dict(family='Ubuntu')),
                        scene={'aspectmode': 'cube',
                               'xaxis': {
                                   'title': x_name,
@@ -251,7 +252,8 @@ def create_graph_iot(sensor, time):
                        legend=dict(orientation='h'),
                        xaxis=dict(range=[start, now]),
                        hovermode='closest',
-                       #    uirevision=True,
+                       hoverlabel=dict(font=dict(family='Ubuntu')),
+                       uirevision=True,
                        margin=dict(r=50, t=30, b=30, l=60, pad=0),
                        )
     graphJSON = json.dumps(dict(data=data, layout=layout),
@@ -391,11 +393,13 @@ def get_offsets_oilgas(header, rad):
 
         layout = go.Layout(autosize=True,
                            font=dict(family='Ubuntu'),
+                           hoverlabel=dict(font=dict(family='Ubuntu')),
                            margin=dict(r=10, t=10, b=30, l=150, pad=0),
                            yaxis=dict(autorange='reversed'),
                            )
         layout_ = go.Layout(autosize=True,
                             font=dict(family='Ubuntu'),
+                            hoverlabel=dict(font=dict(family='Ubuntu')),
                             showlegend=False,
                             # legend=dict(orientation='h'),
                             yaxis=dict(type='log'),
@@ -635,6 +639,7 @@ def get_graph_oilgas(api):
         layout = go.Layout(autosize=True,
                         font=dict(family='Ubuntu'),
                         hovermode='closest',
+                        hoverlabel=dict(font=dict(family='Ubuntu')),
                         showlegend=True,
                         legend=dict(orientation='h'),
                         yaxis=dict(type='log'),
@@ -762,8 +767,8 @@ def create_map_oilgas():
 
     layout = go.Layout(autosize=True,
                        font=dict(family='Ubuntu'),
-                       textfont=dict(family='Ubuntu'),
                        hovermode='closest',
+                       hoverlabel=dict(font=dict(family='Ubuntu')),
                        uirevision=True,
                        showlegend=True,
                        legend=dict(orientation='h'),
@@ -1032,10 +1037,10 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', ligh
 
     layout = go.Layout(autosize=True,
                        font=dict(family='Ubuntu'),
-                       textfont=dict(family='Ubuntu'),
                        legend=dict(orientation='h'),
                        showlegend=legend,
                        hovermode='closest',
+                       hoverlabel=dict(font=dict(family='Ubuntu')),
                        uirevision=True,
                        margin=dict(r=0, t=0, b=0, l=0, pad=0),
                        mapbox=dict(bearing=0,
@@ -1111,6 +1116,7 @@ def create_map_aprs(script, prop, time):
                             font=dict(family='Ubuntu'),
                             showlegend=False,
                             hovermode='closest',
+                            hoverlabel=dict(font=dict(family='Ubuntu')),
                             uirevision=True,
                             margin=dict(r=0, t=0, b=0, l=0, pad=0),
                             mapbox=dict(bearing=0,
@@ -1136,6 +1142,7 @@ def create_map_aprs(script, prop, time):
 
     layout_speed = go.Layout(autosize=True,
                              height=200,
+                             hoverlabel=dict(font=dict(family='Ubuntu')),
                              yaxis=dict(domain=[0.02, 0.98],
                                         title='Speed (mph)',
                                         fixedrange=True,
@@ -1160,6 +1167,7 @@ def create_map_aprs(script, prop, time):
 
     layout_alt = go.Layout(autosize=True,
                             font=dict(family='Ubuntu'),
+                            hoverlabel=dict(font=dict(family='Ubuntu')),
                             height=200,
                             yaxis=dict(domain=[0.02, 0.98],
                                         title='Altitude (ft)',
@@ -1184,6 +1192,7 @@ def create_map_aprs(script, prop, time):
 
     layout_course = go.Layout(autosize=True,
                                 font=dict(family='Ubuntu'),
+                                hoverlabel=dict(font=dict(family='Ubuntu')),
                                 height=200,
                                 yaxis=dict(domain=[0.02, 0.98],
                                             title='Course (degrees)',
@@ -1371,6 +1380,7 @@ def create_wx_figs(time, sid):
 
     layout_td = go.Layout(autosize=True,
                             font=dict(family='Ubuntu'),
+                            hoverlabel=dict(font=dict(family='Ubuntu')),
                             height=200,
                             yaxis=dict(domain=[0.02, 0.98],
                                         title='Temperature (F)',
@@ -1414,6 +1424,7 @@ def create_wx_figs(time, sid):
     layout_pr = go.Layout(autosize=True,
                           height=200,
                           font=dict(family='Ubuntu'),
+                          hoverlabel=dict(font=dict(family='Ubuntu')),
                           yaxis=dict(domain=[0.02, 0.98],
                                      title='Pressure (inHg)',
                                      # range=[0,120],
@@ -1456,6 +1467,7 @@ def create_wx_figs(time, sid):
     layout_pc = go.Layout(autosize=True,
                           height=200,
                           font=dict(family='Ubuntu'),
+                          hoverlabel=dict(font=dict(family='Ubuntu')),
                           yaxis=dict(domain=[0.02, 0.98],
                                      title='Precip (in/hr)',
                                      # range=[0,120],
@@ -1491,6 +1503,7 @@ def create_wx_figs(time, sid):
     layout_cb = go.Layout(autosize=True,
                           height=200,
                           font=dict(family='Ubuntu'),
+                          hoverlabel=dict(font=dict(family='Ubuntu')),
                           yaxis=dict(domain=[0.02, 0.98],
                                      title='Minimum Cloudbase (ft)',
                                      # range=[0,120],
@@ -1532,6 +1545,7 @@ def create_wx_figs(time, sid):
     layout_wd = go.Layout(autosize=True,
                           height=200,
                           font=dict(family='Ubuntu'),
+                          hoverlabel=dict(font=dict(family='Ubuntu')),
                           yaxis=dict(domain=[0.02, 0.98],
                                      title='Wind Direction (degrees)',
                                      range=[0, 360],
