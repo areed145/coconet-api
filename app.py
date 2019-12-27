@@ -422,6 +422,13 @@ def graph_wx_change():
     data['fig_thp'] = json.loads(fig_thp)
     return json.dumps(data, default=myconverter)
 
+@app.route('/station/live', methods=['GET', 'POST'])
+def get_station_live():
+    wx = figs.get_wx_latest(sid)
+    data = {}
+    data['wx'] = json.loads(wx)
+    return json.dumps(data, default=myconverter)
+
 
 @app.route('/soundings/update', methods=['GET', 'POST'])
 def sounding_update():
