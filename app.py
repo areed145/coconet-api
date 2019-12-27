@@ -427,9 +427,9 @@ def graph_wx_change():
 def get_station_live():
     time_int = request.args['test']
     wx = figs.get_wx_latest(sid)
-    data = {}
-    data['wx'] = json.loads(wx)
-    return json.dumps(data, default=myconverter)
+    # data = {}
+    # data['wx'] = json.loads(wx)
+    return json.dumps(json.loads(wx), default=myconverter)
 
 
 @app.route('/soundings/update', methods=['GET', 'POST'])
