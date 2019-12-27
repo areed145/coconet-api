@@ -1245,7 +1245,13 @@ def create_map_aprs(script, prop, time):
 
 def get_wx_latest(sid):
     db = client.wx
-    return list(db.raw.find({'station_id': sid}).sort([('observation_time_rfc822', -1)]).limit(1))[0]
+    vals = list(db.raw.find({'station_id': sid}).sort([('observation_time_rfc822', -1)]).limit(1))[0]
+    vals.pop('_id')
+    vals.pop('observation_time_rfc822')
+    vals.pop('ttl')
+    vals.pop('timestamp')
+    vals = json.dumps(vals)
+    return vals
 
 
 def create_wx_figs(time, sid):
