@@ -425,6 +425,7 @@ def graph_wx_change():
 
 @app.route('/station/live', methods=['GET', 'POST'])
 def get_station_live():
+    time_int = request.args['test']
     wx = figs.get_wx_latest(sid)
     data = {}
     data['wx'] = json.loads(wx)
