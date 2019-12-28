@@ -434,8 +434,9 @@ def graph_iot_change():
     return graphJSON
 
 
-@app.route('/oilgas/details/<api>/graphs', methods=['GET', 'POST'])
-def oilgas_detail_data(api):
+@app.route('/oilgas/details/graphs', methods=['GET', 'POST'])
+def oilgas_detail_data():
+    api = request.args['api']
     graph_oilgas, header = figs.get_graph_oilgas(str(api))
     graph_cyclic_jobs = figs.get_cyclic_jobs(header)
     graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
