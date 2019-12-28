@@ -434,7 +434,7 @@ def graph_iot_change():
     return graphJSON
 
 
-@app.route('/oilgas/details/<api>/data', methods=['GET', 'POST'])
+@app.route('/oilgas/details/<api>/graphs', methods=['GET', 'POST'])
 def oilgas_detail_data(api):
     graph_oilgas, header = figs.get_graph_oilgas(str(api))
     graph_cyclic_jobs = figs.get_cyclic_jobs(header)
