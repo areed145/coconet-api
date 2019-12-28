@@ -434,5 +434,40 @@ def graph_iot_change():
     return graphJSON
 
 
+@app.route('/oilgas/details/<api>/data', methods=['GET', 'POST'])
+def oilgas_detail_data(api):
+    graph_oilgas, header = figs.get_graph_oilgas(str(api))
+    graph_cyclic_jobs = figs.get_cyclic_jobs(header)
+    graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
+        header, 0.1)
+    try:
+        header.pop('_id')
+    except:
+        pass
+    try:
+        header.pop('prodinj')
+    except:
+        pass
+    try:
+        header.pop('crm')
+    except:
+        pass
+    try:
+        header.pop('cyclic_jobs')
+    except:
+        pass
+    data = {}
+    data['header'] = header
+    data['graph_offset_oil'] = json.loads(graph_offset_oil)
+    data['graph_offset_stm'] = json.loads(graph_offset_stm)
+    data['graph_offset_wtr'] = json.loads(graph_offset_wtr)
+    data['graph_offset_oil_ci'] = json.loads(graph_offset_oil_ci)
+    data['graph_offset_stm_ci'] = json.loads(graph_offset_stm_ci)
+    data['graph_offset_wtr_ci'] = json.loads(graph_offset_wtr_ci)
+    # data['map_offsets'] = map_offsets
+    # data['offsets'] = offsets
+    return json.dumps(data, default=myconverter)
+
+
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
