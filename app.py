@@ -458,15 +458,42 @@ def oilgas_detail_data():
     except:
         pass
     data = {}
-    data['header'] = header
-    data['graph_oilgas'] = json.loads(graph_oilgas)
-    data['graph_offset_oil'] = json.loads(graph_offset_oil)
-    data['graph_offset_stm'] = json.loads(graph_offset_stm)
-    data['graph_offset_wtr'] = json.loads(graph_offset_wtr)
-    data['graph_offset_oil_ci'] = json.loads(graph_offset_oil_ci)
-    data['graph_offset_stm_ci'] = json.loads(graph_offset_stm_ci)
-    data['graph_offset_wtr_ci'] = json.loads(graph_offset_wtr_ci)
-    data['graph_cyclic_jobs'] = json.loads(graph_cyclic_jobs)
+    try:
+        data['header'] = header
+    except:
+        pass
+    try:
+        data['graph_oilgas'] = json.loads(graph_oilgas)
+    except:
+        pass
+    try:
+        data['graph_offset_oil'] = json.loads(graph_offset_oil)
+    except:
+        pass
+    try:
+        data['graph_offset_stm'] = json.loads(graph_offset_stm)
+    except:
+        pass
+    try:
+        data['graph_offset_wtr'] = json.loads(graph_offset_wtr)
+    except:
+        pass
+    try:
+        data['graph_offset_oil_ci'] = json.loads(graph_offset_oil_ci)
+    except:
+        pass
+    try:
+        data['graph_offset_stm_ci'] = json.loads(graph_offset_stm_ci)
+    except:
+        pass
+    try:
+        data['graph_offset_wtr_ci'] = json.loads(graph_offset_wtr_ci)
+    except:
+        pass
+    try:
+        data['graph_cyclic_jobs'] = json.loads(graph_cyclic_jobs)
+    except:
+        pass
     # data['map_offsets'] = map_offsets
     # data['offsets'] = offsets
     return json.dumps(data, default=myconverter)
