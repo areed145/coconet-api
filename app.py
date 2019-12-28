@@ -115,7 +115,7 @@ def station_info():
 @app.route('/weather/blips')
 def blips():
     g.track_var['page'] = 'blips'
-    return render_template('blips.html')
+    return render_template('weather_blips.html')
 
 
 @cache.cached(timeout=60)
@@ -124,7 +124,7 @@ def blips():
 def soundings():
     g.track_var['page'] = 'soundings'
     img = figs.get_image('OAK')
-    return render_template('soundings.html', img=img)
+    return render_template('weather_soundings.html', img=img)
 
 
 @cache.cached(timeout=60)
@@ -419,7 +419,7 @@ def get_station_live():
     return json.dumps(wx, default=myconverter)
 
 
-@app.route('weather/soundings/image', methods=['GET', 'POST'])
+@app.route('/weather/soundings/image', methods=['GET', 'POST'])
 def sounding_update():
     sid = request.args['sid']
     img = figs.get_image(sid)
