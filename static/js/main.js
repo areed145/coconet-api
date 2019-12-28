@@ -72,7 +72,7 @@ function awc_fetch() {
     var zoom = map_awc.layout.mapbox.zoom;
 
     $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -122,7 +122,7 @@ if ($('#station_history').length > 0) {
 
     $('#time_int').on('change', function () {
         $.ajax({
-            url: "/wx/graph",
+            url: "/station/history/graphs",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -325,7 +325,7 @@ if ($('#awc').length > 0) {
         }
 
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -361,7 +361,7 @@ if ($('#awc').length > 0) {
         }
 
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -397,7 +397,7 @@ if ($('#awc').length > 0) {
         }
 
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -432,7 +432,7 @@ if ($('#awc').length > 0) {
             lightning = 0;
         }
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -467,7 +467,7 @@ if ($('#awc').length > 0) {
             analysis = 0;
         }
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -502,7 +502,7 @@ if ($('#awc').length > 0) {
             precip = 0;
         }
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -537,7 +537,7 @@ if ($('#awc').length > 0) {
             watchwarn = 0;
         }
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {
@@ -567,7 +567,7 @@ if ($('#awc').length > 0) {
         var zoom = map_awc.layout.mapbox.zoom;
 
         $.ajax({
-            url: "/awc/update",
+            url: "/weather/aviation/map",
             type: "GET",
             contentType: 'application/json;charset=UTF-8',
             data: {

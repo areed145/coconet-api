@@ -73,16 +73,16 @@ def index():
 
 @cache.cached(timeout=60)
 @t.include
-@app.route('/awc')
+@app.route('/weather/aviation')
 def awc():
-    g.track_var['page'] = 'awc'
+    g.track_var['page'] = 'weather_aviation'
     prop_awc = 'flight_category'
     map_awc = figs.create_map_awc(prop_awc)
-    return render_template('awc.html', plot=map_awc)
+    return render_template('weather_aviation.html', plot=map_awc)
 
 
 @t.include
-@app.route('/station_live')
+@app.route('/station/live')
 def station_live():
     g.track_var['page'] = 'station_live'
     wx = figs.get_wx_latest(sid)
@@ -93,7 +93,7 @@ def station_live():
 
 @cache.cached(timeout=60)
 @t.include
-@app.route('/station_history')
+@app.route('/station/history')
 def station_history():
     g.track_var['page'] = 'station_history'
     time_int = 'd_1'
@@ -104,7 +104,7 @@ def station_history():
 
 @cache.cached(timeout=60)
 @t.include
-@app.route('/station_info')
+@app.route('/station/info')
 def station_info():
     g.track_var['page'] = 'station_info'
     return render_template('station_info.html')
@@ -112,7 +112,7 @@ def station_info():
 
 @cache.cached(timeout=60)
 @t.include
-@app.route('/blips')
+@app.route('/weather/blips')
 def blips():
     g.track_var['page'] = 'blips'
     return render_template('blips.html')
@@ -120,7 +120,7 @@ def blips():
 
 @cache.cached(timeout=60)
 @t.include
-@app.route('/soundings')
+@app.route('/weather/soundings')
 def soundings():
     g.track_var['page'] = 'soundings'
     img = figs.get_image('OAK')
@@ -248,16 +248,6 @@ def fishing():
 
 @cache.cached(timeout=60)
 @t.include
-@app.route('/oilgas/map')
-def oilgas_map():
-    g.track_var['page'] = 'oilgas/map'
-    with open('static/oilgas.json') as json_file:
-        map_oilgas = json.load(json_file)
-    return render_template('oilgas_map.html', plot=map_oilgas)
-
-
-@cache.cached(timeout=60)
-@t.include
 @app.route('/oilgas/summary')
 def oilgas_summary():
     g.track_var['page'] = 'oilgas/summary'
@@ -295,10 +285,10 @@ def oilgas_detail(api):
 
 @cache.cached(timeout=60)
 @t.include
-@app.route('/oilgas/mapbox')
-def oilgas_mapbox():
-    g.track_var['page'] = 'oilgas/mapbox'
-    return render_template('oilgas_mapbox.html')
+@app.route('/oilgas/map')
+def oilgas_map():
+    g.track_var['page'] = 'oilgas/map'
+    return render_template('oilgas_map.html')
 
 
 @cache.cached(timeout=60)
@@ -372,7 +362,7 @@ def create_new_post(blog_id):
         return make_response(blog_posts(blog_id))
 
 
-@app.route('/awc/update', methods=['GET', 'POST'])
+@app.route('/weather/aviation/map', methods=['GET', 'POST'])
 def map_awc_update():
     prop_awc = request.args['prop_awc']
     lat = request.args['lat']
@@ -406,7 +396,7 @@ def map_aprs_change():
     return json.dumps(data, default=myconverter)
 
 
-@app.route('/wx/graph', methods=['GET', 'POST'])
+@app.route('/station/history/graphs', methods=['GET', 'POST'])
 def graph_wx_change():
     time_int = request.args['time_int']
     fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
@@ -423,13 +413,13 @@ def graph_wx_change():
     return json.dumps(data, default=myconverter)
 
 
-@app.route('/station/live', methods=['GET', 'POST'])
+@app.route('/station/live/data', methods=['GET', 'POST'])
 def get_station_live():
     wx = figs.get_wx_latest(sid)
     return json.dumps(wx, default=myconverter)
 
 
-@app.route('/soundings/update', methods=['GET', 'POST'])
+@app.route('weather/soundings/image', methods=['GET', 'POST'])
 def sounding_update():
     sid = request.args['sid']
     img = figs.get_image(sid)
@@ -442,14 +432,6 @@ def graph_iot_change():
     time_int = request.args['time_int']
     graphJSON = figs.create_graph_iot(sensor_iot, time_int)
     return graphJSON
-
-
-@app.route('/oilgas/map/create')
-def create_oilgas():
-    map_oilgas, sum_oilgas = figs.create_map_oilgas()
-    with open('static/oilgas.json', 'w') as outfile:
-        json.dump(map_oilgas, outfile)
-    sum_oilgas.to_feather('static/oilgas_sum.feather')
 
 
 if __name__ == '__main__':
