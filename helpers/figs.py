@@ -313,7 +313,7 @@ def get_offsets_oilgas(header, rad):
             lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
         df_offsets.sort_values(by='distapi', inplace=True)
 
-        def ci_plot(df_offsets, prop, api, c1, c2):
+        def ci_plot(df_offsets, prop, api, c1, c2, c3):
             df_ci = df_offsets.pivot_table(
                 index='date', columns='api', values=prop)
             df_ci = df_ci.replace(0, pd.np.nan)
@@ -322,6 +322,8 @@ def get_offsets_oilgas(header, rad):
             # df_std = df_ci.std(axis=1)
             # ci_lb = df_mean - df_std
             # ci_ub = df_mean + df_std
+            count = df_ci.count(axis=1).fillna(0)
+            sums = df_ci.sum(axis=1).fillna(0)
             ci_lb = df_ci.quantile(0.25, axis=1).fillna(0)
             ci_ub = df_ci.quantile(0.75, axis=1).fillna(0)
             val = df_ci[api]
@@ -330,6 +332,7 @@ def get_offsets_oilgas(header, rad):
                 go.Scatter(
                     x=df_ci.index,
                     y=ci_ub,
+                    name='offest_upper_75ci',
                     fill=None,
                     mode='lines',
                     line=dict(
@@ -342,6 +345,7 @@ def get_offsets_oilgas(header, rad):
                 go.Scatter(
                     x=df_ci.index,
                     y=ci_lb,
+                    name='offset_lower_75ci',
                     fill='tonexty',
                     mode='lines',
                     line=dict(
@@ -353,10 +357,35 @@ def get_offsets_oilgas(header, rad):
                 ),
                 go.Scatter(
                     x=df_ci.index,
-                    y=val,
+                    y=count,
+                    name='offset_count',
+                    mode='lines',
+                    line=dict(
+                        color='#8c8c8c',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                ),
+                go.Scatter(
+                    x=df_ci.index,
+                    y=sums,
+                    name='offset_sum',
                     mode='lines',
                     line=dict(
                         color=c2,
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                ),
+                go.Scatter(
+                    x=df_ci.index,
+                    y=val,
+                    name='current_well',
+                    mode='lines',
+                    line=dict(
+                        color=c3,
                         shape='spline',
                         smoothing=0.3,
                         width=3
@@ -396,12 +425,13 @@ def get_offsets_oilgas(header, rad):
                            hoverlabel=dict(font=dict(family='Ubuntu')),
                            margin=dict(r=10, t=10, b=30, l=150, pad=0),
                            yaxis=dict(autorange='reversed'),
+                           showlegend=False,
                            )
         layout_ = go.Layout(autosize=True,
                             font=dict(family='Ubuntu'),
                             hoverlabel=dict(font=dict(family='Ubuntu')),
-                            showlegend=False,
-                            # legend=dict(orientation='h'),
+                            showlegend=True,
+                            legend=dict(orientation='h'),
                             yaxis=dict(type='log'),
                             margin=dict(r=50, t=30, b=30, l=60, pad=0),
                             )
@@ -412,11 +442,11 @@ def get_offsets_oilgas(header, rad):
                                           cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
                                           cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], '#d6ed42', '#50bf37'), layout=layout_),
+        graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
                                              cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], '#caf0f7', '#4286f4'), layout=layout_),
+        graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
                                              cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], '#edb6d7', '#e32980'), layout=layout_),
+        graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
                                              cls=plotly.utils.PlotlyJSONEncoder)
 
     except:
@@ -637,15 +667,15 @@ def get_graph_oilgas(api):
         ]
 
         layout = go.Layout(autosize=True,
-                        font=dict(family='Ubuntu'),
-                        hovermode='closest',
-                        hoverlabel=dict(font=dict(family='Ubuntu')),
-                        showlegend=True,
-                        legend=dict(orientation='h'),
-                        yaxis=dict(type='log'),
-                        uirevision=True,
-                        margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                        )
+                           font=dict(family='Ubuntu'),
+                           hovermode='closest',
+                           hoverlabel=dict(font=dict(family='Ubuntu')),
+                           showlegend=True,
+                           legend=dict(orientation='h'),
+                           yaxis=dict(type='log'),
+                           uirevision=True,
+                           margin=dict(r=50, t=30, b=30, l=60, pad=0),
+                           )
         graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
@@ -1113,20 +1143,20 @@ def create_map_aprs(script, prop, time):
                                      )
                     ]
     layout_map = go.Layout(autosize=True,
-                            font=dict(family='Ubuntu'),
-                            showlegend=False,
-                            hovermode='closest',
-                            hoverlabel=dict(font=dict(family='Ubuntu')),
-                            uirevision=True,
-                            margin=dict(r=0, t=0, b=0, l=0, pad=0),
-                            mapbox=dict(bearing=0,
-                                        center=dict(lat=30, lon=-95),
-                                        accesstoken=mapbox_access_token,
-                                        style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
-                                        pitch=0,
-                                        zoom=6
-                                        )
-                            )
+                           font=dict(family='Ubuntu'),
+                           showlegend=False,
+                           hovermode='closest',
+                           hoverlabel=dict(font=dict(family='Ubuntu')),
+                           uirevision=True,
+                           margin=dict(r=0, t=0, b=0, l=0, pad=0),
+                           mapbox=dict(bearing=0,
+                                       center=dict(lat=30, lon=-95),
+                                       accesstoken=mapbox_access_token,
+                                       style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+                                       pitch=0,
+                                       zoom=6
+                                       )
+                           )
 
     data_speed = [
         go.Scatter(x=df['timestamp_'],
@@ -1166,19 +1196,19 @@ def create_map_aprs(script, prop, time):
     ]
 
     layout_alt = go.Layout(autosize=True,
-                            font=dict(family='Ubuntu'),
-                            hoverlabel=dict(font=dict(family='Ubuntu')),
-                            height=200,
-                            yaxis=dict(domain=[0.02, 0.98],
-                                        title='Altitude (ft)',
-                                        fixedrange=True,
-                                        titlefont=dict(color='rgb(255, 95, 63)')
-                                        ),
-                            xaxis=dict(type='date', fixedrange=False,
-                                        range=[start, now]),
-                            margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                            showlegend=False,
-                            )
+                           font=dict(family='Ubuntu'),
+                           hoverlabel=dict(font=dict(family='Ubuntu')),
+                           height=200,
+                           yaxis=dict(domain=[0.02, 0.98],
+                                      title='Altitude (ft)',
+                                      fixedrange=True,
+                                      titlefont=dict(color='rgb(255, 95, 63)')
+                                      ),
+                           xaxis=dict(type='date', fixedrange=False,
+                                      range=[start, now]),
+                           margin=dict(r=50, t=30, b=30, l=60, pad=0),
+                           showlegend=False,
+                           )
 
     data_course = [
         go.Scatter(x=df['timestamp_'],
@@ -1191,20 +1221,20 @@ def create_map_aprs(script, prop, time):
     ]
 
     layout_course = go.Layout(autosize=True,
-                                font=dict(family='Ubuntu'),
-                                hoverlabel=dict(font=dict(family='Ubuntu')),
-                                height=200,
-                                yaxis=dict(domain=[0.02, 0.98],
-                                            title='Course (degrees)',
-                                            fixedrange=True,
-                                            titlefont=dict(
-                                    color='rgb(255, 95, 63)')
-                                ),
-                                xaxis=dict(type='date', fixedrange=False,
-                                            range=[start, now]),
-                                margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                                showlegend=False,
-                                )
+                              font=dict(family='Ubuntu'),
+                              hoverlabel=dict(font=dict(family='Ubuntu')),
+                              height=200,
+                              yaxis=dict(domain=[0.02, 0.98],
+                                         title='Course (degrees)',
+                                         fixedrange=True,
+                                         titlefont=dict(
+                                  color='rgb(255, 95, 63)')
+                              ),
+                              xaxis=dict(type='date', fixedrange=False,
+                                         range=[start, now]),
+                              margin=dict(r=50, t=30, b=30, l=60, pad=0),
+                              showlegend=False,
+                              )
 
     graphJSON_map = json.dumps(dict(data=data_map, layout=layout_map),
                                cls=plotly.utils.PlotlyJSONEncoder)
@@ -1245,7 +1275,8 @@ def create_map_aprs(script, prop, time):
 
 def get_wx_latest(sid):
     db = client.wx
-    wx = list(db.raw.find({'station_id': sid}).sort([('observation_time_rfc822', -1)]).limit(1))[0]
+    wx = list(db.raw.find({'station_id': sid}).sort(
+        [('observation_time_rfc822', -1)]).limit(1))[0]
     wx.pop('_id')
     return wx
 
@@ -1379,30 +1410,32 @@ def create_wx_figs(time, sid):
     ]
 
     layout_td = go.Layout(autosize=True,
-                            font=dict(family='Ubuntu'),
-                            hoverlabel=dict(font=dict(family='Ubuntu')),
-                            height=200,
-                            yaxis=dict(domain=[0.02, 0.98],
-                                        title='Temperature (F)',
-                                        range=[td_min, td_max],
-                                        fixedrange=True,
-                                        titlefont=dict(family='Ubuntu',color='rgb(255, 95, 63)')
-                                        ),
-                            yaxis2=dict(domain=[0.02, 0.98],
-                                        title='Dewpoint (F)',
-                                        overlaying='y',
-                                        side='right',
-                                        range=[td_min, td_max],
-                                        fixedrange=True,
-                                        titlefont=dict(family='Ubuntu',color='rgb(63, 127, 255)')
-                                        ),
-                            xaxis=dict(type='date',
-                                        # fixedrange=True,
-                                        range=[dt_min, dt_max],
-                                        ),
-                            margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                            showlegend=False,
-                            )
+                          font=dict(family='Ubuntu'),
+                          hoverlabel=dict(font=dict(family='Ubuntu')),
+                          height=200,
+                          yaxis=dict(domain=[0.02, 0.98],
+                                     title='Temperature (F)',
+                                     range=[td_min, td_max],
+                                     fixedrange=True,
+                                     titlefont=dict(
+                                         family='Ubuntu', color='rgb(255, 95, 63)')
+                                     ),
+                          yaxis2=dict(domain=[0.02, 0.98],
+                                      title='Dewpoint (F)',
+                                      overlaying='y',
+                                      side='right',
+                                      range=[td_min, td_max],
+                                      fixedrange=True,
+                                      titlefont=dict(
+                                          family='Ubuntu', color='rgb(63, 127, 255)')
+                                      ),
+                          xaxis=dict(type='date',
+                                     # fixedrange=True,
+                                     range=[dt_min, dt_max],
+                                     ),
+                          margin=dict(r=50, t=30, b=30, l=60, pad=0),
+                          showlegend=False,
+                          )
 
     data_pr = [
         go.Scatter(x=df_wx_raw.index,
@@ -1429,7 +1462,8 @@ def create_wx_figs(time, sid):
                                      title='Pressure (inHg)',
                                      # range=[0,120],
                                      fixedrange=True,
-                                     titlefont=dict(family='Ubuntu', color='rgb(255, 127, 63)')
+                                     titlefont=dict(
+                                         family='Ubuntu', color='rgb(255, 127, 63)')
                                      ),
                           yaxis2=dict(domain=[0.02, 0.98],
                                       title='Humidity (%)',
@@ -1437,7 +1471,8 @@ def create_wx_figs(time, sid):
                                       side='right',
                                       # range=[0,120],
                                       fixedrange=True,
-                                      titlefont=dict(family='Ubuntu', color='rgb(127, 255, 63)')
+                                      titlefont=dict(
+                                          family='Ubuntu', color='rgb(127, 255, 63)')
                                       ),
                           xaxis=dict(type='date',
                                      # fixedrange=True,
@@ -1472,7 +1507,8 @@ def create_wx_figs(time, sid):
                                      title='Precip (in/hr)',
                                      # range=[0,120],
                                      fixedrange=True,
-                                     titlefont=dict(family='Ubuntu',color='rgb(31, 190, 255)')
+                                     titlefont=dict(
+                                         family='Ubuntu', color='rgb(31, 190, 255)')
                                      ),
                           yaxis2=dict(domain=[0.02, 0.98],
                                       title='Precip Cumulative (in)',
@@ -1480,7 +1516,8 @@ def create_wx_figs(time, sid):
                                       side='right',
                                       # range=[0,120],
                                       fixedrange=True,
-                                      titlefont=dict(family='Ubuntu',color='rgb(63, 255, 255)')
+                                      titlefont=dict(
+                                          family='Ubuntu', color='rgb(63, 255, 255)')
                                       ),
                           xaxis=dict(type='date',
                                      # fixedrange=True,
@@ -1508,7 +1545,8 @@ def create_wx_figs(time, sid):
                                      title='Minimum Cloudbase (ft)',
                                      # range=[0,120],
                                      fixedrange=True,
-                                     titlefont=dict(family='Ubuntu',color='rgb(90, 66, 245)')
+                                     titlefont=dict(
+                                         family='Ubuntu', color='rgb(90, 66, 245)')
                                      ),
                           xaxis=dict(type='date',
                                      # fixedrange=True,
@@ -1550,7 +1588,8 @@ def create_wx_figs(time, sid):
                                      title='Wind Direction (degrees)',
                                      range=[0, 360],
                                      fixedrange=True,
-                                     titlefont=dict(family='Ubuntu', color='rgb(190, 63, 255)')
+                                     titlefont=dict(
+                                         family='Ubuntu', color='rgb(190, 63, 255)')
                                      ),
                           yaxis2=dict(domain=[0.02, 0.98],
                                       title='Wind Speed / Gust (kts)',
@@ -1559,7 +1598,8 @@ def create_wx_figs(time, sid):
                                       range=[
                                           0, df_wx_raw['wind_gust_mph'].max() * 0.869],
                                       fixedrange=True,
-                                      titlefont=dict(family='Ubuntu', color='rgb(127, 255, 31)')
+                                      titlefont=dict(
+                                          family='Ubuntu', color='rgb(127, 255, 31)')
                                       ),
                           xaxis=dict(type='date',
                                      # fixedrange=True,
@@ -1594,7 +1634,8 @@ def create_wx_figs(time, sid):
                                      title='Solar Radiation (W/m<sup>2</sup>)',
                                      # range=[0,120],
                                      fixedrange=True,
-                                     titlefont=dict(family='Ubuntu', color='rgb(255, 63, 127)')
+                                     titlefont=dict(
+                                         family='Ubuntu', color='rgb(255, 63, 127)')
                                      ),
                           yaxis2=dict(domain=[0.02, 0.98],
                                       title='UV',
@@ -1602,7 +1643,8 @@ def create_wx_figs(time, sid):
                                       side='right',
                                       # range=[0,120],
                                       fixedrange=True,
-                                      titlefont=dict(family='Ubuntu', color='rgb(255, 190, 63)')
+                                      titlefont=dict(
+                                          family='Ubuntu', color='rgb(255, 190, 63)')
                                       ),
                           xaxis=dict(type='date',
                                      # fixedrange=True,
