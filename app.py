@@ -375,7 +375,7 @@ def map_awc_update():
     precip = request.args['precip']
     watchwarn = request.args['watchwarn']
     temp = request.args['temp']
-    visible = request.args['satellite']
+    visible = request.args['visible']
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, satellite, radar, lightning, analysis, precip, watchwarn, temp, visible)
     return graphJSON
