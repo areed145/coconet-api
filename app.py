@@ -4,7 +4,6 @@ import time
 import atexit
 import json
 import datetime
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, session, g, redirect, render_template_string, make_response
 from flask_cors import CORS
 from helpers import figs, flickr
@@ -44,10 +43,6 @@ app.config['TRACK_USAGE_INCLUDE_OR_EXCLUDE_VIEWS'] = 'include'
 app.config['TRACK_USAGE_COOKIE'] = True
 
 t = TrackUsage(app, [MongoPiggybackStorage(stats)])
-
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(flickr.get_gals, 'interval', hours=1)
-sched.start()
 
 
 def myconverter(o):
