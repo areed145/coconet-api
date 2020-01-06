@@ -400,6 +400,7 @@ def map_aprs_change():
 
 @app.route('/aprs/igate_range', methods=['GET', 'POST'])
 def map_aprs_range():
+    time_int = request.args['time_int']
     range_aprs = figs.create_range_aprs(time_int)
     data = {}
     data['range_aprs'] = json.loads(range_aprs)
