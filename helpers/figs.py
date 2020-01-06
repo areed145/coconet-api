@@ -171,6 +171,8 @@ def get_time_range(time):
         start = now - timedelta(hours=val)
     if unit == 'd':
         start = now - timedelta(days=val)
+    if unit == 'o':
+        start = now - timedelta(months=val)
     return start, now
 
 
@@ -1087,6 +1089,77 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, satellite='0', radar='0', ligh
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
+
+
+def create_range_aprs(time):
+
+    lat = 29.780880
+    lon = -95.420410
+
+    start, now = get_time_range(time)
+    db = client.aprs
+    df = pd.DataFrame(list(db.raw.find({
+        'script': 'entry',
+        'latitude': {'$exists': True, '$ne': None},
+        'timestamp_': {'$gt': start, '$lte': now}
+    }).sort([('timestamp_', -1)])))
+    df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
+                           * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
+
+    df['month'] = df['timestamp_'].apply(
+        lambda row: str(row.year)+'-'+str(row.month).zfill(2))
+    df['dist_'] = np.round(df['dist'] * 1) / 1
+    df = df[df['dist'] <= 250]
+
+    data = []
+    for month in df['month'].unique():
+        df2 = df[df['month'] == month]
+        df2 = df2.groupby(by='dist_').count()
+        data.append(
+            go.Scatter(
+                x=df2.index,
+                y=df2['_id'],
+                name=month,
+                line=dict(
+                    width=3,
+                    shape='spline',
+                    smoothing=0.3
+                ),
+                mode='lines',
+            ),
+        )
+
+    layout = go.Layout(
+        autosize=True,
+        #     height=200,
+        hoverlabel=dict(
+            font=dict(
+                family='Ubuntu'
+            )
+        ),
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            type='log',
+            title='Frequency',
+            fixedrange=False,
+        ),
+        xaxis=dict(
+            type='log',
+            title='Distance (mi)',
+            fixedrange=False,
+        ),
+        margin=dict(
+            r=50,
+            t=30,
+            b=30,
+            l=60,
+            pad=0
+        ),
+        #     showlegend=False,
+    )
+
+    graphJSON = json.dumps(dict(data=data, layout=layout),
+                            cls=plotly.utils.PlotlyJSONEncoder)
 
 
 def create_map_aprs(script, prop, time):

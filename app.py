@@ -283,6 +283,7 @@ def oilgas_detail(api):
         header, 0.1)
     return render_template('oilgas_details.html', header=header, plot=graph_oilgas, plot_offset_oil=graph_offset_oil, plot_offset_stm=graph_offset_stm, plot_offset_wtr=graph_offset_wtr, plot_offset_oil_ci=graph_offset_oil_ci, plot_offset_stm_ci=graph_offset_stm_ci, plot_offset_wtr_ci=graph_offset_wtr_ci, plot_cyclic_jobs=graph_cyclic_jobs, offsets=offsets)
 
+
 @cache.cached(timeout=60)
 @t.include
 @app.route('/oilgas/map')
@@ -394,6 +395,14 @@ def map_aprs_change():
     data['plot_alt'] = json.loads(plot_alt)
     data['plot_course'] = json.loads(plot_course)
     data['rows'] = rows
+    return json.dumps(data, default=myconverter)
+
+
+@app.route('/aprs/igate_range', methods=['GET', 'POST'])
+def map_aprs_range():
+    range_aprs = figs.create_range_aprs(time_int)
+    data = {}
+    data['range_aprs'] = json.loads(range_aprs)
     return json.dumps(data, default=myconverter)
 
 
