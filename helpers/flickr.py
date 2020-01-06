@@ -2,6 +2,8 @@
 
 import flickr_api as f
 import pickle
+from pymongo import MongoClient
+import os
 
 f.set_keys(api_key='77a2ae7ea816558f00e4dd32249be54e',
            api_secret='2267640a7461db21')
@@ -9,6 +11,8 @@ f.set_auth_handler('helpers/auth')
 username = '- Adam Reeder -'
 u = f.Person.findByUserName(username)
 
+client = MongoClient(os.environ['MONGODB_CLIENT'])
+db = client.flickr
 
 def get_gals():
     ps = u.getPhotosets()
@@ -40,25 +44,24 @@ def get_gals():
             'kk6gpv_link': kk6gpv_link,
             'photos': photos
         }
-    g = open('static/gals', 'wb')
-    pickle.dump(gals, g)
+    # g = open('static/gals', 'wb')
+    # pickle.dump(gals, g)
     print('galleries updated')
+    db.gals.insert_one(gals)
     return gals
 
 
 def load_gals():
-    g = open('static/gals', 'rb')
-    gals = pickle.load(g)
+    gals = list(db.gals.find({}))[0]
     return gals
 
 
 def get_gal_rows(width):
-    g = open('static/gals', 'rb')
-    gals = pickle.load(g)
+    gals = list(db.gals.find({}))[0]
     rows = []
     frames = []
     idx = 1
-    for gal in gals:
+    for gal in list(gals.keys())[1:]:
         if (idx/width) != (idx//width):
             frames.append(
                 {'caption': gals[gal]['title'] + ' - ' + str(gals[gal]['count_photos']),
@@ -80,8 +83,7 @@ def get_gal_rows(width):
 
 
 def get_photo_rows(id, width):
-    g = open('static/gals', 'rb')
-    gals = pickle.load(g)
+    gals = list(db.gals.find({}))[0]
     rows = []
     frames = []
     idx = 1
