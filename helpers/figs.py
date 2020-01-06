@@ -1161,6 +1161,8 @@ def create_range_aprs(time):
     graphJSON = json.dumps(dict(data=data, layout=layout),
                             cls=plotly.utils.PlotlyJSONEncoder)
 
+    return graphJSON
+
 
 def create_map_aprs(script, prop, time):
     params = {'none': [0, 0, 0, 0, ''],
