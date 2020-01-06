@@ -1111,8 +1111,19 @@ def create_range_aprs(time):
     df['dist_'] = np.round(df['dist'] * 1) / 1
     df = df[df['dist'] <= 250]
 
+    c5 = np.array([245/256, 200/256, 66/256, 1])
+    c4 = np.array([245/256, 218/256, 66/256, 1])
+    c3 = np.array([188/256, 245/256, 66/256, 1])
+    c2 = np.array([108/256, 201/256, 46/256, 1])
+    c1 = np.array([82/256, 138/256, 45/256, 1])
+    c0 = np.array([24/256, 110/256, 45/256, 1])
+    total = len(df['month'].unique())
+    cm = LinearSegmentedColormap.from_list(
+        'custom', [c0, c1, c2, c3, c4, c5], N=total)
+
     data = []
-    for month in df['month'].unique():
+    for idx, month in enumerate(df['month'].unique()):
+        color = rgb2hex(cm(idx/total))
         df2 = df[df['month'] == month]
         df2 = df2.groupby(by='dist_').count()
         data.append(
@@ -1121,6 +1132,7 @@ def create_range_aprs(time):
                 y=df2['_id'],
                 name=month,
                 line=dict(
+                    color=color,
                     width=3,
                     shape='spline',
                     smoothing=0.3
@@ -1159,7 +1171,7 @@ def create_range_aprs(time):
     )
 
     graphJSON = json.dumps(dict(data=data, layout=layout),
-                            cls=plotly.utils.PlotlyJSONEncoder)
+                           cls=plotly.utils.PlotlyJSONEncoder)
 
     return graphJSON
 
