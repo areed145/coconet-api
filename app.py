@@ -332,6 +332,38 @@ def blog_posts(blog_id='bca7359faed442669aa888a2657b331f'):
     return render_template('posts.html', posts=posts, blog_title=blog.title, blog_id=blog._id)
 
 
+@cache.cached(timeout=60)
+@app.route('/photos/galleries')
+def galleries_api():
+    rows = flickr.get_gal_rows(5)
+    data = {}
+    data['rows'] = json.loads(rows)
+    return json.dumps(data, default=myconverter)
+
+
+@cache.cached(timeout=60)
+@app.route('/photos/galleries/<id>')
+def gallery_api(id):
+    rows, gals = flickr.get_photo_rows(id, 5)
+    data = {}
+    data['rows'] = json.loads(rows)
+    data['gals'] = json.loads(gals)
+    return json.dumps(data, default=myconverter)
+
+
+@cache.cached(timeout=60)
+@app.route('/photos/galleries/<id>/<ph>')
+def image_api(id, ph):
+    gals = flickr.load_gals()
+    image = {
+        'thumb': gals[id]['photos'][ph]['thumb'],
+        'large': gals[id]['photos'][ph]['large'],
+    }
+    data = {}
+    data['image'] = json.loads(image)
+    return json.dumps(data, default=myconverter)
+
+
 @app.route('/blogs/new', methods=['POST', 'GET'])
 def create_new_blog():
     if request.method == 'GET':
