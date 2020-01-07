@@ -337,7 +337,7 @@ def blog_posts(blog_id='bca7359faed442669aa888a2657b331f'):
 def galleries_api():
     rows = flickr.get_gal_rows(5)
     data = {}
-    data['rows'] = json.loads(rows)
+    data['rows'] = rows
     return json.dumps(data, default=myconverter)
 
 
@@ -346,8 +346,8 @@ def galleries_api():
 def gallery_api(id):
     rows, gals = flickr.get_photo_rows(id, 5)
     data = {}
-    data['rows'] = json.loads(rows)
-    data['gals'] = json.loads(gals)
+    data['rows'] = rows
+    data['gals'] = gals
     return json.dumps(data, default=myconverter)
 
 
@@ -360,7 +360,7 @@ def image_api(id, ph):
         'large': gals[id]['photos'][ph]['large'],
     }
     data = {}
-    data['image'] = json.loads(image)
+    data['image'] = image
     return json.dumps(data, default=myconverter)
 
 
