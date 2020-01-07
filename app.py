@@ -333,7 +333,7 @@ def blog_posts(blog_id='bca7359faed442669aa888a2657b331f'):
 
 
 @cache.cached(timeout=60)
-@app.route('/photos/galleries')
+@app.route('/photos/galleries', methods=['POST', 'GET'])
 def galleries_api():
     rows = flickr.get_gal_rows(5)
     data = {}
@@ -342,7 +342,7 @@ def galleries_api():
 
 
 @cache.cached(timeout=60)
-@app.route('/photos/galleries/<id>')
+@app.route('/photos/galleries/<id>', methods=['POST', 'GET'])
 def gallery_api(id):
     rows, gals = flickr.get_photo_rows(id, 5)
     data = {}
@@ -352,7 +352,7 @@ def gallery_api(id):
 
 
 @cache.cached(timeout=60)
-@app.route('/photos/galleries/<id>/<ph>')
+@app.route('/photos/galleries/<id>/<ph>', methods=['POST', 'GET'])
 def image_api(id, ph):
     gals = flickr.load_gals()
     image = {
