@@ -13,7 +13,7 @@ import uvicorn
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 app = FastAPI()
 
@@ -197,7 +197,7 @@ def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infra
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     # json_compatible_item_data = jsonable_encoder(graphJSON)
     # return JSONResponse(content=graphJSON)
-    return graphJSON
+    return Response(graphJSON)
 
 
 @app.get('/weather/soundings/image')
