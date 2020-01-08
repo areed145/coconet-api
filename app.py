@@ -12,6 +12,9 @@ from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 from typing import List
 
+from fastapi.encoders import jsonable_encoder
+from starlette.responses import JSONResponse
+
 app = FastAPI()
 
 origins = [
@@ -50,7 +53,9 @@ def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
     data['plot_alt'] = json.loads(plot_alt)
     data['plot_course'] = json.loads(plot_course)
     data['rows'] = rows
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+    # return json.dumps(data, default=myconverter)
 
 
 @app.get('/aprs/igate_range')
@@ -181,14 +186,18 @@ def station_live_data():
     wx = figs.get_wx_latest(sid)
     data = {}
     data['wx'] = wx
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+    # return json.dumps(data, default=myconverter)
 
 
 @app.get('/weather/aviation/map')
 def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: int, radar: int, analysis: int, lightning: int, precip: int, watchwarn: int, temp: int, visible: int):
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
-    return graphJSON
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+    # return graphJSON
 
 
 @app.get('/weather/soundings/image')
