@@ -1438,7 +1438,8 @@ def create_wx_figs(time, sid):
     df_wx_raw.loc[df_wx_raw['wind_mph'] == 0, 'wind_degrees'] = pd.np.nan
 
     wind = df_wx_raw[['wind_cat', 'wind_degrees_cat']]
-    wind['count'] = 1
+    wind.loc[:,'count'] = 1
+    # wind['count'] = 1
     ct = len(wind)
     wind = pd.pivot_table(wind, values='count', index=[
         'wind_degrees_cat'], columns=['wind_cat'], aggfunc=np.sum)
