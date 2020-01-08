@@ -43,6 +43,11 @@ def myconverter(o):
         return o.__str__()
 
 
+@app.get("/")
+def main():
+    return {"api": "kk6gpv.net"}
+
+
 @app.get('/aprs/map')
 def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
     map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
