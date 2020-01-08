@@ -179,7 +179,9 @@ def station_historical_graphs(time_int: str):
 @app.get('/station/live/data')
 def station_live_data():
     wx = figs.get_wx_latest(sid)
-    return json.dumps(wx, default=myconverter)
+    data = {}
+    data['wx'] = json.loads(wx)
+    return json.dumps(data, default=myconverter)
 
 
 @app.get('/weather/aviation/map')
