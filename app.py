@@ -202,7 +202,7 @@ def station_live_data():
 
 
 @app.get('/weather/aviation/map')
-def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: int, radar: int, analysis: int, lightning: int, precip: int, watchwarn: int, temp: int, visible: int):
+def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: str, radar: str, analysis: str, lightning: str, precip: str, watchwarn: str, temp: str, visible: str):
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     return Response(graphJSON)
