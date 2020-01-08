@@ -195,8 +195,8 @@ def station_live_data():
 def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: int, radar: int, analysis: int, lightning: int, precip: int, watchwarn: int, temp: int, visible: int):
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
-    json_compatible_item_data = jsonable_encoder(graphJSON)
-    return JSONResponse(content=json_compatible_item_data)
+    # json_compatible_item_data = jsonable_encoder(graphJSON)
+    return JSONResponse(content=graphJSON)
     # return graphJSON
 
 
