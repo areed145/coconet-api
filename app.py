@@ -8,17 +8,26 @@ from helpers import figs, flickr
 from pymongo import MongoClient
 import pandas as pd
 from fastapi import FastAPI, Query, Form
+from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 from typing import List
 
 app = FastAPI()
 
-sid = os.environ['SID']
+origins = [
+    "https://www.kk6gpv.net",
+    "https://api.kk6gpv.net",
+]
 
-client = MongoClient(
-    'mongodb+srv://kk6gpv:kk6gpv@cluster0-kglzh.azure.mongodb.net/test?retryWrites=true&w=majority')
-db = client.coconut_barometer
-stats = db.stats
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+sid = os.environ['SID']
 
 times = dict(m_5='5m', h_1='1h', h_6='6h', d_1='1d',
              d_2='2d', d_7='7d', d_30='30d')
