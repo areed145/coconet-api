@@ -55,7 +55,6 @@ def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
     data['rows'] = rows
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
-    # return json.dumps(data, default=myconverter)
 
 
 @app.get('/aprs/igate_range')
@@ -63,13 +62,14 @@ def aprs_range_analysis(time_int: str):
     range_aprs = figs.create_range_aprs(time_int)
     data = {}
     data['range_aprs'] = json.loads(range_aprs)
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/iot/graph')
 def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
     graphJSON = figs.create_graph_iot(sensor_iot, time_int)
-    return graphJSON
+    return Response(graphJSON)
 
 
 @app.get('/oilgas/details/graphs')
@@ -133,7 +133,8 @@ def oilgas_graphs(api: str):
         pass
     # data['map_offsets'] = map_offsets
     # data['offsets'] = offsets
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/photos/galleries')
@@ -141,7 +142,8 @@ def galleries():
     rows = flickr.get_gal_rows(5)
     data = {}
     data['rows'] = rows
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/photos/gallery')
@@ -150,7 +152,8 @@ def gallery_images(id: str):
     data = {}
     data['rows'] = rows
     data['gals'] = gals
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/photos/photo')
@@ -162,7 +165,8 @@ def photos(id: str, ph: str):
     }
     data = {}
     data['image'] = image
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/station/history/graphs')
@@ -178,7 +182,8 @@ def station_historical_graphs(time_int: str):
     data['fig_su'] = json.loads(fig_su)
     data['fig_wr'] = json.loads(fig_wr)
     data['fig_thp'] = json.loads(fig_thp)
-    return json.dumps(data, default=myconverter)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/station/live/data')
@@ -188,23 +193,17 @@ def station_live_data():
     data['wx'] = wx
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
-    # return json.dumps(data, default=myconverter)
 
 
 @app.get('/weather/aviation/map')
 def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: int, radar: int, analysis: int, lightning: int, precip: int, watchwarn: int, temp: int, visible: int):
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
-    # json_compatible_item_data = jsonable_encoder(graphJSON)
-    # return JSONResponse(content=graphJSON)
     return Response(graphJSON)
 
 
 @app.get('/weather/soundings/image')
 def sounding_plots(sid: str):
     img = figs.get_image(sid)
-    return json.dumps(img.decode('unicode_escape'))
-
-
-# if __name__ == "__main__":
-#     uvicorn.run(app, port=80)
+    json_compatible_item_data = jsonable_encoder(img.decode('unicode_escape'))
+    return JSONResponse(content=json_compatible_item_data)
