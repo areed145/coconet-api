@@ -182,3 +182,7 @@ def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infra
 def sounding_plots(sid: str):
     img = figs.get_image(sid)
     return json.dumps(img.decode('unicode_escape'))
+
+
+# if __name__ == "__main__":
+#     uvicorn.run(app, port=80)
