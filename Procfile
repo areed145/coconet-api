@@ -1,1 +1,1 @@
-web: uvicorn app:app --preload
+web: uvicorn app:app --host 0.0.0.0 --port 80
