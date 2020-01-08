@@ -1043,7 +1043,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
 
     if temp == '1':
         layers.append(dict(below='traces', sourcetype='raster', source=[
-                      'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/NDFD_temp/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:8&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+                      'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/NDFD_temp/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:1&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
     if precip == '1':
         layers.append(dict(below='traces', sourcetype='raster', source=[
                       'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/wpc_precip_hazards/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:0&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
