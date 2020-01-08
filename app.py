@@ -196,8 +196,8 @@ def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infra
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     # json_compatible_item_data = jsonable_encoder(graphJSON)
-    return JSONResponse(content=graphJSON)
-    # return graphJSON
+    # return JSONResponse(content=graphJSON)
+    return graphJSON
 
 
 @app.get('/weather/soundings/image')
