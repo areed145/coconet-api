@@ -20,6 +20,8 @@ app = FastAPI()
 origins = [
     "https://www.kk6gpv.net",
     "https://api.kk6gpv.net",
+    "https://idpgis.ncep.noaa.gov",
+    "https://nowcoast.noaa.gov",
     "http://localhost",
     "http://localhost:3000",
 ]
