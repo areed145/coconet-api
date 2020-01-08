@@ -1,5 +1,5 @@
-# kk6gpv-frontend
-goal will be to re-create kk6gpv.net as a flask site
+# kk6gpv-api
+goal will be to re-create kk6gpv.net as a fast-api
 
 [![build status](https://img.shields.io/circleci/build/gh/areed145/kk6gpv-flask)](https://circleci.com/gh/areed145/kk6gpv-flask)     [![size](https://img.shields.io/github/repo-size/areed145/kk6gpv-flask)](https://github.com/areed145/kk6gpv-flask)     [![Coverage Status](https://coveralls.io/repos/github/areed145/kk6gpv-flask/badge.svg?branch=master)](https://coveralls.io/github/areed145/kk6gpv-flask?branch=master)
 
