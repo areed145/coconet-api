@@ -1,1 +1,1 @@
-web: uvicorn app:app --port 80
+web: gunicorn -k uvicorn.workers.UvicornWorker app:app --preload
