@@ -103,4 +103,4 @@ def get_photo_rows(id, width):
             frames = []
             idx = 1
     rows.append(frames)
-    return rows, gals
+    return rows
