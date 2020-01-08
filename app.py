@@ -17,6 +17,8 @@ app = FastAPI()
 origins = [
     "https://www.kk6gpv.net",
     "https://api.kk6gpv.net",
+    "http://localhost",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
