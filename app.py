@@ -180,7 +180,7 @@ def station_historical_graphs(time_int: str):
 def station_live_data():
     wx = figs.get_wx_latest(sid)
     data = {}
-    data['wx'] = json.loads(wx)
+    data['wx'] = wx
     return json.dumps(data, default=myconverter)
 
 
