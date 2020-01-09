@@ -164,11 +164,7 @@ def gallery_images(id: str):
 
 @app.get('/photos/photo')
 def photos(id: str):
-    image = list(db.photos.find({'id': id}))[0]
-    # image = {
-    #     'thumb': img['thumb'],
-    #     'large': img['large'],
-    # }
+    image = flickr.get_photo(id)
     data = {}
     data['image'] = image
     json_compatible_item_data = jsonable_encoder(data)

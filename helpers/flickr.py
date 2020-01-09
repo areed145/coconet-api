@@ -62,3 +62,7 @@ def get_photo_rows(id, width):
             idx = 1
     rows.append(frames)
     return rows
+
+
+def get_photo(id):
+    return list(db.photos.find({'id': id}))[0]
