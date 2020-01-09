@@ -10,6 +10,8 @@ import plotly.graph_objs as go
 client = MongoClient(os.environ['MONGODB_CLIENT'])
 db = client.flickr
 
+mapbox_access_token = os.environ['MAPBOX_TOKEN']
+
 
 def load_gals():
     gals = list(db.galleries.find({}, {"photos": 0}))
@@ -84,6 +86,9 @@ def get_photo_rows(id, width):
             idx = 1
     rows.append(frames)
 
+    lat_c = np.array(lats).mean()
+    lon_c = np.array(lons).mean()
+
     data = [
         go.Scattermapbox(
             lat=lats,
@@ -106,7 +111,7 @@ def get_photo_rows(id, width):
         margin=dict(r=0, t=0, b=0, l=0, pad=0),
         mapbox=dict(
             bearing=0,
-            center=dict(lat=30, lon=-95),
+            center=dict(lat=lat_c, lon=lon_c),
             accesstoken=mapbox_access_token,
             style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
             pitch=0,
