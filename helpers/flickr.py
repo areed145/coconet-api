@@ -22,16 +22,20 @@ def get_gal_rows(width):
     for gal in gals:
         if (idx/width) != (idx//width):
             frames.append(
-                {'caption': gal['title'] + ' - ' + str(gal['count_photos']),
-                 'thumb': gal['primary'],
-                 'kk6gpv_link': gal['kk6gpv_link']},
+                {
+                    'caption': gal['title'] + ' - ' + str(gal['count_photos']),
+                    'thumb': gal['primary'],
+                    'kk6gpv_link': '/gallery/'+gal['id']
+                },
             )
             idx += 1
         else:
             frames.append(
-                {'caption': gal['title'] + ' - ' + str(gal['count_photos']),
-                 'thumb': gal['primary'],
-                 'kk6gpv_link': gal['kk6gpv_link']},
+                {
+                    'caption': gal['title'] + ' - ' + str(gal['count_photos']),
+                    'thumb': gal['primary'],
+                    'kk6gpv_link': '/gallery/'+gal['id']
+                },
             )
             rows.append(frames)
             frames = []
@@ -47,26 +51,30 @@ def get_photo_rows(id, width):
     lats = []
     lons = []
     idx = 1
-    for ph in gal[0]['photos']:
+    for phid in gal[0]['photos']:
         if (idx/width) != (idx//width):
             frames.append(
-                {'thumb': gal[0]['photos'][ph]['thumb'],
-                 'kk6gpv_link': '/galleries/'+id+'/'+ph},
+                {
+                    'thumb': gal[0]['photos'][phid]['thumb'],
+                    'kk6gpv_link': '/photo/'+phid
+                },
             )
             try:
-                lats.append(float(gal[0]['photos'][ph]['latitude']))
-                lons.append(float(gal[0]['photos'][ph]['longitude']))
+                lats.append(float(gal[0]['photos'][phid]['latitude']))
+                lons.append(float(gal[0]['photos'][phid]['longitude']))
             except:
                 pass
             idx += 1
         else:
             frames.append(
-                {'thumb': gal[0]['photos'][ph]['thumb'],
-                 'kk6gpv_link': '/galleries/'+id+'/'+ph},
+                {
+                    'thumb': gal[0]['photos'][ph]['thumb'],
+                    'kk6gpv_link': '/photo/'+phid
+                },
             )
             try:
-                lats.append(float(gal[0]['photos'][ph]['latitude']))
-                lons.append(float(gal[0]['photos'][ph]['longitude']))
+                lats.append(float(gal[0]['photos'][phid]['latitude']))
+                lons.append(float(gal[0]['photos'][phid]['longitude']))
             except:
                 pass
             rows.append(frames)
