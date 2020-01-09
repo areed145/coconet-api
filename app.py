@@ -163,8 +163,8 @@ def gallery_images(id: str):
 
 
 @app.get('/photos/photo')
-def photos(pid: str):
-    img = list(db.photos.find({'pid': pid}))[0]
+def photos(id: str):
+    img = list(db.photos.find({'id': id}))[0]
     image = {
         'thumb': img['thumb'],
         'large': img['large'],
