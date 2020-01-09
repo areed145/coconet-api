@@ -4,6 +4,8 @@ import flickr_api as f
 import pickle
 from pymongo import MongoClient
 import os
+import plotly
+import plotly.graph_objs as go
 
 client = MongoClient(os.environ['MONGODB_CLIENT'])
 db = client.flickr
