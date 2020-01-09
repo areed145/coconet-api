@@ -44,6 +44,8 @@ def get_photo_rows(id, width):
     gal = list(db.galleries.find({'id': id}))
     rows = []
     frames = []
+    lats = []
+    lons = []
     idx = 1
     for ph in gal[0]['photos']:
         if (idx/width) != (idx//width):
@@ -51,20 +53,64 @@ def get_photo_rows(id, width):
                 {'thumb': gal[0]['photos'][ph]['thumb'],
                  'kk6gpv_link': '/galleries/'+id+'/'+ph},
             )
+            try:
+                lats.append(float(gal[0]['photos'][ph]['latitude']))
+                lons.append(float(gal[0]['photos'][ph]['longitude']))
+            except:
+                pass
             idx += 1
         else:
             frames.append(
                 {'thumb': gal[0]['photos'][ph]['thumb'],
                  'kk6gpv_link': '/galleries/'+id+'/'+ph},
             )
+            try:
+                lats.append(float(gal[0]['photos'][ph]['latitude']))
+                lons.append(float(gal[0]['photos'][ph]['longitude']))
+            except:
+                pass
             rows.append(frames)
             frames = []
             idx = 1
     rows.append(frames)
-    return rows
+
+    data = [
+        go.Scattermapbox(
+            lat=lats,
+            lon=lons,
+            text=df['raw'],
+            mode='markers',
+            marker=dict(size=10)
+        )
+    ]
+    layout = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        showlegend=False,
+        hovermode='closest',
+        hoverlabel=dict(
+            font=dict(
+                family='Ubuntu'
+            )
+        ),
+        uirevision=True,
+        margin=dict(r=0, t=0, b=0, l=0, pad=0),
+        mapbox=dict(
+            bearing=0,
+            center=dict(lat=30, lon=-95),
+            accesstoken=mapbox_access_token,
+            style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+            pitch=0,
+            zoom=6
+        )
+    )
+
+    graphJSON = json.dumps(dict(data=data, layout=layout),
+                           cls=plotly.utils.PlotlyJSONEncoder)
+    return rows, graphJSON
 
 
 def get_photo(id):
-    image =  list(db.photos.find({'id': id}))[0]
+    image = list(db.photos.find({'id': id}))[0]
     image.pop('_id')
     return image
