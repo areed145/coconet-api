@@ -155,8 +155,12 @@ def galleries():
 
 @app.get('/photos/gallery')
 def gallery_images(id: str):
-    rows, map_gal = flickr.get_photo_rows(id, 5)
+    rows, map_gal, title, count_photos, count_views = flickr.get_photo_rows(
+        id, 5)
     data = {}
+    data['title'] = title
+    data['count_photos'] = count_photos
+    data['count_views'] = count_views
     data['rows'] = rows
     data['map'] = json.loads(map_gal)
     json_compatible_item_data = jsonable_encoder(data)

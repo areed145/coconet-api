@@ -123,7 +123,7 @@ def get_photo_rows(id, width):
 
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
-    return rows, graphJSON
+    return rows, graphJSON, gal['title'], gal['count_photos'], gal['count_views']
 
 
 def get_photo(id):
