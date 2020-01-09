@@ -4,6 +4,7 @@ import flickr_api as f
 import pickle
 from pymongo import MongoClient
 import os
+import numpy as np
 import plotly
 import plotly.graph_objs as go
 
