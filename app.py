@@ -164,9 +164,7 @@ def gallery_images(id: str):
 
 @app.get('/photos/photo')
 def photos(id: str):
-    image = flickr.get_photo(id)
-    data = {}
-    data['image'] = image
+    data = flickr.get_photo(id)
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
