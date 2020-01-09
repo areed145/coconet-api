@@ -68,7 +68,7 @@ def get_photo_rows(id, width):
         else:
             frames.append(
                 {
-                    'thumb': gal[0]['photos'][ph]['thumb'],
+                    'thumb': gal[0]['photos'][phid]['thumb'],
                     'kk6gpv_link': '/photo/'+phid
                 },
             )
