@@ -51,36 +51,36 @@ def get_gal_rows(width):
 
 
 def get_photo_rows(id, width):
-    gal = list(db.galleries.find({'id': id}))
+    gal = list(db.galleries.find({'id': id}))[0]
     rows = []
     frames = []
     lats = []
     lons = []
     idx = 1
-    for phid in gal[0]['photos']:
+    for phid in gal['photos']:
         if (idx/width) != (idx//width):
             frames.append(
                 {
-                    'thumb': gal[0]['photos'][phid]['thumb'],
+                    'thumb': gal['photos'][phid]['thumb'],
                     'kk6gpv_link': '/photo/'+phid
                 },
             )
             try:
-                lats.append(float(gal[0]['photos'][phid]['latitude']))
-                lons.append(float(gal[0]['photos'][phid]['longitude']))
+                lats.append(float(gal['photos'][phid]['latitude']))
+                lons.append(float(gal['photos'][phid]['longitude']))
             except:
                 pass
             idx += 1
         else:
             frames.append(
                 {
-                    'thumb': gal[0]['photos'][phid]['thumb'],
+                    'thumb': gal['photos'][phid]['thumb'],
                     'kk6gpv_link': '/photo/'+phid
                 },
             )
             try:
-                lats.append(float(gal[0]['photos'][phid]['latitude']))
-                lons.append(float(gal[0]['photos'][phid]['longitude']))
+                lats.append(float(gal['photos'][phid]['latitude']))
+                lons.append(float(gal['photos'][phid]['longitude']))
             except:
                 pass
             rows.append(frames)
