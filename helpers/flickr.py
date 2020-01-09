@@ -88,7 +88,6 @@ def get_photo_rows(id, width):
         go.Scattermapbox(
             lat=lats,
             lon=lons,
-            text=df['raw'],
             mode='markers',
             marker=dict(size=10)
         )
