@@ -164,10 +164,10 @@ def gallery_images(id: str):
 
 @app.get('/photos/photo')
 def photos(id: str, pid: str):
-    gals = flickr.load_gals()
+    img = list(db.photos.find({'id': pid}))[0]
     image = {
-        'thumb': gals[id]['photos'][pid]['thumb'],
-        'large': gals[id]['photos'][pid]['large'],
+        'thumb': img['thumb'],
+        'large': img['large'],
     }
     data = {}
     data['image'] = image
