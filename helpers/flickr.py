@@ -45,16 +45,16 @@ def get_photo_rows(id, width):
     rows = []
     frames = []
     idx = 1
-    for ph in gal['photos']:
+    for ph in gal[0]['photos']:
         if (idx/width) != (idx//width):
             frames.append(
-                {'thumb': ph['thumb'],
+                {'thumb': gal[0]['photos'][ph]['thumb'],
                  'kk6gpv_link': '/galleries/'+id+'/'+ph},
             )
             idx += 1
         else:
             frames.append(
-                {'thumb': ph['thumb'],
+                {'thumb': gal[0]['photos'][ph]['thumb'],
                  'kk6gpv_link': '/galleries/'+id+'/'+ph},
             )
             rows.append(frames)
