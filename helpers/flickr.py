@@ -65,4 +65,6 @@ def get_photo_rows(id, width):
 
 
 def get_photo(id):
-    return list(db.photos.find({'id': id}))[0]
+    image =  list(db.photos.find({'id': id}))[0]
+    image.pop('_id')
+    return image
