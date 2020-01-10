@@ -129,8 +129,8 @@ def get_photo_rows(id, width):
 def get_photo(id):
     image = list(db.photos.find({'id': id}))[0]
     image.pop('_id')
-    lat_c = image['location']['latitude']
-    lon_c = image['location']['longitude']
+    lat_c = float(image['location']['latitude'])
+    lon_c = float(image['location']['longitude'])
     data = [
         go.Scattermapbox(
             lat=[lat_c],
