@@ -19,6 +19,18 @@ client = MongoClient(os.environ['MONGODB_CLIENT'], maxPoolSize=10000)
 
 mapbox_access_token = os.environ['MAPBOX_TOKEN']
 
+colorway = [
+    '#b8fb3c',
+    '#5ce5d5',
+    '#7898fb',
+    '#001437',
+    '#f5d300',
+    '#3cb9fc',
+    '#b537f2',
+    '#8a2be2',
+    '#120052',
+]
+
 cs_normal = [
     [0.0, '#424ded'],
     [0.1, '#4283ed'],
@@ -259,9 +271,6 @@ def create_graph_iot(sensor, time):
             )
         except:
             pass
-
-    colorway = ['#f3cec9', '#e7a4b6', '#cd7eaf',
-                '#a262a9', '#6f4d96', '#3d3b72', '#182844']
 
     layout = go.Layout(
         autosize=True,
