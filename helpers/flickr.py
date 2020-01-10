@@ -133,8 +133,8 @@ def get_photo(id):
     lon_c = image['location']['longitude']
     data = [
         go.Scattermapbox(
-            lat=lat_c,
-            lon=lon_c,
+            lat=[lat_c],
+            lon=[lon_c],
             mode='markers',
             marker=dict(size=10)
         )
