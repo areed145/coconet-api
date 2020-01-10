@@ -180,5 +180,5 @@ def get_photo(id):
             cls=plotly.utils.PlotlyJSONEncoder
         )
     except:
-        graphJSON = {}
+        graphJSON = None
     return image, graphJSON
