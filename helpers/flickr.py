@@ -168,7 +168,7 @@ def get_photo(id):
                 accesstoken=mapbox_access_token,
                 style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
                 pitch=0,
-                zoom=9
+                zoom=11
             )
         )
 
