@@ -75,8 +75,10 @@ def aprs_range_analysis(time_int: str):
 
 @app.get('/iot/graph')
 def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
-    graphJSON = figs.create_graph_iot(sensor_iot, time_int)
-    return Response(graphJSON)
+    graph = figs.create_graph_iot(sensor_iot, time_int)
+    data = {}
+    data['graph'] = json.loads(graph)
+    return Response(data)
 
 
 @app.get('/oilgas/details/graphs')
