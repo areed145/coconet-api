@@ -77,7 +77,10 @@ def aprs_range_analysis(time_int: str):
 def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
     graph = figs.create_graph_iot(sensor_iot, time_int)
     data = {}
-    data['graph'] = json.loads(graph)
+    try:
+        data['graph'] = json.loads(graph)
+    except:
+        pass
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
@@ -214,7 +217,7 @@ def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infra
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     data = {}
-    data['map'] = graphJSON
+    data['map'] = json.loads(graphJSON)
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
