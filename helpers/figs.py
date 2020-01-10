@@ -22,13 +22,18 @@ mapbox_access_token = os.environ['MAPBOX_TOKEN']
 colorway = [
     '#b8fb3c',
     '#5ce5d5',
+    '#fe53bb',
     '#7898fb',
     '#001437',
+    '#09fbd3',
     '#f5d300',
     '#3cb9fc',
     '#b537f2',
     '#8a2be2',
     '#120052',
+    '#08f7fe',
+    '#09fbd3',
+    '#fe53bb',
 ]
 
 cs_normal = [
