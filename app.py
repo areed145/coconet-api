@@ -13,7 +13,7 @@ import uvicorn
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse
 
 app = FastAPI()
 
@@ -78,7 +78,8 @@ def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
     graph = figs.create_graph_iot(sensor_iot, time_int)
     data = {}
     data['graph'] = json.loads(graph)
-    return Response(data)
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/oilgas/details/graphs')
@@ -212,7 +213,10 @@ def station_live_data():
 def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: str, radar: str, analysis: str, lightning: str, precip: str, watchwarn: str, temp: str, visible: str):
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
-    return Response(graphJSON)
+    data = {}
+    data['map'] = graphJSON
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/weather/soundings/image')
