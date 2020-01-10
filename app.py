@@ -172,7 +172,10 @@ def photos(id: str):
     image, map_photo = flickr.get_photo(id)
     data = {}
     data['image'] = image
-    data['map'] = map_photo
+    try:
+        data['map'] = json.loads(map_photo)
+    except
+        pass
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
