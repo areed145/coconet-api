@@ -189,37 +189,43 @@ def create_3d_plot(df, x, y, z, cs, x_name, y_name, z_name, x_color, y_color, z_
         x+'_u'], columns=[y+'_u'], aggfunc=np.mean)
 
     data = [
-        go.Surface(x=df.index.values,
-                   y=df.columns.values,
-                   z=df.values,
-                   colorscale=cs,
-                   connectgaps=True,
-                   ),
+        go.Surface(
+            x=df.index.values,
+            y=df.columns.values,
+            z=df.values,
+            colorscale=cs,
+            connectgaps=True,
+        ),
     ]
 
-    layout = go.Layout(autosize=True,
-                       margin=dict(r=10, t=10, b=10, l=10, pad=0),
-                       hoverlabel=dict(font=dict(family='Ubuntu')),
-                       scene={'aspectmode': 'cube',
-                              'xaxis': {
-                                  'title': x_name,
-                                  'tickfont': {'family': 'Ubuntu', 'size': 10},
-                                  'titlefont': {'family': 'Ubuntu', 'color': x_color},
-                                  'type': 'linear'
-                              },
-                              'yaxis': {
-                                  'title': y_name,
-                                  'tickfont': {'family': 'Ubuntu', 'size': 10},
-                                  'titlefont': {'family': 'Ubuntu', 'color': y_color},
-                                  'tickangle': 1
-                              },
-                              'zaxis': {
-                                  'title': z_name,
-                                  'tickfont': {'family': 'Ubuntu', 'size': 10},
-                                  'titlefont': {'family': 'Ubuntu', 'color': z_color},
-                              },
-                              }
-                       )
+    layout = go.Layout(
+        autosize=True,
+        margin=dict(r=10, t=10, b=10, l=10, pad=0),
+        hoverlabel=dict(
+            font=dict(
+                family='Ubuntu'
+            )
+        ),
+        scene={'aspectmode': 'cube',
+               'xaxis': {
+                   'title': x_name,
+                   'tickfont': {'family': 'Ubuntu', 'size': 10},
+                   'titlefont': {'family': 'Ubuntu', 'color': x_color},
+                   'type': 'linear'
+               },
+               'yaxis': {
+                   'title': y_name,
+                   'tickfont': {'family': 'Ubuntu', 'size': 10},
+                   'titlefont': {'family': 'Ubuntu', 'color': y_color},
+                   'tickangle': 1
+               },
+               'zaxis': {
+                   'title': z_name,
+                   'tickfont': {'family': 'Ubuntu', 'size': 10},
+                   'titlefont': {'family': 'Ubuntu', 'color': z_color},
+               },
+               }
+    )
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
@@ -238,32 +244,40 @@ def create_graph_iot(sensor, time):
     for s in sensor:
         try:
             df_s = df[df['entity_id'] == s]
-            data.append(go.Scatter(x=df_s['timestamp_'],
-                                y=df_s['state'],
-                                name=df_s['entity_id'].values[0],
-                                line=dict(
-                shape='spline',
-                smoothing=0.7,
-                width=3
-            ),
-                mode='lines')
+            data.append(
+                go.Scatter(
+                    x=df_s['timestamp_'],
+                    y=df_s['state'],
+                    name=df_s['entity_id'].values[0],
+                    line=dict(
+                        shape='spline',
+                        smoothing=0.7,
+                        width=3
+                    ),
+                    mode='lines'
+                )
             )
         except:
             pass
 
-    layout = go.Layout(autosize=True,
-                       font=dict(family='Ubuntu'),
-                       showlegend=True,
-                       legend=dict(orientation='h'),
-                       xaxis=dict(range=[start, now]),
-                       hovermode='closest',
-                       hoverlabel=dict(font=dict(family='Ubuntu')),
-                       uirevision=True,
-                       margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                       )
+    colorway = ['#f3cec9', '#e7a4b6', '#cd7eaf',
+                '#a262a9', '#6f4d96', '#3d3b72', '#182844']
+
+    layout = go.Layout(
+        autosize=True,
+        colorway=colorway,
+        font=dict(family='Ubuntu'),
+        showlegend=True,
+        legend=dict(orientation='h'),
+        xaxis=dict(range=[start, now]),
+        hovermode='closest',
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        uirevision=True,
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+    )
     try:
         graphJSON = json.dumps(dict(data=data, layout=layout),
-                           cls=plotly.utils.PlotlyJSONEncoder)
+                               cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
     return graphJSON
@@ -428,21 +442,23 @@ def get_offsets_oilgas(header, rad):
             ),
         ]
 
-        layout = go.Layout(autosize=True,
-                           font=dict(family='Ubuntu'),
-                           hoverlabel=dict(font=dict(family='Ubuntu')),
-                           margin=dict(r=10, t=10, b=30, l=150, pad=0),
-                           yaxis=dict(autorange='reversed'),
-                           showlegend=False,
-                           )
-        layout_ = go.Layout(autosize=True,
-                            font=dict(family='Ubuntu'),
-                            hoverlabel=dict(font=dict(family='Ubuntu')),
-                            showlegend=True,
-                            legend=dict(orientation='h'),
-                            yaxis=dict(type='log'),
-                            margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                            )
+        layout = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            margin=dict(r=10, t=10, b=30, l=150, pad=0),
+            yaxis=dict(autorange='reversed'),
+            showlegend=False,
+        )
+        layout_ = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            showlegend=True,
+            legend=dict(orientation='h'),
+            yaxis=dict(type='log'),
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        )
 
         graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
                                           cls=plotly.utils.PlotlyJSONEncoder)
@@ -552,138 +568,164 @@ def get_graph_oilgas(api):
     try:
         df = get_prodinj([api])
 
-        data = [go.Scatter(x=df['date'],
-                           y=df['oil'],
-                           name='oil',
-                           line=dict(
-            color='#50bf37',
-            shape='spline',
-            smoothing=0.3,
-            width=3
-        ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['water'],
-                       name='water',
-                       line=dict(
-                color='#4286f4',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+        data = [
+            go.Scatter(
+                x=df['date'],
+                y=df['oil'],
+                name='oil',
+                line=dict(
+                    color='#50bf37',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['gas'],
-                       name='gas',
-                       line=dict(
-                color='#ef2626',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['water'],
+                name='water',
+                line=dict(
+                    color='#4286f4',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['steam'],
-                       name='steam',
-                       line=dict(
-                color='#e32980',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['gas'],
+                name='gas',
+                line=dict(
+                    color='#ef2626',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['cyclic'],
-                       name='cyclic',
-                       line=dict(
-                color='#fcd555',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['steam'],
+                name='steam',
+                line=dict(
+                    color='#e32980',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['water_i'],
-                       name='water_inj',
-                       line=dict(
-                color='#03b6fc',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['cyclic'],
+                name='cyclic',
+                line=dict(
+                    color='#fcd555',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['gasair'],
-                       name='gasair',
-                       line=dict(
-                color='#fc7703',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['water_i'],
+                name='water_inj',
+                line=dict(
+                    color='#03b6fc',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['oilgrav'],
-                       name='oilgrav',
-                       line=dict(
-                color='#81d636',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['gasair'],
+                name='gasair',
+                line=dict(
+                    color='#fc7703',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['pcsg'],
-                       name='pcsg',
-                       line=dict(
-                color='#4136d6',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['oilgrav'],
+                name='oilgrav',
+                line=dict(
+                    color='#81d636',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['ptbg'],
-                       name='ptbg',
-                       line=dict(
-                color='#7636d6',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['pcsg'],
+                name='pcsg',
+                line=dict(
+                    color='#4136d6',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['btu'],
-                       name='btu',
-                       line=dict(
-                color='#d636d1',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['ptbg'],
+                name='ptbg',
+                line=dict(
+                    color='#7636d6',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
-            go.Scatter(x=df['date'],
-                       y=df['pinjsurf'],
-                       name='pinjsurf',
-                       line=dict(
-                color='#e38f29',
-                shape='spline',
-                smoothing=0.3,
-                width=3
+            go.Scatter(
+                x=df['date'],
+                y=df['btu'],
+                name='btu',
+                line=dict(
+                    color='#d636d1',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             ),
-            mode='lines'),
+            go.Scatter(
+                x=df['date'],
+                y=df['pinjsurf'],
+                name='pinjsurf',
+                line=dict(
+                    color='#e38f29',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
+            ),
         ]
 
-        layout = go.Layout(autosize=True,
-                           font=dict(family='Ubuntu'),
-                           hovermode='closest',
-                           hoverlabel=dict(font=dict(family='Ubuntu')),
-                           showlegend=True,
-                           legend=dict(orientation='h'),
-                           yaxis=dict(type='log'),
-                           uirevision=True,
-                           margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                           )
+        layout = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hovermode='closest',
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            showlegend=True,
+            legend=dict(orientation='h'),
+            yaxis=dict(type='log'),
+            uirevision=True,
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        )
         graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
@@ -714,111 +756,122 @@ def create_map_oilgas():
         #                  zmin=0,
         #                  zmax=10000000,
         #                  radius=10),
-        go.Scattermapbox(lat=df_water['latitude'].values,
-                         lon=df_water['longitude'].values,
-                         mode='markers',
-                         name='water',
-                         visible='legendonly',
-                         text=df_water['water_cum'].values,
-                         marker=dict(size=13,
-                                     color=df_water['water_cum'].values,
-                                     colorbar=dict(
-                                         title='water',
-                                         lenmode='fraction',
-                                         len=0.30,
-                                     ),
-                                     colorscale=scl_wtr,
-                                     cmin=df_water['water_cum'].quantile(
-                                         0.01),
-                                     cmax=df_water['water_cum'].quantile(
-                                         0.75),
-                                     )
-                         ),
-        go.Scattermapbox(lat=df_oil['latitude'].values,
-                         lon=df_oil['longitude'].values,
-                         mode='markers',
-                         name='oil',
-                         visible=True,
-                         text=df_oil['oil_cum'].values,
-                         marker=dict(size=10,
-                                     color=df_oil['oil_cum'].values,
-                                     colorbar=dict(
-                                         title='oil',
-                                         lenmode='fraction',
-                                         len=0.30,
-                                     ),
-                                     colorscale=scl_oil,
-                                     cmin=df_oil['oil_cum'].quantile(0.01),
-                                     cmax=df_oil['oil_cum'].quantile(0.75),
-                                     )
-                         ),
-        go.Scattermapbox(lat=df_wtrstm['latitude'].values,
-                         lon=df_wtrstm['longitude'].values,
-                         mode='markers',
-                         name='steam',
-                         visible='legendonly',
-                         text=df_wtrstm['wtrstm_cum'].values,
-                         marker=dict(size=7,
-                                     color=df_wtrstm['wtrstm_cum'].values,
-                                     colorbar=dict(
-                                         title='steam',
-                                         lenmode='fraction',
-                                         len=0.30,
-                                     ),
-                                     colorscale=scl_cyc,
-                                     cmin=df_wtrstm['wtrstm_cum'].quantile(
-                                         0.01),
-                                     cmax=df_wtrstm['wtrstm_cum'].quantile(
-                                         0.75),
-                                     )
-                         ),
-        go.Scattermapbox(lat=df_gas['latitude'].values,
-                         lon=df_gas['longitude'].values,
-                         mode='markers',
-                         name='gas',
-                         visible='legendonly',
-                         text=df_gas['gas_cum'].values,
-                         marker=dict(size=7,
-                                     color=df_gas['gas_cum'].values,
-                                     colorbar=dict(
-                                         title='gas',
-                                         lenmode='fraction',
-                                         len=0.30,
-                                     ),
-                                     colorscale=scl_gas,
-                                     cmin=df_gas['gas_cum'].quantile(0.01),
-                                     cmax=df_gas['gas_cum'].quantile(0.75),
-                                     )
-                         ),
-        go.Scattermapbox(lat=df_wells['latitude'].values,
-                         lon=df_wells['longitude'].values,
-                         mode='markers',
-                         text=df_wells['api'].values,
-                         name='wells',
-                         visible=True,
-                         marker=dict(
-            size=4,
-            color='black',
+        go.Scattermapbox(
+            lat=df_water['latitude'].values,
+            lon=df_water['longitude'].values,
+            mode='markers',
+            name='water',
+            visible='legendonly',
+            text=df_water['water_cum'].values,
+            marker=dict(
+                size=13,
+                color=df_water['water_cum'].values,
+                colorbar=dict(
+                    title='water',
+                    lenmode='fraction',
+                    len=0.30,
+                ),
+                colorscale=scl_wtr,
+                cmin=df_water['water_cum'].quantile(
+                    0.01),
+                cmax=df_water['water_cum'].quantile(
+                    0.75),
+            )
         ),
+        go.Scattermapbox(
+            lat=df_oil['latitude'].values,
+            lon=df_oil['longitude'].values,
+            mode='markers',
+            name='oil',
+            visible=True,
+            text=df_oil['oil_cum'].values,
+            marker=dict(
+                size=10,
+                color=df_oil['oil_cum'].values,
+                colorbar=dict(
+                    title='oil',
+                    lenmode='fraction',
+                    len=0.30,
+                ),
+                colorscale=scl_oil,
+                cmin=df_oil['oil_cum'].quantile(0.01),
+                cmax=df_oil['oil_cum'].quantile(0.75),
+            )
+        ),
+        go.Scattermapbox(
+            lat=df_wtrstm['latitude'].values,
+            lon=df_wtrstm['longitude'].values,
+            mode='markers',
+            name='steam',
+            visible='legendonly',
+            text=df_wtrstm['wtrstm_cum'].values,
+            marker=dict(
+                size=7,
+                color=df_wtrstm['wtrstm_cum'].values,
+                colorbar=dict(
+                    title='steam',
+                    lenmode='fraction',
+                    len=0.30,
+                ),
+                colorscale=scl_cyc,
+                cmin=df_wtrstm['wtrstm_cum'].quantile(
+                    0.01),
+                cmax=df_wtrstm['wtrstm_cum'].quantile(
+                    0.75),
+            )
+        ),
+        go.Scattermapbox(
+            lat=df_gas['latitude'].values,
+            lon=df_gas['longitude'].values,
+            mode='markers',
+            name='gas',
+            visible='legendonly',
+            text=df_gas['gas_cum'].values,
+            marker=dict(
+                size=7,
+                color=df_gas['gas_cum'].values,
+                colorbar=dict(
+                    title='gas',
+                    lenmode='fraction',
+                    len=0.30,
+                ),
+                colorscale=scl_gas,
+                cmin=df_gas['gas_cum'].quantile(0.01),
+                cmax=df_gas['gas_cum'].quantile(0.75),
+            )
+        ),
+        go.Scattermapbox(
+            lat=df_wells['latitude'].values,
+            lon=df_wells['longitude'].values,
+            mode='markers',
+            text=df_wells['api'].values,
+            name='wells',
+            visible=True,
+            marker=dict(
+                size=4,
+                color='black',
+            ),
         ),
     ]
 
-    layout = go.Layout(autosize=True,
-                       font=dict(family='Ubuntu'),
-                       hovermode='closest',
-                       hoverlabel=dict(font=dict(family='Ubuntu')),
-                       uirevision=True,
-                       showlegend=True,
-                       legend=dict(orientation='h'),
-                       margin=dict(r=0, t=0, b=0, l=0, pad=0),
-                       mapbox=dict(bearing=0,
-                                   center=dict(lat=36, lon=-119),
-                                   accesstoken=mapbox_access_token,
-                                   style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
-                                   pitch=0,
-                                   zoom=5
-                                   )
-                       )
+    layout = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        hovermode='closest',
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        uirevision=True,
+        showlegend=True,
+        legend=dict(orientation='h'),
+        margin=dict(r=0, t=0, b=0, l=0, pad=0),
+        mapbox=dict(
+            bearing=0,
+            center=dict(lat=36, lon=-119),
+            accesstoken=mapbox_access_token,
+            style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+            pitch=0,
+            zoom=5
+        )
+    )
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -876,43 +929,52 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
         df_lifr = df[df['flight_category'] == 'LIFR']
         legend = False
 
-        data = [go.Scattermapbox(lat=df_vfr['latitude'],
-                                 lon=df_vfr['longitude'],
-                                 text=df_vfr['raw_text'],
-                                 mode='markers',
-                                 name='VFR',
-                                 marker=dict(size=10,
-                                             color='rgb(0,255,0)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_mvfr['latitude'],
-                                 lon=df_mvfr['longitude'],
-                                 text=df_mvfr['raw_text'],
-                                 mode='markers',
-                                 name='MVFR',
-                                 marker=dict(size=10,
-                                             color='rgb(0,0,255)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_ifr['latitude'],
-                                 lon=df_ifr['longitude'],
-                                 text=df_ifr['raw_text'],
-                                 mode='markers',
-                                 name='IFR',
-                                 marker=dict(size=10,
-                                             color='rgb(255,0,0)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_lifr['latitude'],
-                                 lon=df_lifr['longitude'],
-                                 text=df_lifr['raw_text'],
-                                 mode='markers',
-                                 name='LIFR',
-                                 marker=dict(size=10,
-                                             color='rgb(255,127.5,255)',
-                                             )
-                                 )
-                ]
+        data = [
+            go.Scattermapbox(
+                lat=df_vfr['latitude'],
+                lon=df_vfr['longitude'],
+                text=df_vfr['raw_text'],
+                mode='markers',
+                name='VFR',
+                marker=dict(
+                    size=10,
+                    color='rgb(0,255,0)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_mvfr['latitude'],
+                lon=df_mvfr['longitude'],
+                text=df_mvfr['raw_text'],
+                mode='markers',
+                name='MVFR',
+                marker=dict(
+                    size=10,
+                    color='rgb(0,0,255)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_ifr['latitude'],
+                lon=df_ifr['longitude'],
+                text=df_ifr['raw_text'],
+                mode='markers',
+                name='IFR',
+                marker=dict(
+                    size=10,
+                    color='rgb(255,0,0)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_lifr['latitude'],
+                lon=df_lifr['longitude'],
+                text=df_lifr['raw_text'],
+                mode='markers',
+                name='LIFR',
+                marker=dict(
+                    size=10,
+                    color='rgb(255,127.5,255)',
+                )
+            )
+        ]
     elif prop == 'sky_cover_0':
         df_clr = df[df['sky_cover_0'] == 'CLR']
         df_few = df[df['sky_cover_0'] == 'FEW']
@@ -922,61 +984,74 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
         df_ovx = df[df['sky_cover_0'] == 'OVX']
         legend = True
 
-        data = [go.Scattermapbox(lat=df_clr['latitude'],
-                                 lon=df_clr['longitude'],
-                                 text=df_clr['raw_text'],
-                                 mode='markers',
-                                 name='CLR',
-                                 marker=dict(size=10,
-                                             color='rgb(21, 230, 234)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_few['latitude'],
-                                 lon=df_few['longitude'],
-                                 text=df_few['raw_text'],
-                                 mode='markers',
-                                 name='FEW',
-                                 marker=dict(size=10,
-                                             color='rgb(194, 234, 21)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_sct['latitude'],
-                                 lon=df_sct['longitude'],
-                                 text=df_sct['raw_text'],
-                                 mode='markers',
-                                 name='SCT',
-                                 marker=dict(size=10,
-                                             color='rgb(234, 216, 21)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_bkn['latitude'],
-                                 lon=df_bkn['longitude'],
-                                 text=df_bkn['raw_text'],
-                                 mode='markers',
-                                 name='BKN',
-                                 marker=dict(size=10,
-                                             color='rgb(234, 181, 21)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_ovc['latitude'],
-                                 lon=df_ovc['longitude'],
-                                 text=df_ovc['raw_text'],
-                                 mode='markers',
-                                 name='OVC',
-                                 marker=dict(size=10,
-                                             color='rgb(234, 77, 21)',
-                                             )
-                                 ),
-                go.Scattermapbox(lat=df_ovx['latitude'],
-                                 lon=df_ovx['longitude'],
-                                 text=df_ovx['raw_text'],
-                                 mode='markers',
-                                 name='OVX',
-                                 marker=dict(size=10,
-                                             color='rgb(234, 21, 21)',
-                                             )
-                                 )
-                ]
+        data = [
+            go.Scattermapbox(
+                lat=df_clr['latitude'],
+                lon=df_clr['longitude'],
+                text=df_clr['raw_text'],
+                mode='markers',
+                name='CLR',
+                marker=dict(
+                    size=10,
+                    color='rgb(21, 230, 234)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_few['latitude'],
+                lon=df_few['longitude'],
+                text=df_few['raw_text'],
+                mode='markers',
+                name='FEW',
+                marker=dict(
+                    size=10,
+                    color='rgb(194, 234, 21)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_sct['latitude'],
+                lon=df_sct['longitude'],
+                text=df_sct['raw_text'],
+                mode='markers',
+                name='SCT',
+                marker=dict(
+                    size=10,
+                    color='rgb(234, 216, 21)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_bkn['latitude'],
+                lon=df_bkn['longitude'],
+                text=df_bkn['raw_text'],
+                mode='markers',
+                name='BKN',
+                marker=dict(
+                    size=10,
+                    color='rgb(234, 181, 21)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_ovc['latitude'],
+                lon=df_ovc['longitude'],
+                text=df_ovc['raw_text'],
+                mode='markers',
+                name='OVC',
+                marker=dict(
+                    size=10,
+                    color='rgb(234, 77, 21)',
+                )
+            ),
+            go.Scattermapbox(
+                lat=df_ovx['latitude'],
+                lon=df_ovx['longitude'],
+                text=df_ovx['raw_text'],
+                mode='markers',
+                name='OVX',
+                marker=dict(
+                    size=10,
+                    color='rgb(234, 21, 21)',
+                )
+            )
+        ]
     else:
         if prop == 'wind_dir_degrees':
             cs = cs_circle
@@ -1027,70 +1102,124 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
             cmin = df[prop].quantile(0.01)
             cmax = df[prop].quantile(0.99)
 
-        data = [go.Scattermapbox(lat=df['latitude'],
-                                 lon=df['longitude'],
-                                 text=df['raw_text'],
-                                 mode='markers',
-                                 marker=dict(size=10,
-                                             color=params[prop][2] *
-                                             df[prop] + params[prop][3],
-                                             colorbar=dict(
-                                                 title=params[prop][4]),
-                                             colorscale=cs,
-                                             cmin=params[prop][2] *
-                                             cmin + params[prop][3],
-                                             cmax=params[prop][2] *
-                                             cmax + params[prop][3],
-                                             )
-                                 )
-                ]
+        data = [
+            go.Scattermapbox(
+                lat=df['latitude'],
+                lon=df['longitude'],
+                text=df['raw_text'],
+                mode='markers',
+                marker=dict(
+                    size=10,
+                    color=params[prop][2] *
+                    df[prop] + params[prop][3],
+                    colorbar=dict(
+                        title=params[prop][4]),
+                    colorscale=cs,
+                    cmin=params[prop][2] *
+                    cmin + params[prop][3],
+                    cmax=params[prop][2] *
+                    cmax + params[prop][3],
+                )
+            )
+        ]
 
     layers = []
 
     if temp == '1':
-        layers.append(dict(below='traces', sourcetype='raster', source=[
-                      'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/NDFD_temp/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:1&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                below='traces',
+                sourcetype='raster',
+                source=[
+                    'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/NDFD_temp/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:1&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
     if precip == '1':
-        layers.append(dict(below='traces', sourcetype='raster', source=[
-                      'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/wpc_precip_hazards/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:0&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                below='traces',
+                sourcetype='raster',
+                source=[
+                    'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/wpc_precip_hazards/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:0&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
     if watchwarn == '1':
-        layers.append(dict(below='traces', sourcetype='raster', source=[
-                      'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:1&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                below='traces',
+                sourcetype='raster',
+                source=[
+                    'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:1&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
     if infrared == '1':
-        layers.append(dict(below='traces', opacity=0.5, sourcetype='raster', source=[
-                      'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:20,8&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                below='traces',
+                opacity=0.5,
+                sourcetype='raster',
+                source=[
+                    'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:20,8&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
     if visible == '1':
-        layers.append(dict(below='traces', opacity=0.5, sourcetype='raster', source=[
-                      'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:16&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                below='traces',
+                opacity=0.5,
+                sourcetype='raster',
+                source=[
+                    'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:16&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
     if radar == '1':
-        layers.append(dict(below='traces', sourcetype='raster', source=[
-                      'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:0&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                below='traces',
+                sourcetype='raster',
+                source=[
+                    'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:0&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
     if lightning == '1':
-        layers.append(dict(below='traces', sourcetype='raster', source=[
-                      'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_emulated_imagery_lightningstrikedensity_goes_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:0&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                below='traces',
+                sourcetype='raster',
+                source=[
+                    'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_emulated_imagery_lightningstrikedensity_goes_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:0&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
     if analysis == '1':
-        layers.append(dict(sourcetype='raster', source=[
-                      'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/natl_fcst_wx_chart/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:1,2&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']))
+        layers.append(
+            dict(
+                sourcetype='raster',
+                source=[
+                    'https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/natl_fcst_wx_chart/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:1,2&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
+            )
+        )
 
     lat = float(lat)
     lon = float(lon)
     zoom = float(zoom)
 
-    layout = go.Layout(autosize=True,
-                       font=dict(family='Ubuntu'),
-                       legend=dict(orientation='h'),
-                       showlegend=legend,
-                       hovermode='closest',
-                       hoverlabel=dict(font=dict(family='Ubuntu')),
-                       uirevision=True,
-                       margin=dict(r=0, t=0, b=0, l=0, pad=0),
-                       mapbox=dict(bearing=0,
-                                   center=dict(lat=lat, lon=lon),
-                                   accesstoken=mapbox_access_token,
-                                   style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
-                                   pitch=0,
-                                   layers=layers,
-                                   zoom=zoom))
+    layout = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        legend=dict(orientation='h'),
+        showlegend=legend,
+        hovermode='closest',
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        uirevision=True,
+        margin=dict(r=0, t=0, b=0, l=0, pad=0),
+        mapbox=dict(
+            bearing=0,
+            center=dict(lat=lat, lon=lon),
+            accesstoken=mapbox_access_token,
+            style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+            pitch=0,
+            layers=layers,
+            zoom=zoom))
 
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
@@ -1149,7 +1278,6 @@ def create_range_aprs(time):
 
     layout = go.Layout(
         autosize=True,
-        #     height=200,
         hoverlabel=dict(
             font=dict(
                 family='Ubuntu'
@@ -1205,13 +1333,15 @@ def create_map_aprs(script, prop, time):
         }).sort([('timestamp_', -1)])))
 
     if prop == 'none':
-        data_map = [go.Scattermapbox(lat=df['latitude'],
-                                     lon=df['longitude'],
-                                     text=df['raw'],
-                                     mode='markers',
-                                     marker=dict(size=10)
-                                     )
-                    ]
+        data_map = [
+            go.Scattermapbox(
+                lat=df['latitude'],
+                lon=df['longitude'],
+                text=df['raw'],
+                mode='markers',
+                marker=dict(size=10)
+            )
+        ]
     else:
         cs = cs_normal
         if prop == 'course':
@@ -1221,116 +1351,153 @@ def create_map_aprs(script, prop, time):
         else:
             cmin = df[prop].quantile(0.01)
             cmax = df[prop].quantile(0.99)
-        data_map = [go.Scattermapbox(lat=df['latitude'],
-                                     lon=df['longitude'],
-                                     text=df['raw'],
-                                     mode='markers',
-                                     marker=dict(size=10,
-                                                 color=params[prop][2] *
-                                                 df[prop] + params[prop][3],
-                                                 colorbar=dict(
-                                                     title=params[prop][4]),
-                                                 colorscale=cs,
-                                                 cmin=params[prop][2] *
-                                                 cmin + params[prop][3],
-                                                 cmax=params[prop][2] *
-                                                 cmax + params[prop][3],
-                                                 )
-                                     )
-                    ]
-    layout_map = go.Layout(autosize=True,
-                           font=dict(family='Ubuntu'),
-                           showlegend=False,
-                           hovermode='closest',
-                           hoverlabel=dict(font=dict(family='Ubuntu')),
-                           uirevision=True,
-                           margin=dict(r=0, t=0, b=0, l=0, pad=0),
-                           mapbox=dict(bearing=0,
-                                       center=dict(lat=30, lon=-95),
-                                       accesstoken=mapbox_access_token,
-                                       style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
-                                       pitch=0,
-                                       zoom=6
-                                       )
-                           )
+        data_map = [
+            go.Scattermapbox(
+                lat=df['latitude'],
+                lon=df['longitude'],
+                text=df['raw'],
+                mode='markers',
+                marker=dict(
+                    size=10,
+                    color=params[prop][2] *
+                    df[prop] + params[prop][3],
+                    colorbar=dict(
+                        title=params[prop][4]),
+                    colorscale=cs,
+                    cmin=params[prop][2] *
+                    cmin + params[prop][3],
+                    cmax=params[prop][2] *
+                    cmax + params[prop][3],
+                )
+            )
+        ]
+    layout_map = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        showlegend=False,
+        hovermode='closest',
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        uirevision=True,
+        margin=dict(r=0, t=0, b=0, l=0, pad=0),
+        mapbox=dict(
+            bearing=0,
+            center=dict(lat=30, lon=-95),
+            accesstoken=mapbox_access_token,
+            style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+            pitch=0,
+            zoom=6
+        )
+    )
 
     data_speed = [
-        go.Scatter(x=df['timestamp_'],
-                   y=df['speed'],
-                   name='Speed (mph)',
-                   line=dict(color='rgb(255, 127, 63)',
-                             width=3,
-                             shape='spline',
-                             smoothing=0.3
-                             ),
-                   mode='lines'),
+        go.Scatter(
+            x=df['timestamp_'],
+            y=df['speed'],
+            name='Speed (mph)',
+            line=dict(
+                color='rgb(255, 127, 63)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            mode='lines'
+        ),
     ]
 
-    layout_speed = go.Layout(autosize=True,
-                             height=200,
-                             hoverlabel=dict(font=dict(family='Ubuntu')),
-                             yaxis=dict(domain=[0.02, 0.98],
-                                        title='Speed (mph)',
-                                        fixedrange=True,
-                                        titlefont=dict(
-                                 color='rgb(255, 95, 63)')
-                             ),
-                             xaxis=dict(type='date', fixedrange=False,
-                                        range=[start, now]),
-                             margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                             showlegend=False,
-                             )
+    layout_speed = go.Layout(
+        autosize=True,
+        height=200,
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Speed (mph)',
+            fixedrange=True,
+            titlefont=dict(
+                color='rgb(255, 95, 63)'
+            )
+        ),
+        xaxis=dict(
+            type='date',
+            fixedrange=False,
+            range=[start, now]
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     data_alt = [
-        go.Scatter(x=df['timestamp_'],
-                   y=df['altitude'],
-                   name='Altitude (ft)',
-                   line=dict(color='rgb(255, 95, 63)',
-                             width=3, shape='spline',
-                             smoothing=0.3),
-                   mode='lines'),
+        go.Scatter(
+            x=df['timestamp_'],
+            y=df['altitude'],
+            name='Altitude (ft)',
+            line=dict(
+                color='rgb(255, 95, 63)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            mode='lines'
+        ),
     ]
 
-    layout_alt = go.Layout(autosize=True,
-                           font=dict(family='Ubuntu'),
-                           hoverlabel=dict(font=dict(family='Ubuntu')),
-                           height=200,
-                           yaxis=dict(domain=[0.02, 0.98],
-                                      title='Altitude (ft)',
-                                      fixedrange=True,
-                                      titlefont=dict(color='rgb(255, 95, 63)')
-                                      ),
-                           xaxis=dict(type='date', fixedrange=False,
-                                      range=[start, now]),
-                           margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                           showlegend=False,
-                           )
+    layout_alt = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        height=200,
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Altitude (ft)',
+            fixedrange=True,
+            titlefont=dict(
+                color='rgb(255, 95, 63)'
+            )
+        ),
+        xaxis=dict(
+            type='date',
+            fixedrange=False,
+            range=[start, now]
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     data_course = [
-        go.Scatter(x=df['timestamp_'],
-                   y=df['course'],
-                   name='Course (degrees)',
-                   line=dict(color='rgb(255, 63, 63)',
-                             width=3, shape='spline',
-                             smoothing=0.3),
-                   mode='lines'),
+        go.Scatter(
+            x=df['timestamp_'],
+            y=df['course'],
+            name='Course (degrees)',
+            line=dict(
+                color='rgb(255, 63, 63)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            mode='lines'
+        ),
     ]
 
-    layout_course = go.Layout(autosize=True,
-                              font=dict(family='Ubuntu'),
-                              hoverlabel=dict(font=dict(family='Ubuntu')),
-                              height=200,
-                              yaxis=dict(domain=[0.02, 0.98],
-                                         title='Course (degrees)',
-                                         fixedrange=True,
-                                         titlefont=dict(
-                                  color='rgb(255, 95, 63)')
-                              ),
-                              xaxis=dict(type='date', fixedrange=False,
-                                         range=[start, now]),
-                              margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                              showlegend=False,
-                              )
+    layout_course = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        height=200,
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Course (degrees)',
+            fixedrange=True,
+            titlefont=dict(
+                color='rgb(255, 95, 63)'
+            )
+        ),
+        xaxis=dict(
+            type='date',
+            fixedrange=False,
+            range=[start, now]
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     graphJSON_map = json.dumps(dict(data=data_map, layout=layout_map),
                                cls=plotly.utils.PlotlyJSONEncoder)
@@ -1444,7 +1611,7 @@ def create_wx_figs(time, sid):
     df_wx_raw.loc[df_wx_raw['wind_mph'] == 0, 'wind_degrees'] = pd.np.nan
 
     wind = df_wx_raw[['wind_cat', 'wind_degrees_cat']]
-    wind.loc[:,'count'] = 1
+    wind.loc[:, 'count'] = 1
     # wind['count'] = 1
     ct = len(wind)
     wind = pd.pivot_table(wind, values='count', index=[
@@ -1476,311 +1643,472 @@ def create_wx_figs(time, sid):
     td_min = min(df_wx_raw['temp_f'].min(), df_wx_raw['dewpoint_f'].min()) - 1
 
     data_td = [
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['temp_f'],
-                   name='Temperature (F)',
-                   line=dict(color='rgb(255, 95, 63)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y',
-                   mode='lines'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['heat_index_f'],
-                   name='Heat Index (F)',
-                   line=dict(color='#F42ED0', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y',
-                   mode='lines'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['windchill_f'],
-                   name='Windchill (F)',
-                   line=dict(color='#2EE8F4', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y',
-                   mode='lines'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['dewpoint_f'],
-                   name='Dewpoint (F)',
-                   line=dict(color='rgb(63, 127, 255)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y2',
-                   mode='lines'),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['temp_f'],
+            name='Temperature (F)',
+            line=dict(
+                color='rgb(255, 95, 63)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['heat_index_f'],
+            name='Heat Index (F)',
+            line=dict(
+                color='#F42ED0',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['windchill_f'],
+            name='Windchill (F)',
+            line=dict(
+                color='#2EE8F4',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['dewpoint_f'],
+            name='Dewpoint (F)',
+            line=dict(
+                color='rgb(63, 127, 255)',
+                width=3,
+                shape='spline',
+                smoothing=0.3),
+            xaxis='x',
+            yaxis='y2',
+            mode='lines'
+        ),
     ]
 
-    layout_td = go.Layout(autosize=True,
-                          font=dict(family='Ubuntu'),
-                          hoverlabel=dict(font=dict(family='Ubuntu')),
-                          height=200,
-                          yaxis=dict(domain=[0.02, 0.98],
-                                     title='Temperature (F)',
-                                     range=[td_min, td_max],
-                                     fixedrange=True,
-                                     titlefont=dict(
-                                         family='Ubuntu', color='rgb(255, 95, 63)')
-                                     ),
-                          yaxis2=dict(domain=[0.02, 0.98],
-                                      title='Dewpoint (F)',
-                                      overlaying='y',
-                                      side='right',
-                                      range=[td_min, td_max],
-                                      fixedrange=True,
-                                      titlefont=dict(
-                                          family='Ubuntu', color='rgb(63, 127, 255)')
-                                      ),
-                          xaxis=dict(type='date',
-                                     # fixedrange=True,
-                                     range=[dt_min, dt_max],
-                                     ),
-                          margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                          showlegend=False,
-                          )
+    layout_td = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        height=200,
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Temperature (F)',
+            range=[td_min, td_max],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(255, 95, 63)'
+            )
+        ),
+        yaxis2=dict(
+            domain=[0.02, 0.98],
+            title='Dewpoint (F)',
+            overlaying='y',
+            side='right',
+            range=[td_min, td_max],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(63, 127, 255)')
+        ),
+        xaxis=dict(type='date',
+                   # fixedrange=True,
+                   range=[dt_min, dt_max],
+                   ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     data_pr = [
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['pressure_in'],
-                   name='Pressure (inHg)',
-                   line=dict(color='rgb(255, 127, 63)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y',
-                   mode='lines'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['relative_humidity'],
-                   name='Humidity (%)',
-                   line=dict(color='rgb(127, 255, 63)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y2',
-                   mode='lines'),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['pressure_in'],
+            name='Pressure (inHg)',
+            line=dict(
+                color='rgb(255, 127, 63)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['relative_humidity'],
+            name='Humidity (%)',
+            line=dict(
+                color='rgb(127, 255, 63)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y2',
+            mode='lines'
+        ),
     ]
 
-    layout_pr = go.Layout(autosize=True,
-                          height=200,
-                          font=dict(family='Ubuntu'),
-                          hoverlabel=dict(font=dict(family='Ubuntu')),
-                          yaxis=dict(domain=[0.02, 0.98],
-                                     title='Pressure (inHg)',
-                                     # range=[0,120],
-                                     fixedrange=True,
-                                     titlefont=dict(
-                                         family='Ubuntu', color='rgb(255, 127, 63)')
-                                     ),
-                          yaxis2=dict(domain=[0.02, 0.98],
-                                      title='Humidity (%)',
-                                      overlaying='y',
-                                      side='right',
-                                      # range=[0,120],
-                                      fixedrange=True,
-                                      titlefont=dict(
-                                          family='Ubuntu', color='rgb(127, 255, 63)')
-                                      ),
-                          xaxis=dict(type='date',
-                                     # fixedrange=True,
-                                     range=[dt_min, dt_max],
-                                     ),
-                          margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                          showlegend=False,
-                          )
+    layout_pr = go.Layout(
+        autosize=True,
+        height=200,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Pressure (inHg)',
+            # range=[0,120],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(255, 127, 63)')
+        ),
+        yaxis2=dict(
+            domain=[0.02, 0.98],
+            title='Humidity (%)',
+            overlaying='y',
+            side='right',
+            # range=[0,120],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu', color='rgb(127, 255, 63)')
+        ),
+        xaxis=dict(
+            type='date',
+            # fixedrange=True,
+            range=[dt_min, dt_max],
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     data_pc = [
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['precip_1hr_in'],
-                   name='Precip (in/hr)',
-                   line=dict(color='rgb(31, 190, 255)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y',
-                   mode='lines'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['precip_cum_in'],
-                   name='Precip Cumulative (in)',
-                   line=dict(color='rgb(63, 255, 255)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y2',
-                   mode='lines'),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['precip_1hr_in'],
+            name='Precip (in/hr)',
+            line=dict(
+                color='rgb(31, 190, 255)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['precip_cum_in'],
+            name='Precip Cumulative (in)',
+            line=dict(
+                color='rgb(63, 255, 255)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y2',
+            mode='lines'
+        ),
     ]
 
-    layout_pc = go.Layout(autosize=True,
-                          height=200,
-                          font=dict(family='Ubuntu'),
-                          hoverlabel=dict(font=dict(family='Ubuntu')),
-                          yaxis=dict(domain=[0.02, 0.98],
-                                     title='Precip (in/hr)',
-                                     # range=[0,120],
-                                     fixedrange=True,
-                                     titlefont=dict(
-                                         family='Ubuntu', color='rgb(31, 190, 255)')
-                                     ),
-                          yaxis2=dict(domain=[0.02, 0.98],
-                                      title='Precip Cumulative (in)',
-                                      overlaying='y',
-                                      side='right',
-                                      # range=[0,120],
-                                      fixedrange=True,
-                                      titlefont=dict(
-                                          family='Ubuntu', color='rgb(63, 255, 255)')
-                                      ),
-                          xaxis=dict(type='date',
-                                     # fixedrange=True,
-                                     range=[dt_min, dt_max],
-                                     ),
-                          margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                          showlegend=False,
-                          )
+    layout_pc = go.Layout(
+        autosize=True,
+        height=200,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Precip (in/hr)',
+            # range=[0,120],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(31, 190, 255)')
+        ),
+        yaxis2=dict(
+            domain=[0.02, 0.98],
+            title='Precip Cumulative (in)',
+            overlaying='y',
+            side='right',
+            # range=[0,120],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(63, 255, 255)')
+        ),
+        xaxis=dict(
+            type='date',
+            # fixedrange=True,
+            range=[dt_min, dt_max],
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     data_cb = [
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['cloudbase'],
-                   name='Minimum Cloudbase (ft)',
-                   line=dict(color='rgb(90, 66, 245)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y',
-                   mode='lines'),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['cloudbase'],
+            name='Minimum Cloudbase (ft)',
+            line=dict(
+                color='rgb(90, 66, 245)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='lines'
+        ),
     ]
 
-    layout_cb = go.Layout(autosize=True,
-                          height=200,
-                          font=dict(family='Ubuntu'),
-                          hoverlabel=dict(font=dict(family='Ubuntu')),
-                          yaxis=dict(domain=[0.02, 0.98],
-                                     title='Minimum Cloudbase (ft)',
-                                     # range=[0,120],
-                                     fixedrange=True,
-                                     titlefont=dict(
-                                         family='Ubuntu', color='rgb(90, 66, 245)')
-                                     ),
-                          xaxis=dict(type='date',
-                                     # fixedrange=True,
-                                     range=[dt_min, dt_max],
-                                     ),
-                          margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                          showlegend=False,
-                          )
+    layout_cb = go.Layout(
+        autosize=True,
+        height=200,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Minimum Cloudbase (ft)',
+            # range=[0,120],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(90, 66, 245)')
+        ),
+        xaxis=dict(
+            type='date',
+            # fixedrange=True,
+            range=[dt_min, dt_max],
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     data_wd = [
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['wind_degrees'],
-                   name='Wind Direction (degrees)',
-                   marker=dict(color='rgb(190, 63, 255)',
-                               size=8, symbol='x'),
-                   xaxis='x', yaxis='y',
-                   mode='markers'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['wind_gust_mph'] * 0.869,
-                   name='Wind Gust (kts)',
-                   line=dict(color='rgb(31, 190, 15)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y2',
-                   mode='lines'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['wind_mph'] * 0.869,
-                   name='Wind Speed (kts)',
-                   line=dict(color='rgb(127, 255, 31)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y2',
-                   mode='lines'),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['wind_degrees'],
+            name='Wind Direction (degrees)',
+            marker=dict(
+                color='rgb(190, 63, 255)',
+                size=8,
+                symbol='x'
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='markers'
+        ),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['wind_gust_mph'] * 0.869,
+            name='Wind Gust (kts)',
+            line=dict(
+                color='rgb(31, 190, 15)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y2',
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['wind_mph'] * 0.869,
+            name='Wind Speed (kts)',
+            line=dict(
+                color='rgb(127, 255, 31)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y2',
+            mode='lines'
+        ),
     ]
 
-    layout_wd = go.Layout(autosize=True,
-                          height=200,
-                          font=dict(family='Ubuntu'),
-                          hoverlabel=dict(font=dict(family='Ubuntu')),
-                          yaxis=dict(domain=[0.02, 0.98],
-                                     title='Wind Direction (degrees)',
-                                     range=[0, 360],
-                                     fixedrange=True,
-                                     titlefont=dict(
-                                         family='Ubuntu', color='rgb(190, 63, 255)')
-                                     ),
-                          yaxis2=dict(domain=[0.02, 0.98],
-                                      title='Wind Speed / Gust (kts)',
-                                      overlaying='y',
-                                      side='right',
-                                      range=[
-                                          0, df_wx_raw['wind_gust_mph'].max() * 0.869],
-                                      fixedrange=True,
-                                      titlefont=dict(
-                                          family='Ubuntu', color='rgb(127, 255, 31)')
-                                      ),
-                          xaxis=dict(type='date',
-                                     # fixedrange=True,
-                                     range=[dt_min, dt_max],
-                                     ),
-                          margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                          showlegend=False,
-                          )
+    layout_wd = go.Layout(
+        autosize=True,
+        height=200,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Wind Direction (degrees)',
+            range=[0, 360],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(190, 63, 255)'
+            )
+        ),
+        yaxis2=dict(
+            domain=[0.02, 0.98],
+            title='Wind Speed / Gust (kts)',
+            overlaying='y',
+            side='right',
+            range=[
+                0, df_wx_raw['wind_gust_mph'].max() * 0.869],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu',
+                color='rgb(127, 255, 31)'
+            )
+        ),
+        xaxis=dict(
+            type='date',
+            # fixedrange=True,
+            range=[dt_min, dt_max],
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
     data_su = [
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['solar_radiation'],
-                   name='Solar Radiation (W/m<sup>2</sup>)',
-                   line=dict(color='rgb(255, 63, 127)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y',
-                   mode='lines'),
-        go.Scatter(x=df_wx_raw.index,
-                   y=df_wx_raw['UV'],
-                   name='UV',
-                   line=dict(color='rgb(255, 190, 63)', width=3, shape='spline',
-                             smoothing=0.3),
-                   xaxis='x', yaxis='y2',
-                   mode='lines'),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['solar_radiation'],
+            name='Solar Radiation (W/m<sup>2</sup>)',
+            line=dict(
+                color='rgb(255, 63, 127)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y',
+            mode='lines'),
+        go.Scatter(
+            x=df_wx_raw.index,
+            y=df_wx_raw['UV'],
+            name='UV',
+            line=dict(
+                color='rgb(255, 190, 63)',
+                width=3,
+                shape='spline',
+                smoothing=0.3
+            ),
+            xaxis='x',
+            yaxis='y2',
+            mode='lines'),
     ]
 
-    layout_su = go.Layout(autosize=True,
-                          height=200,
-                          font=dict(family='Ubuntu'),
-                          hoverlabel=dict(font=dict(family='Ubuntu')),
-                          yaxis=dict(domain=[0.02, 0.98],
-                                     title='Solar Radiation (W/m<sup>2</sup>)',
-                                     # range=[0,120],
-                                     fixedrange=True,
-                                     titlefont=dict(
-                                         family='Ubuntu', color='rgb(255, 63, 127)')
-                                     ),
-                          yaxis2=dict(domain=[0.02, 0.98],
-                                      title='UV',
-                                      overlaying='y',
-                                      side='right',
-                                      # range=[0,120],
-                                      fixedrange=True,
-                                      titlefont=dict(
-                                          family='Ubuntu', color='rgb(255, 190, 63)')
-                                      ),
-                          xaxis=dict(type='date',
-                                     # fixedrange=True,
-                                     range=[dt_min, dt_max],
-                                     ),
-                          margin=dict(r=50, t=30, b=30, l=60, pad=0),
-                          showlegend=False,
-                          )
+    layout_su = go.Layout(
+        autosize=True,
+        height=200,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        yaxis=dict(
+            domain=[0.02, 0.98],
+            title='Solar Radiation (W/m<sup>2</sup>)',
+            # range=[0,120],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu', color='rgb(255, 63, 127)')
+        ),
+        yaxis2=dict(
+            domain=[0.02, 0.98],
+            title='UV',
+            overlaying='y',
+            side='right',
+            # range=[0,120],
+            fixedrange=True,
+            titlefont=dict(
+                family='Ubuntu', color='rgb(255, 190, 63)')
+        ),
+        xaxis=dict(
+            type='date',
+            # fixedrange=True,
+            range=[dt_min, dt_max],
+        ),
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        showlegend=False,
+    )
 
-    t1 = go.Barpolar(r=wind_temp['>10'], theta=wind_temp['wind_cat'],
-                     name='>10 mph', width=10,
-                     base=0,
-                     marker=dict(color='#ffff00', line=dict(color='#ffff00')),
-                     )
-    t2 = go.Barpolar(r=wind_temp['5-10'], theta=wind_temp['wind_cat'],
-                     name='5-10 mph', width=10,
-                     base=0,
-                     marker=dict(color='#ffcc00', line=dict(color='#ffcc00')),
-                     )
-    t3 = go.Barpolar(r=wind_temp['2-5'], theta=wind_temp['wind_cat'],
-                     name='2-5 mph', width=10,
-                     base=0,
-                     marker=dict(color='#bfff00', line=dict(color='#bfff00')),
-                     )
-    t4 = go.Barpolar(r=wind_temp['1-2'], theta=wind_temp['wind_cat'],
-                     name='1-2 mph', width=10,
-                     base=0,
-                     marker=dict(color='#00cc00', line=dict(color='#00cc00')),
-                     )
-    t5 = go.Barpolar(r=wind_temp['0-1'], theta=wind_temp['wind_cat'],
-                     name='0-1 mph', width=10,
-                     base=0,
-                     marker=dict(color='#009999', line=dict(color='#009999')),
-                     )
-    t6 = go.Barpolar(r=wind_temp['calm'], theta=wind_temp['wind_cat'],
-                     name='calm', width=10,
-                     base=0,
-                     marker=dict(color='#3366ff', line=dict(color='#3366ff')),
-                     )
+    t1 = go.Barpolar(
+        r=wind_temp['>10'],
+        theta=wind_temp['wind_cat'],
+        name='>10 mph',
+        width=10,
+        base=0,
+        marker=dict(
+            color='#ffff00',
+            line=dict(color='#ffff00')
+        ),
+    )
+    t2 = go.Barpolar(
+        r=wind_temp['5-10'],
+        theta=wind_temp['wind_cat'],
+        name='5-10 mph',
+        width=10,
+        base=0,
+        marker=dict(color='#ffcc00',
+                    line=dict(color='#ffcc00')
+                    ),
+    )
+    t3 = go.Barpolar(
+        r=wind_temp['2-5'],
+        theta=wind_temp['wind_cat'],
+        name='2-5 mph',
+        width=10,
+        base=0,
+        marker=dict(
+            color='#bfff00',
+            line=dict(color='#bfff00')
+        ),
+    )
+    t4 = go.Barpolar(
+        r=wind_temp['1-2'],
+        theta=wind_temp['wind_cat'],
+        name='1-2 mph',
+        width=10,
+        base=0,
+        marker=dict(
+            color='#00cc00',
+            line=dict(color='#00cc00')
+        ),
+    )
+    t5 = go.Barpolar(
+        r=wind_temp['0-1'],
+        theta=wind_temp['wind_cat'],
+        name='0-1 mph', width=10,
+        base=0,
+        marker=dict(
+            color='#009999',
+            line=dict(color='#009999')
+        ),
+    )
+    t6 = go.Barpolar(
+        r=wind_temp['calm'],
+        theta=wind_temp['wind_cat'],
+        name='calm',
+        width=10,
+        base=0,
+        marker=dict(
+            color='#3366ff',
+            line=dict(color='#3366ff')
+        ),
+    )
 
     data_wr = [t1, t2, t3, t4, t5, t6]
 
