@@ -98,7 +98,7 @@ def get_photo_rows(id, width):
             mode='markers',
             marker=dict(
                 size=10,
-                color='2EF4F1',
+                color='#2EF4F1',
             )
         )
     ]
@@ -147,7 +147,7 @@ def get_photo(id):
                 mode='markers',
                 marker=dict(
                     size=10,
-                    color='2EF4F1',
+                    color='#2EF4F1',
                 )
             )
         ]
