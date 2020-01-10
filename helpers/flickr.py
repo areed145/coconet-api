@@ -96,8 +96,10 @@ def get_photo_rows(id, width):
             lat=lats,
             lon=lons,
             mode='markers',
-            color='2EF4F1',
-            marker=dict(size=10)
+            marker=dict(
+                size=10,
+                color='2EF4F1',
+            )
         )
     ]
     layout = go.Layout(
@@ -143,9 +145,9 @@ def get_photo(id):
                 lat=[lat_c],
                 lon=[lon_c],
                 mode='markers',
-                color='2EF4F1',
                 marker=dict(
-                    size=10
+                    size=10,
+                    color='2EF4F1',
                 )
             )
         ]
