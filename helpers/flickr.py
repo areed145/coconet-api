@@ -129,4 +129,38 @@ def get_photo_rows(id, width):
 def get_photo(id):
     image = list(db.photos.find({'id': id}))[0]
     image.pop('_id')
+    lat_c = image['location']['latitude']
+    lon_c = image['location']['longitude']
+    data = [
+        go.Scattermapbox(
+            lat=lat_c,
+            lon=lon_c,
+            mode='markers',
+            marker=dict(size=10)
+        )
+    ]
+    layout = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        showlegend=False,
+        hovermode='closest',
+        hoverlabel=dict(
+            font=dict(
+                family='Ubuntu'
+            )
+        ),
+        uirevision=True,
+        margin=dict(r=0, t=0, b=0, l=0, pad=0),
+        mapbox=dict(
+            bearing=0,
+            center=dict(lat=lat_c, lon=lon_c),
+            accesstoken=mapbox_access_token,
+            style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+            pitch=0,
+            zoom=7
+        )
+    )
+
+    graphJSON = json.dumps(dict(data=data, layout=layout),
+                           cls=plotly.utils.PlotlyJSONEncoder)
     return image
