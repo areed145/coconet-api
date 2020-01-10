@@ -236,17 +236,20 @@ def create_graph_iot(sensor, time):
 
     data = []
     for s in sensor:
-        df_s = df[df['entity_id'] == s]
-        data.append(go.Scatter(x=df_s['timestamp_'],
-                               y=df_s['state'],
-                               name=df_s['entity_id'].values[0],
-                               line=dict(
-            shape='spline',
-            smoothing=0.7,
-            width=3
-        ),
-            mode='lines')
-        )
+        try:
+            df_s = df[df['entity_id'] == s]
+            data.append(go.Scatter(x=df_s['timestamp_'],
+                                y=df_s['state'],
+                                name=df_s['entity_id'].values[0],
+                                line=dict(
+                shape='spline',
+                smoothing=0.7,
+                width=3
+            ),
+                mode='lines')
+            )
+        except:
+            pass
 
     layout = go.Layout(autosize=True,
                        font=dict(family='Ubuntu'),
@@ -258,8 +261,11 @@ def create_graph_iot(sensor, time):
                        uirevision=True,
                        margin=dict(r=50, t=30, b=30, l=60, pad=0),
                        )
-    graphJSON = json.dumps(dict(data=data, layout=layout),
+    try:
+        graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
+    except:
+        graphJSON = None
     return graphJSON
 
 
