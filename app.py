@@ -174,7 +174,7 @@ def photos(id: str):
     data['image'] = image
     try:
         data['map'] = json.loads(map_photo)
-    except
+    except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
