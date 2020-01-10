@@ -163,4 +163,4 @@ def get_photo(id):
 
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
-    return image
+    return image, graphJSON
