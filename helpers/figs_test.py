@@ -10,172 +10,10 @@ import json
 from datetime import datetime, timedelta
 import base64
 import re
-# import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
-
+import config
 
 client = MongoClient(os.environ['MONGODB_CLIENT'], maxPoolSize=10000)
-
 mapbox_access_token = os.environ['MAPBOX_TOKEN']
-
-colorway = [
-    '#b8fb3c',
-    '#5ce5d5',
-    '#fe53bb',
-    '#7898fb',
-    # '#001437',
-    '#09fbd3',
-    '#f5d300',
-    '#3cb9fc',
-    '#b537f2',
-    '#8a2be2',
-    # '#120052',
-    '#08f7fe',
-    '#09fbd3',
-    '#fe53bb',
-]
-
-cs_normal = [
-    [0.0, '#424ded'],
-    [0.1, '#4283ed'],
-    [0.2, '#42d0ed'],
-    [0.3, '#42edae'],
-    [0.4, '#78ed42'],
-    [0.5, '#d6ed42'],
-    [0.6, '#edde42'],
-    [0.7, '#f4af41'],
-    [0.8, '#f48541'],
-    [0.9, '#f44741'],
-    [1.0, '#f44298']
-]
-
-cs_rdgn = [
-    [0.0, '#f44741'],
-    [0.2, '#f48541'],
-    [0.4, '#f4af41'],
-    [0.6, '#edde42'],
-    [0.8, '#d6ed42'],
-    [1.0, '#78ed42']
-]
-
-cs_gnrd = [
-    [0.0, '#78ed42'],
-    [0.2, '#d6ed42'],
-    [0.4, '#edde42'],
-    [0.6, '#f4af41'],
-    [0.8, '#f48541'],
-    [1.0, '#f44741'],
-]
-
-cs_circle = [
-    [0.000, '#f45f42'],
-    [0.067, '#f7856f'],
-    [0.133, '#e2aba1'],
-    [0.200, '#d8bdb8'],
-    [0.267, '#BCBCBC'],
-    [0.333, '#bac8e0'],
-    [0.400, '#aeccfc'],
-    [0.467, '#77aaf9'],
-    [0.533, '#4186f4'],
-    [0.600, '#77aaf9'],
-    [0.667, '#aeccfc'],
-    [0.733, '#bac8e0'],
-    [0.800, '#BCBCBC'],
-    [0.867, '#d8bdb8'],
-    [0.933, '#e2aba1'],
-    [1.000, '#f7856f'],
-]
-
-cs_updown = [
-    [0.000, '#4186f4'],
-    [0.125, '#77aaf9'],
-    [0.250, '#aeccfc'],
-    [0.375, '#bac8e0'],
-    [0.500, '#BCBCBC'],
-    [0.625, '#d8bdb8'],
-    [0.750, '#e2aba1'],
-    [0.875, '#f7856f'],
-    [1.000, '#f45f42'],
-]
-
-cs_circle = [
-    [0.000, '#ff4336'],
-    [0.067, '#ff7936'],
-    [0.133, '#ffaf36'],
-    [0.200, '#ffc636'],
-    [0.267, '#ffee36'],
-    [0.333, '#d0ff36'],
-    [0.400, '#a5ff36'],
-    [0.467, '#72ff36'],
-    [0.533, '#36ff43'],
-    [0.600, '#36ffa5'],
-    [0.667, '#36ffff'],
-    [0.733, '#36d0ff'],
-    [0.800, '#368aff'],
-    [0.867, '#bf36ff'],
-    [0.933, '#ff36c6'],
-    [1.000, '#ff3665'],
-]
-
-scl_oil = [
-    [0.00, '#d6ed42'],
-    [0.10, '#78ed42'],
-    [0.50, '#50bf37'],
-    [1.00, '#06721e']
-]
-
-scl_oil_log = [
-    [0, '#dbdbdb'],  # 0
-    [1./1000, '#d6ed42'],  # 10
-    [1./100, '#78ed42'],  # 100
-    [1./10, '#50bf37'],  # 1000
-    [1., '#06721e']  # 10000
-]
-
-scl_wtr = [
-    [0.00, '#caf0f7'],
-    [0.33, '#64d6ea'],
-    [0.66, '#4286f4'],
-    [1.00, '#0255db']
-]
-
-scl_wtr_log = [
-    [0, '#dbdbdb'],  # 0
-    [1./1000, '#caf0f7'],  # 10
-    [1./100, '#64d6ea'],  # 100
-    [1./10, '#4286f4'],  # 1000
-    [1., '#0255db']  # 10000
-]
-
-scl_gas = [
-    [0.00, '#fcbfbf'],
-    [0.33, '#f28282'],
-    [0.66, '#ef2626'],
-    [1.00, '#7a0707']
-]
-
-scl_stm = [
-    [0.00, '#edb6d7'],
-    [0.33, '#ed87c4'],
-    [0.66, '#e22f9b'],
-    [1.00, '#930b5d']
-]
-
-scl_stm_log = [
-    [0, '#dbdbdb'],  # 0
-    [1./1000, '#edb6d7'],  # 10
-    [1./100, '#ed87c4'],  # 100
-    [1./10, '#e22f9b'],  # 1000
-    [1., '#930b5d']  # 10000
-]
-
-scl_cyc = [
-    [0.00, '#fff1c6'],
-    [0.33, '#f7dd8a'],
-    [0.66, '#fcd555'],
-    [1.00, '#ffc300']
-]
 
 
 def get_time_range(time):
@@ -354,10 +192,6 @@ def get_offsets_oilgas(header, rad):
                 index='date', columns='api', values=prop)
             df_ci = df_ci.replace(0, pd.np.nan)
             df_ci = df_ci / 30.45
-            # df_mean = df_ci.mean(axis=1)
-            # df_std = df_ci.std(axis=1)
-            # ci_lb = df_mean - df_std
-            # ci_ub = df_mean + df_std
             count = df_ci.count(axis=1).fillna(0)
             sums = df_ci.sum(axis=1).fillna(0)
             ci_lb = df_ci.quantile(0.25, axis=1).fillna(0)
@@ -474,18 +308,69 @@ def get_offsets_oilgas(header, rad):
             margin=dict(r=50, t=30, b=30, l=60, pad=0),
         )
 
-        graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
-                                          cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
-                                          cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
-                                          cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
-                                             cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
-                                             cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
-                                             cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_offset_oil = json.dumps(
+            dict(
+                data=data_offset_oil,
+                layout=layout
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder
+        )
+        graphJSON_offset_stm = json.dumps(
+            dict(
+                data=data_offset_stm,
+                layout=layout
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder
+        )
+        graphJSON_offset_wtr = json.dumps(
+            dict(
+                data=data_offset_wtr,
+                layout=layout
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder
+        )
+        graphJSON_offset_oil_ci = json.dumps(
+            dict(
+                data=ci_plot(
+                    df_offsets,
+                    'oil',
+                    header['api'],
+                    scl_oil[0][1],
+                    scl_oil[1][1],
+                    scl_oil[2][1]
+                ),
+                layout=layout_
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder
+        )
+        graphJSON_offset_wtr_ci = json.dumps(
+            dict(
+                data=ci_plot(
+                    df_offsets,
+                    'water',
+                    header['api'],
+                    scl_wtr[0][1],
+                    scl_wtr[1][1],
+                    scl_wtr[2][1]
+                ),
+                layout=layout_
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder
+        )
+        graphJSON_offset_stm_ci = json.dumps(
+            dict(
+                data=ci_plot(
+                    df_offsets,
+                    'steam',
+                    header['api'],
+                    scl_stm[0][1],
+                    scl_stm[1][1],
+                    scl_stm[2][1]
+                ),
+                layout=layout_
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder
+        )
 
     except:
         graphJSON_offset_oil = None
@@ -505,15 +390,7 @@ def get_cyclic_jobs(header):
     try:
         df_cyclic = pd.DataFrame(header['cyclic_jobs'])
         fig_cyclic_jobs = make_subplots(rows=2, cols=1)
-        total = len(df_cyclic)
-        c0 = np.array([245/256, 200/256, 66/256, 1])
-        c1 = np.array([245/256, 218/256, 66/256, 1])
-        c2 = np.array([188/256, 245/256, 66/256, 1])
-        c3 = np.array([108/256, 201/256, 46/256, 1])
-        c4 = np.array([82/256, 138/256, 45/256, 1])
-        c5 = np.array([24/256, 110/256, 45/256, 1])
-        cm = LinearSegmentedColormap.from_list(
-            'custom', [c0, c1, c2, c3, c4, c5], N=total)
+        cm = config.time_cm(len(df_cyclic))
         df_cyclic.sort_values(by='number', inplace=True)
         for idx in range(len(df_cyclic)):
             try:
@@ -588,7 +465,7 @@ def get_graph_oilgas(api):
                 y=df['oil'],
                 name='oil',
                 line=dict(
-                    color='#50bf37',
+                    color=config.oilgas_colors['oil'],
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -600,7 +477,7 @@ def get_graph_oilgas(api):
                 y=df['water'],
                 name='water',
                 line=dict(
-                    color='#4286f4',
+                    color=config.oilgas_colors.water,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -612,7 +489,7 @@ def get_graph_oilgas(api):
                 y=df['gas'],
                 name='gas',
                 line=dict(
-                    color='#ef2626',
+                    color=config.oilgas_colors.gas,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -624,7 +501,7 @@ def get_graph_oilgas(api):
                 y=df['steam'],
                 name='steam',
                 line=dict(
-                    color='#e32980',
+                    color=config.oilgas_colors.steam,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -636,7 +513,7 @@ def get_graph_oilgas(api):
                 y=df['cyclic'],
                 name='cyclic',
                 line=dict(
-                    color='#fcd555',
+                    color=config.oilgas_colors.cyclic,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -648,7 +525,7 @@ def get_graph_oilgas(api):
                 y=df['water_i'],
                 name='water_inj',
                 line=dict(
-                    color='#03b6fc',
+                    color=config.oilgas_colors.water_inj,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -658,9 +535,9 @@ def get_graph_oilgas(api):
             go.Scatter(
                 x=df['date'],
                 y=df['gasair'],
-                name='gasair',
+                name='gasair_inj',
                 line=dict(
-                    color='#fc7703',
+                    color=config.oilgas_colors.gasair_inj,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -672,7 +549,7 @@ def get_graph_oilgas(api):
                 y=df['oilgrav'],
                 name='oilgrav',
                 line=dict(
-                    color='#81d636',
+                    color=config.oilgas_colors.oilgrav,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -684,7 +561,7 @@ def get_graph_oilgas(api):
                 y=df['pcsg'],
                 name='pcsg',
                 line=dict(
-                    color='#4136d6',
+                    color=config.oilgas_colors.pcsg,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -696,7 +573,7 @@ def get_graph_oilgas(api):
                 y=df['ptbg'],
                 name='ptbg',
                 line=dict(
-                    color='#7636d6',
+                    color=config.oilgas_colors.ptbg,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -708,7 +585,7 @@ def get_graph_oilgas(api):
                 y=df['btu'],
                 name='btu',
                 line=dict(
-                    color='#d636d1',
+                    color=config.oilgas_colors.btu,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -720,7 +597,7 @@ def get_graph_oilgas(api):
                 y=df['pinjsurf'],
                 name='pinjsurf',
                 line=dict(
-                    color='#e38f29',
+                    color=config.oilgas_colors.pinjsurf,
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -751,7 +628,24 @@ def get_graph_oilgas(api):
 def create_map_oilgas():
     db = client.petroleum
     df_wells = pd.DataFrame(
-        list(db.doggr.find({}, {'field': 1, 'lease': 1, 'well': 1, 'operator': 1, 'api': 1, 'latitude': 1, 'longitude': 1, 'oil_cum': 1, 'water_cum': 1, 'gas_cum': 1, 'wtrstm_cum': 1})))
+        list(
+            db.doggr.find(
+                {},
+                {'field': 1,
+                 'lease': 1,
+                 'well': 1,
+                 'operator': 1,
+                 'api': 1,
+                 'latitude': 1,
+                 'longitude': 1,
+                 'oil_cum': 1,
+                 'water_cum': 1,
+                 'gas_cum': 1,
+                 'wtrstm_cum': 1
+                 }
+            )
+        )
+    )
 
     df_wells.fillna(0, inplace=True)
     for col in ['oil_cum', 'water_cum', 'gas_cum', 'wtrstm_cum']:
@@ -763,13 +657,6 @@ def create_map_oilgas():
     df_wtrstm = df_wells[df_wells['wtrstm_cum'] > 0]
 
     data = [
-        # go.Densitymapbox(lat=df_oil['latitude'].values,
-        #                  lon=df_oil['longitude'].values,
-        #                  z=df_oil['oil_cum'].values,
-        #                  colorscale=scl_oil,
-        #                  zmin=0,
-        #                  zmax=10000000,
-        #                  radius=10),
         go.Scattermapbox(
             lat=df_water['latitude'].values,
             lon=df_water['longitude'].values,
@@ -785,7 +672,7 @@ def create_map_oilgas():
                     lenmode='fraction',
                     len=0.30,
                 ),
-                colorscale=scl_wtr,
+                colorscale=config.scl_wtr,
                 cmin=df_water['water_cum'].quantile(
                     0.01),
                 cmax=df_water['water_cum'].quantile(
@@ -807,7 +694,7 @@ def create_map_oilgas():
                     lenmode='fraction',
                     len=0.30,
                 ),
-                colorscale=scl_oil,
+                colorscale=config.scl_oil,
                 cmin=df_oil['oil_cum'].quantile(0.01),
                 cmax=df_oil['oil_cum'].quantile(0.75),
             )
@@ -827,7 +714,7 @@ def create_map_oilgas():
                     lenmode='fraction',
                     len=0.30,
                 ),
-                colorscale=scl_cyc,
+                colorscale=config.scl_cyc,
                 cmin=df_wtrstm['wtrstm_cum'].quantile(
                     0.01),
                 cmax=df_wtrstm['wtrstm_cum'].quantile(
@@ -849,7 +736,7 @@ def create_map_oilgas():
                     lenmode='fraction',
                     len=0.30,
                 ),
-                colorscale=scl_gas,
+                colorscale=config.scl_gas,
                 cmin=df_gas['gas_cum'].quantile(0.01),
                 cmax=df_gas['gas_cum'].quantile(0.75),
             )
@@ -879,15 +766,23 @@ def create_map_oilgas():
         margin=dict(r=0, t=0, b=0, l=0, pad=0),
         mapbox=dict(
             bearing=0,
-            center=dict(lat=36, lon=-119),
+            center=dict(
+                lat=36,
+                lon=-119
+            ),
             accesstoken=mapbox_access_token,
             style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
             pitch=0,
             zoom=5
         )
     )
-    graphJSON = json.dumps(dict(data=data, layout=layout),
-                           cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON = json.dumps(
+        dict(
+            data=data,
+            layout=layout
+        ),
+        cls=plotly.utils.PlotlyJSONEncoder
+    )
 
     df_wells = df_wells[['field', 'lease', 'well', 'operator',
                          'api', 'oil_cum', 'water_cum', 'gas_cum', 'wtrstm_cum']]
@@ -896,30 +791,6 @@ def create_map_oilgas():
 
 
 def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', lightning='0', analysis='0', precip='0', watchwarn='0', temp='0', visible='0'):
-    params = {'flight_category': [0, 0, 0, 0, ''],
-              'temp_c': [0, 100, 1.8, 32, 'F'],
-              'temp_c_var': [0, 100, 1.8, 0, 'F'],
-              'temp_c_delta': [0, 100, 1.8, 0, 'F'],
-              'dewpoint_c': [0, 100, 1.8, 32, 'F'],
-              'dewpoint_c_delta': [0, 100, 1.8, 0, 'F'],
-              'temp_dewpoint_spread': [0, 100, 1.8, 0, 'F'],
-              'altim_in_hg': [0, 100, 1, 0, 'inHg'],
-              'altim_in_hg_var': [0, 100, 1, 0, 'inHg'],
-              'altim_in_hg_delta': [0, 100, 1, 0, 'inHg'],
-              'wind_dir_degrees': [0, 359, 1, 0, 'degrees'],
-              'wind_speed_kt': [0, 100, 1, 0, 'kts'],
-              'wind_speed_kt_delta': [0, 100, 1, 0, 'kts'],
-              'wind_gust_kt': [0, 100, 1, 0, 'kts'],
-              'wind_gust_kt_delta': [0, 100, 1, 0, 'kts'],
-              'visibility_statute_mi': [0, 100, 1, 0, 'mi'],
-              'cloud_base_ft_agl_0': [0, 10000, 1, 0, 'ft'],
-              'cloud_base_ft_agl_0_delta': [0, 10000, 1, 0, 'ft'],
-              'sky_cover_0': [0, 100, 1, 0, 'degrees'],
-              'precip_in': [0, 10, 1, 0, 'degrees'],
-              'elevation_m': [0, 10000, 3.2808, 0, 'ft'],
-              'age': [0, 10000, 1, 0, 'minutes'],
-              'three_hr_pressure_tendency_mb': [0, 10000, 1, 0, '?'],
-              }
 
     db = client.wx
 
@@ -952,7 +823,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='VFR',
                 marker=dict(
                     size=10,
-                    color='rgb(0,255,0)',
+                    color=config.wx_params.flight_category.vfr,
                 )
             ),
             go.Scattermapbox(
@@ -963,7 +834,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='MVFR',
                 marker=dict(
                     size=10,
-                    color='rgb(0,0,255)',
+                    color=config.wx_params.flight_category.mvfr,
                 )
             ),
             go.Scattermapbox(
@@ -974,7 +845,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='IFR',
                 marker=dict(
                     size=10,
-                    color='rgb(255,0,0)',
+                    color=config.wx_params.flight_category.ifr,
                 )
             ),
             go.Scattermapbox(
@@ -985,7 +856,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='LIFR',
                 marker=dict(
                     size=10,
-                    color='rgb(255,127.5,255)',
+                    color=config.wx_params.flight_category.lifr,
                 )
             )
         ]
@@ -1007,7 +878,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='CLR',
                 marker=dict(
                     size=10,
-                    color='rgb(21, 230, 234)',
+                    color=config.wx_params.sky_cover_0.clr,
                 )
             ),
             go.Scattermapbox(
@@ -1018,7 +889,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='FEW',
                 marker=dict(
                     size=10,
-                    color='rgb(194, 234, 21)',
+                    color=config.wx_params.sky_cover_0.few,
                 )
             ),
             go.Scattermapbox(
@@ -1029,7 +900,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='SCT',
                 marker=dict(
                     size=10,
-                    color='rgb(234, 216, 21)',
+                    color=config.wx_params.sky_cover_0.sct,
                 )
             ),
             go.Scattermapbox(
@@ -1040,7 +911,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='BKN',
                 marker=dict(
                     size=10,
-                    color='rgb(234, 181, 21)',
+                    color=config.wx_params.sky_cover_0.bkn,
                 )
             ),
             go.Scattermapbox(
@@ -1051,7 +922,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='OVC',
                 marker=dict(
                     size=10,
-                    color='rgb(234, 77, 21)',
+                    color=config.wx_params.sky_cover_0.ovc,
                 )
             ),
             go.Scattermapbox(
@@ -1062,57 +933,57 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
                 name='OVX',
                 marker=dict(
                     size=10,
-                    color='rgb(234, 21, 21)',
+                    color=config.wx_params.sky_cover_0.ovx,
                 )
             )
         ]
     else:
         if prop == 'wind_dir_degrees':
-            cs = cs_circle
+            cs = config.cs_circle
             cmin = 0
             cmax = 359
         elif prop == 'visibility_statute_mi':
-            cs = cs_rdgn
+            cs = config.cs_rdgn
             cmin = 0
             cmax = 10
         elif prop == 'cloud_base_ft_agl_0':
-            cs = cs_rdgn
+            cs = config.cs_rdgn
             cmin = 0
             cmax = 2000
         elif prop == 'age':
-            cs = cs_gnrd
+            cs = config.cs_gnrd
             cmin = 0
             cmax = 60
         elif prop == 'temp_dewpoint_spread':
-            cs = cs_rdgn
+            cs = config.cs_rdgn
             cmin = 0
             cmax = 5
         elif prop == 'temp_c_delta':
-            cs = cs_updown
+            cs = config.cs_updown
             cmin = -3
             cmax = 3
         elif prop == 'dewpoint_c_delta':
-            cs = cs_updown
+            cs = config.cs_updown
             cmin = -3
             cmax = 3
         elif prop == 'altim_in_hg_delta':
-            cs = cs_updown
+            cs = config.cs_updown
             cmin = -0.03
             cmax = 0.03
         elif prop == 'wind_speed_kt_delta':
-            cs = cs_updown
+            cs = config.cs_updown
             cmin = -5
             cmax = 5
         elif prop == 'wind_gust_kt_delta':
-            cs = cs_updown
+            cs = config.cs_updown
             cmin = -5
             cmax = 5
         elif prop == 'cloud_base_ft_agl_0_delta':
-            cs = cs_updown
+            cs = config.cs_updown
             cmin = -1000
             cmax = 1000
         else:
-            cs = cs_normal
+            cs = config.cs_normal
             cmin = df[prop].quantile(0.01)
             cmax = df[prop].quantile(0.99)
 
@@ -1409,7 +1280,7 @@ def create_map_aprs(script, prop, time):
             y=params['speed'][2] * df['speed'] + params['speed'][3],
             name='Speed (mph)',
             line=dict(
-                color='#96F42E',
+                color='rgb(255, 127, 63)',
                 width=3,
                 shape='spline',
                 smoothing=0.3
@@ -1427,7 +1298,7 @@ def create_map_aprs(script, prop, time):
             title='Speed (mph)',
             fixedrange=True,
             titlefont=dict(
-                color='#96F42E'
+                color='rgb(255, 95, 63)'
             )
         ),
         xaxis=dict(
@@ -1445,7 +1316,7 @@ def create_map_aprs(script, prop, time):
             y=params['altitude'][2] * df['altitude'] + params['altitude'][3],
             name='Altitude (ft)',
             line=dict(
-                color='#2ED9F4',
+                color='rgb(255, 95, 63)',
                 width=3,
                 shape='spline',
                 smoothing=0.3
@@ -1464,7 +1335,7 @@ def create_map_aprs(script, prop, time):
             title='Altitude (ft)',
             fixedrange=True,
             titlefont=dict(
-                color='#2ED9F4'
+                color='rgb(255, 95, 63)'
             )
         ),
         xaxis=dict(
@@ -1482,7 +1353,7 @@ def create_map_aprs(script, prop, time):
             y=params['course'][2] * df['course'] + params['course'][3],
             name='Course (degrees)',
             line=dict(
-                color='#B02EF4',
+                color='rgb(255, 63, 63)',
                 width=3,
                 shape='spline',
                 smoothing=0.3
@@ -1501,7 +1372,7 @@ def create_map_aprs(script, prop, time):
             title='Course (degrees)',
             fixedrange=True,
             titlefont=dict(
-                color='#B02EF4'
+                color='rgb(255, 95, 63)'
             )
         ),
         xaxis=dict(

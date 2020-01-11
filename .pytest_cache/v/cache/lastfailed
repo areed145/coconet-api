@@ -1,3 +1,4 @@
 {
+  "helpers/figs_test.py": true,
   "test_pytest.py": true
 }
