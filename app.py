@@ -119,6 +119,18 @@ def oilgas_prodinj_graph(api: str):
     return JSONResponse(content=json_compatible_item_data)
 
 
+@app.get('/oilgas/crm/graph')
+def oilgas_crm_graph(api: str):
+    graph_crm = figs.get_crm(str(api))
+    data = {}
+    try:
+        data['graph_crm'] = json.loads(graph_crm)
+    except:
+        pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
 @app.get('/oilgas/cyclic/graph')
 def oilgas_cyclic_graph(api: str):
     graph_cyclic_jobs = figs.get_cyclic_jobs(str(api))
@@ -134,7 +146,7 @@ def oilgas_cyclic_graph(api: str):
 @app.get('/oilgas/offset/graphs')
 def oilgas_offset_graph(api: str):
     graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
-        str(api), 0.1)
+        str(api), rad=0.1, log=True)
     data = {}
     try:
         data['graph_offset_oil'] = json.loads(graph_offset_oil)
@@ -227,9 +239,9 @@ def station_live_data():
 
 
 @app.get('/weather/aviation/map')
-def weather_aviation_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: str, radar: str, analysis: str, lightning: str, precip: str, watchwarn: str, temp: str, visible: str):
+def weather_aviation_map(prop_awc: str, lat: float, lon: float, zoom: int, stations: str, infrared: str, radar: str, analysis: str, lightning: str, precip: str, watchwarn: str, temp: str, visible: str):
     graphJSON = figs.create_map_awc(
-        prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
+        prop_awc, lat, lon, zoom, stations, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     data = {}
     data['map'] = json.loads(graphJSON)
     json_compatible_item_data = jsonable_encoder(data)

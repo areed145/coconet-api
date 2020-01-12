@@ -320,7 +320,7 @@ def get_prodinj(wells):
     return df
 
 
-def get_offsets_oilgas(api, rad):
+def get_offsets_oilgas(api, radius, log=True):
     db = client.petroleum
 
     docs = db.doggr.find(
@@ -328,14 +328,14 @@ def get_offsets_oilgas(api, rad):
     for x in docs:
         header = dict(x)
     try:
-        r = rad/100
+        r = radius/100
         lat = header['latitude']
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
                                               'longitude': {'$gt': lon-r, '$lt': lon+r}})))
         df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
                                * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
-        df = df[df['dist'] <= rad]
+        df = df[df['dist'] <= radius]
         df.sort_values(by='dist', inplace=True)
         offsets = df['api'].tolist()
         dists = df['dist'].tolist()
@@ -469,15 +469,25 @@ def get_offsets_oilgas(api, rad):
             yaxis=dict(autorange='reversed'),
             showlegend=False,
         )
-        layout_ = go.Layout(
-            autosize=True,
-            font=dict(family='Ubuntu'),
-            hoverlabel=dict(font=dict(family='Ubuntu')),
-            showlegend=True,
-            legend=dict(orientation='h'),
-            yaxis=dict(type='log'),
-            margin=dict(r=50, t=30, b=30, l=60, pad=0),
-        )
+        if log == False:
+            layout_ = go.Layout(
+                autosize=True,
+                font=dict(family='Ubuntu'),
+                hoverlabel=dict(font=dict(family='Ubuntu')),
+                showlegend=True,
+                legend=dict(orientation='h'),
+                margin=dict(r=50, t=30, b=30, l=60, pad=0),
+            )
+        else:
+            layout_ = go.Layout(
+                autosize=True,
+                font=dict(family='Ubuntu'),
+                hoverlabel=dict(font=dict(family='Ubuntu')),
+                showlegend=True,
+                legend=dict(orientation='h'),
+                yaxis=dict(type='log'),
+                margin=dict(r=50, t=30, b=30, l=60, pad=0),
+            )
 
         graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
                                           cls=plotly.utils.PlotlyJSONEncoder)
@@ -504,6 +514,51 @@ def get_offsets_oilgas(api, rad):
     map_offsets = None
 
     return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, graphJSON_offset_oil_ci, graphJSON_offset_stm_ci, graphJSON_offset_wtr_ci, map_offsets, offsets
+
+
+def get_crm(api):
+    db = client.petroleum
+    docs = db.doggr.find({'api': api}, {'crm': 1})
+    for x in docs:
+        header = dict(x)
+    try:
+        df = pd.DataFrame(header['crm']['cons'])
+        df['gain'] = df['gain'].apply(lambda x: '%.3f' % x)
+        df['gain'] = df['gain'].astype(float)
+        df['dist'] = np.arccos(
+            np.sin(df['y0']*np.pi/180) *
+            np.sin(df['y1']*np.pi/180) +
+            np.cos(df['y0']*np.pi/180) *
+            np.cos(df['y1']*np.pi/180) *
+            np.cos((df['x1']*np.pi/180) - (df['x0']*np.pi/180))) * 6371
+        df['distapi'] = df.apply(lambda x: str(
+            np.round(x['dist'], 3))+' mi - '+str(x['to']), axis=1)
+        df = df.sort_values(by='distapi', ascending=True).reset_index()
+        xs = df['gain']
+        ys = df['distapi']
+        data = [
+            go.Bar(
+                y=ys,
+                x=xs,
+                name='crm_gains',
+                orientation='h',
+                marker=dict(
+                    color=xs,
+                    colorscale='Viridis'
+                )
+            )
+        ]
+        layout = {
+            'xaxis': {
+                'categoryorder': 'array',
+                'categoryarray': [x for _, x in sorted(zip(ys, xs))]
+            }
+        }
+        graphJSON_crm = json.dumps(
+            dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder)
+    except:
+        graphJSON_crm = None
+    return graphJSON_crm
 
 
 def get_cyclic_jobs(api):
@@ -911,7 +966,7 @@ def create_map_oilgas():
     return graphJSON, df_wells
 
 
-def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', lightning='0', analysis='0', precip='0', watchwarn='0', temp='0', visible='0'):
+def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', radar='0', lightning='0', analysis='0', precip='0', watchwarn='0', temp='0', visible='0'):
     params = {'flight_category': [0, 0, 0, 0, ''],
               'temp_c': [0, 100, 1.8, 32, 'F'],
               'temp_c_var': [0, 100, 1.8, 0, 'F'],
@@ -937,221 +992,225 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, infrared='0', radar='0', light
               'three_hr_pressure_tendency_mb': [0, 10000, 1, 0, '?'],
               }
 
-    db = client.wx
+    if stations = '1':
 
-    df = pd.DataFrame(list(db.awc.find()))
+        db = client.wx
 
-    if prop == 'temp_dewpoint_spread':
-        df['temp_dewpoint_spread'] = df['temp_c'] - df['dewpoint_c']
+        df = pd.DataFrame(list(db.awc.find()))
 
-    if prop == 'age':
-        df['age'] = (datetime.utcnow() - df['observation_time']
-                     ).astype('timedelta64[m]')
+        if prop == 'temp_dewpoint_spread':
+            df['temp_dewpoint_spread'] = df['temp_c'] - df['dewpoint_c']
 
-    df.dropna(subset=[prop], inplace=True)
+        if prop == 'age':
+            df['age'] = (datetime.utcnow() - df['observation_time']
+                         ).astype('timedelta64[m]')
 
-    legend = False
+        df.dropna(subset=[prop], inplace=True)
 
-    if prop == 'flight_category':
-        df_vfr = df[df['flight_category'] == 'VFR']
-        df_mvfr = df[df['flight_category'] == 'MVFR']
-        df_ifr = df[df['flight_category'] == 'IFR']
-        df_lifr = df[df['flight_category'] == 'LIFR']
         legend = False
 
-        data = [
-            go.Scattermapbox(
-                lat=df_vfr['latitude'],
-                lon=df_vfr['longitude'],
-                text=df_vfr['raw_text'],
-                mode='markers',
-                name='VFR',
-                marker=dict(
-                    size=10,
-                    color='rgb(0,255,0)',
-                )
-            ),
-            go.Scattermapbox(
-                lat=df_mvfr['latitude'],
-                lon=df_mvfr['longitude'],
-                text=df_mvfr['raw_text'],
-                mode='markers',
-                name='MVFR',
-                marker=dict(
-                    size=10,
-                    color='rgb(0,0,255)',
-                )
-            ),
-            go.Scattermapbox(
-                lat=df_ifr['latitude'],
-                lon=df_ifr['longitude'],
-                text=df_ifr['raw_text'],
-                mode='markers',
-                name='IFR',
-                marker=dict(
-                    size=10,
-                    color='rgb(255,0,0)',
-                )
-            ),
-            go.Scattermapbox(
-                lat=df_lifr['latitude'],
-                lon=df_lifr['longitude'],
-                text=df_lifr['raw_text'],
-                mode='markers',
-                name='LIFR',
-                marker=dict(
-                    size=10,
-                    color='rgb(255,127.5,255)',
-                )
-            )
-        ]
-    elif prop == 'sky_cover_0':
-        df_clr = df[df['sky_cover_0'] == 'CLR']
-        df_few = df[df['sky_cover_0'] == 'FEW']
-        df_sct = df[df['sky_cover_0'] == 'SCT']
-        df_bkn = df[df['sky_cover_0'] == 'BKN']
-        df_ovc = df[df['sky_cover_0'] == 'OVC']
-        df_ovx = df[df['sky_cover_0'] == 'OVX']
-        legend = True
+        if prop == 'flight_category':
+            df_vfr = df[df['flight_category'] == 'VFR']
+            df_mvfr = df[df['flight_category'] == 'MVFR']
+            df_ifr = df[df['flight_category'] == 'IFR']
+            df_lifr = df[df['flight_category'] == 'LIFR']
+            legend = False
 
-        data = [
-            go.Scattermapbox(
-                lat=df_clr['latitude'],
-                lon=df_clr['longitude'],
-                text=df_clr['raw_text'],
-                mode='markers',
-                name='CLR',
-                marker=dict(
-                    size=10,
-                    color='rgb(21, 230, 234)',
+            data = [
+                go.Scattermapbox(
+                    lat=df_vfr['latitude'],
+                    lon=df_vfr['longitude'],
+                    text=df_vfr['raw_text'],
+                    mode='markers',
+                    name='VFR',
+                    marker=dict(
+                        size=10,
+                        color='rgb(0,255,0)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_mvfr['latitude'],
+                    lon=df_mvfr['longitude'],
+                    text=df_mvfr['raw_text'],
+                    mode='markers',
+                    name='MVFR',
+                    marker=dict(
+                        size=10,
+                        color='rgb(0,0,255)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_ifr['latitude'],
+                    lon=df_ifr['longitude'],
+                    text=df_ifr['raw_text'],
+                    mode='markers',
+                    name='IFR',
+                    marker=dict(
+                        size=10,
+                        color='rgb(255,0,0)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_lifr['latitude'],
+                    lon=df_lifr['longitude'],
+                    text=df_lifr['raw_text'],
+                    mode='markers',
+                    name='LIFR',
+                    marker=dict(
+                        size=10,
+                        color='rgb(255,127.5,255)',
+                    )
                 )
-            ),
-            go.Scattermapbox(
-                lat=df_few['latitude'],
-                lon=df_few['longitude'],
-                text=df_few['raw_text'],
-                mode='markers',
-                name='FEW',
-                marker=dict(
-                    size=10,
-                    color='rgb(194, 234, 21)',
+            ]
+        elif prop == 'sky_cover_0':
+            df_clr = df[df['sky_cover_0'] == 'CLR']
+            df_few = df[df['sky_cover_0'] == 'FEW']
+            df_sct = df[df['sky_cover_0'] == 'SCT']
+            df_bkn = df[df['sky_cover_0'] == 'BKN']
+            df_ovc = df[df['sky_cover_0'] == 'OVC']
+            df_ovx = df[df['sky_cover_0'] == 'OVX']
+            legend = True
+
+            data = [
+                go.Scattermapbox(
+                    lat=df_clr['latitude'],
+                    lon=df_clr['longitude'],
+                    text=df_clr['raw_text'],
+                    mode='markers',
+                    name='CLR',
+                    marker=dict(
+                        size=10,
+                        color='rgb(21, 230, 234)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_few['latitude'],
+                    lon=df_few['longitude'],
+                    text=df_few['raw_text'],
+                    mode='markers',
+                    name='FEW',
+                    marker=dict(
+                        size=10,
+                        color='rgb(194, 234, 21)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_sct['latitude'],
+                    lon=df_sct['longitude'],
+                    text=df_sct['raw_text'],
+                    mode='markers',
+                    name='SCT',
+                    marker=dict(
+                        size=10,
+                        color='rgb(234, 216, 21)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_bkn['latitude'],
+                    lon=df_bkn['longitude'],
+                    text=df_bkn['raw_text'],
+                    mode='markers',
+                    name='BKN',
+                    marker=dict(
+                        size=10,
+                        color='rgb(234, 181, 21)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_ovc['latitude'],
+                    lon=df_ovc['longitude'],
+                    text=df_ovc['raw_text'],
+                    mode='markers',
+                    name='OVC',
+                    marker=dict(
+                        size=10,
+                        color='rgb(234, 77, 21)',
+                    )
+                ),
+                go.Scattermapbox(
+                    lat=df_ovx['latitude'],
+                    lon=df_ovx['longitude'],
+                    text=df_ovx['raw_text'],
+                    mode='markers',
+                    name='OVX',
+                    marker=dict(
+                        size=10,
+                        color='rgb(234, 21, 21)',
+                    )
                 )
-            ),
-            go.Scattermapbox(
-                lat=df_sct['latitude'],
-                lon=df_sct['longitude'],
-                text=df_sct['raw_text'],
-                mode='markers',
-                name='SCT',
-                marker=dict(
-                    size=10,
-                    color='rgb(234, 216, 21)',
-                )
-            ),
-            go.Scattermapbox(
-                lat=df_bkn['latitude'],
-                lon=df_bkn['longitude'],
-                text=df_bkn['raw_text'],
-                mode='markers',
-                name='BKN',
-                marker=dict(
-                    size=10,
-                    color='rgb(234, 181, 21)',
-                )
-            ),
-            go.Scattermapbox(
-                lat=df_ovc['latitude'],
-                lon=df_ovc['longitude'],
-                text=df_ovc['raw_text'],
-                mode='markers',
-                name='OVC',
-                marker=dict(
-                    size=10,
-                    color='rgb(234, 77, 21)',
-                )
-            ),
-            go.Scattermapbox(
-                lat=df_ovx['latitude'],
-                lon=df_ovx['longitude'],
-                text=df_ovx['raw_text'],
-                mode='markers',
-                name='OVX',
-                marker=dict(
-                    size=10,
-                    color='rgb(234, 21, 21)',
-                )
-            )
-        ]
-    else:
-        if prop == 'wind_dir_degrees':
-            cs = cs_circle
-            cmin = 0
-            cmax = 359
-        elif prop == 'visibility_statute_mi':
-            cs = cs_rdgn
-            cmin = 0
-            cmax = 10
-        elif prop == 'cloud_base_ft_agl_0':
-            cs = cs_rdgn
-            cmin = 0
-            cmax = 2000
-        elif prop == 'age':
-            cs = cs_gnrd
-            cmin = 0
-            cmax = 60
-        elif prop == 'temp_dewpoint_spread':
-            cs = cs_rdgn
-            cmin = 0
-            cmax = 5
-        elif prop == 'temp_c_delta':
-            cs = cs_updown
-            cmin = -3
-            cmax = 3
-        elif prop == 'dewpoint_c_delta':
-            cs = cs_updown
-            cmin = -3
-            cmax = 3
-        elif prop == 'altim_in_hg_delta':
-            cs = cs_updown
-            cmin = -0.03
-            cmax = 0.03
-        elif prop == 'wind_speed_kt_delta':
-            cs = cs_updown
-            cmin = -5
-            cmax = 5
-        elif prop == 'wind_gust_kt_delta':
-            cs = cs_updown
-            cmin = -5
-            cmax = 5
-        elif prop == 'cloud_base_ft_agl_0_delta':
-            cs = cs_updown
-            cmin = -1000
-            cmax = 1000
+            ]
         else:
-            cs = cs_normal
-            cmin = df[prop].quantile(0.01)
-            cmax = df[prop].quantile(0.99)
+            if prop == 'wind_dir_degrees':
+                cs = cs_circle
+                cmin = 0
+                cmax = 359
+            elif prop == 'visibility_statute_mi':
+                cs = cs_rdgn
+                cmin = 0
+                cmax = 10
+            elif prop == 'cloud_base_ft_agl_0':
+                cs = cs_rdgn
+                cmin = 0
+                cmax = 2000
+            elif prop == 'age':
+                cs = cs_gnrd
+                cmin = 0
+                cmax = 60
+            elif prop == 'temp_dewpoint_spread':
+                cs = cs_rdgn
+                cmin = 0
+                cmax = 5
+            elif prop == 'temp_c_delta':
+                cs = cs_updown
+                cmin = -3
+                cmax = 3
+            elif prop == 'dewpoint_c_delta':
+                cs = cs_updown
+                cmin = -3
+                cmax = 3
+            elif prop == 'altim_in_hg_delta':
+                cs = cs_updown
+                cmin = -0.03
+                cmax = 0.03
+            elif prop == 'wind_speed_kt_delta':
+                cs = cs_updown
+                cmin = -5
+                cmax = 5
+            elif prop == 'wind_gust_kt_delta':
+                cs = cs_updown
+                cmin = -5
+                cmax = 5
+            elif prop == 'cloud_base_ft_agl_0_delta':
+                cs = cs_updown
+                cmin = -1000
+                cmax = 1000
+            else:
+                cs = cs_normal
+                cmin = df[prop].quantile(0.01)
+                cmax = df[prop].quantile(0.99)
 
-        data = [
-            go.Scattermapbox(
-                lat=df['latitude'],
-                lon=df['longitude'],
-                text=df['raw_text'],
-                mode='markers',
-                marker=dict(
-                    size=10,
-                    color=params[prop][2] *
-                    df[prop] + params[prop][3],
-                    colorbar=dict(
-                        title=params[prop][4]),
-                    colorscale=cs,
-                    cmin=params[prop][2] *
-                    cmin + params[prop][3],
-                    cmax=params[prop][2] *
-                    cmax + params[prop][3],
+            data = [
+                go.Scattermapbox(
+                    lat=df['latitude'],
+                    lon=df['longitude'],
+                    text=df['raw_text'],
+                    mode='markers',
+                    marker=dict(
+                        size=10,
+                        color=params[prop][2] *
+                        df[prop] + params[prop][3],
+                        colorbar=dict(
+                            title=params[prop][4]),
+                        colorscale=cs,
+                        cmin=params[prop][2] *
+                        cmin + params[prop][3],
+                        cmax=params[prop][2] *
+                        cmax + params[prop][3],
+                    )
                 )
-            )
-        ]
+            ]
+    else:
+        data = []
 
     layers = []
 
