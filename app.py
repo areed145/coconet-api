@@ -131,7 +131,7 @@ def oilgas_cyclic_graph(api: str):
     return JSONResponse(content=json_compatible_item_data)
 
 
-@app.get('/oilgas/offset/graph')
+@app.get('/oilgas/offset/graphs')
 def oilgas_offset_graph(api: str):
     graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
         str(api), 0.1)
