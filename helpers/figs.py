@@ -320,8 +320,12 @@ def get_prodinj(wells):
     return df
 
 
-def get_offsets_oilgas(header, rad):
+def get_offsets_oilgas(api, rad):
     db = client.petroleum
+
+    docs = db.doggr.find({'api': api})
+    for x in docs:
+        header = dict(x)
     try:
         r = rad/100
         lat = header['latitude']
@@ -501,7 +505,12 @@ def get_offsets_oilgas(header, rad):
     return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, graphJSON_offset_oil_ci, graphJSON_offset_stm_ci, graphJSON_offset_wtr_ci, map_offsets, offsets
 
 
-def get_cyclic_jobs(header):
+def get_cyclic_jobs(api):
+    db = client.petroleum
+
+    docs = db.doggr.find({'api': api})
+    for x in docs:
+        header = dict(x)
     try:
         df_cyclic = pd.DataFrame(header['cyclic_jobs'])
         fig_cyclic_jobs = make_subplots(rows=2, cols=1)

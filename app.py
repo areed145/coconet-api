@@ -91,12 +91,9 @@ def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
     return JSONResponse(content=json_compatible_item_data)
 
 
-@app.get('/oilgas/details/graphs')
-def oilgas_graphs(api: str):
+@app.get('/oilgas/details/graph')
+def oilgas_details_graph(api: str):
     graph_oilgas, header = figs.get_graph_oilgas(str(api))
-    graph_cyclic_jobs = figs.get_cyclic_jobs(header)
-    graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
-        header, 0.1)
     try:
         header.pop('_id')
     except:
@@ -122,6 +119,27 @@ def oilgas_graphs(api: str):
         data['graph_oilgas'] = json.loads(graph_oilgas)
     except:
         pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
+@app.get('/oilgas/cyclic/graph')
+def oilgas_cyclic_graph(api: str):
+    graph_cyclic_jobs = figs.get_cyclic_jobs(str(api))
+    data = {}
+    try:
+        data['graph_cyclic_jobs'] = json.loads(graph_cyclic_jobs)
+    except:
+        pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
+@app.get('/oilgas/offset/graph')
+def oilgas_offset_graph(api: str):
+    graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
+        str(api), 0.1)
+    data = {}
     try:
         data['graph_offset_oil'] = json.loads(graph_offset_oil)
     except:
@@ -146,12 +164,6 @@ def oilgas_graphs(api: str):
         data['graph_offset_wtr_ci'] = json.loads(graph_offset_wtr_ci)
     except:
         pass
-    try:
-        data['graph_cyclic_jobs'] = json.loads(graph_cyclic_jobs)
-    except:
-        pass
-    # data['map_offsets'] = map_offsets
-    # data['offsets'] = offsets
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
