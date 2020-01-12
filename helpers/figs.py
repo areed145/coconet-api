@@ -52,6 +52,16 @@ cs_normal = [
 
 cs_rdgn = [
     [0.0, '#f44741'],
+    [0.4, '#f44741'],
+    [0.45, '#f7e926'],
+    [0.475, '#f67513'],
+    [0.525, '#ed0c0c'],
+    [0.55, '#f613e7'],
+    [1.0, '#f613e7']
+]
+
+cs_rdylgn = [
+    [0.0, '#21d411'],
     [0.2, '#f48541'],
     [0.4, '#f4af41'],
     [0.6, '#edde42'],
@@ -544,7 +554,9 @@ def get_crm(api):
                 orientation='h',
                 marker=dict(
                     color=xs,
-                    colorscale='Viridis'
+                    colorscale=cs_rdgn,
+                    cmin=0,
+                    cmax=1
                 )
             )
         ]
