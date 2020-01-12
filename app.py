@@ -91,23 +91,11 @@ def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
     return JSONResponse(content=json_compatible_item_data)
 
 
-@app.get('/oilgas/details/graph')
+@app.get('/oilgas/header/details')
 def oilgas_details_graph(api: str):
-    graph_oilgas, header = figs.get_graph_oilgas(str(api))
+    header = figs.get_header_oilgas(str(api))
     try:
         header.pop('_id')
-    except:
-        pass
-    try:
-        header.pop('prodinj')
-    except:
-        pass
-    try:
-        header.pop('crm')
-    except:
-        pass
-    try:
-        header.pop('cyclic_jobs')
     except:
         pass
     data = {}
@@ -115,6 +103,14 @@ def oilgas_details_graph(api: str):
         data['header'] = header
     except:
         pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
+@app.get('/oilgas/prod/graph')
+def oilgas_details_graph(api: str):
+    graph_oilgas = figs.get_graph_oilgas(str(api))
+    data = {}
     try:
         data['graph_oilgas'] = json.loads(graph_oilgas)
     except:

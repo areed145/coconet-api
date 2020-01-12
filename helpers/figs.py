@@ -323,7 +323,8 @@ def get_prodinj(wells):
 def get_offsets_oilgas(api, rad):
     db = client.petroleum
 
-    docs = db.doggr.find({'api': api})
+    docs = db.doggr.find(
+        {'api': api}, {'api': 1, 'latitude': 1, 'longitude': 1})
     for x in docs:
         header = dict(x)
     try:
@@ -508,7 +509,7 @@ def get_offsets_oilgas(api, rad):
 def get_cyclic_jobs(api):
     db = client.petroleum
 
-    docs = db.doggr.find({'api': api})
+    docs = db.doggr.find({'api': api}, {'cyclic_jobs': 1})
     for x in docs:
         header = dict(x)
     try:
@@ -581,12 +582,18 @@ def get_cyclic_jobs(api):
     return graphJSON_cyclic_jobs
 
 
-def get_graph_oilgas(api):
+def get_header_oilgas(api):
     db = client.petroleum
 
-    docs = db.doggr.find({'api': api})
+    docs = db.doggr.find(
+        {'api': api}, {'cyclic_jobs': 0, 'prodinj': 0, 'crm': 0})
     for x in docs:
         header = dict(x)
+    return header
+
+
+def get_graph_oilgas(api):
+    db = client.petroleum
 
     try:
         df = get_prodinj([api])
@@ -754,7 +761,7 @@ def get_graph_oilgas(api):
     except:
         graphJSON = None
 
-    return graphJSON, header
+    return graphJSON
 
 
 def create_map_oilgas():
