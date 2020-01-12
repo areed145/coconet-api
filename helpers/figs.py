@@ -320,7 +320,7 @@ def get_prodinj(wells):
     return df
 
 
-def get_offsets_oilgas(api, radius, log=True):
+def get_offsets_oilgas(api, radius, axis):
     db = client.petroleum
 
     docs = db.doggr.find(
@@ -469,13 +469,14 @@ def get_offsets_oilgas(api, radius, log=True):
             yaxis=dict(autorange='reversed'),
             showlegend=False,
         )
-        if log == False:
+        if axis == 'log':
             layout_ = go.Layout(
                 autosize=True,
                 font=dict(family='Ubuntu'),
                 hoverlabel=dict(font=dict(family='Ubuntu')),
                 showlegend=True,
                 legend=dict(orientation='h'),
+                yaxis=dict(type='log'),
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
         else:
@@ -485,7 +486,6 @@ def get_offsets_oilgas(api, radius, log=True):
                 hoverlabel=dict(font=dict(family='Ubuntu')),
                 showlegend=True,
                 legend=dict(orientation='h'),
-                yaxis=dict(type='log'),
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
 
@@ -653,7 +653,7 @@ def get_header_oilgas(api):
     return header
 
 
-def get_graph_oilgas(api):
+def get_graph_oilgas(api, axis):
     db = client.petroleum
 
     try:
@@ -806,17 +806,29 @@ def get_graph_oilgas(api):
             ),
         ]
 
-        layout = go.Layout(
-            autosize=True,
-            font=dict(family='Ubuntu'),
-            hovermode='closest',
-            hoverlabel=dict(font=dict(family='Ubuntu')),
-            showlegend=True,
-            legend=dict(orientation='h'),
-            yaxis=dict(type='log'),
-            uirevision=True,
-            margin=dict(r=50, t=30, b=30, l=60, pad=0),
-        )
+        if axis == 'log':
+            layout = go.Layout(
+                autosize=True,
+                font=dict(family='Ubuntu'),
+                hovermode='closest',
+                hoverlabel=dict(font=dict(family='Ubuntu')),
+                showlegend=True,
+                legend=dict(orientation='h'),
+                yaxis=dict(type='log'),
+                uirevision=True,
+                margin=dict(r=50, t=30, b=30, l=60, pad=0),
+            )
+        else:
+            layout = go.Layout(
+                autosize=True,
+                font=dict(family='Ubuntu'),
+                hovermode='closest',
+                hoverlabel=dict(font=dict(family='Ubuntu')),
+                showlegend=True,
+                legend=dict(orientation='h'),
+                uirevision=True,
+                margin=dict(r=50, t=30, b=30, l=60, pad=0),
+            )
         graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
