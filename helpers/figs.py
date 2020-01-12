@@ -68,9 +68,9 @@ cs_gnrd = [
     [1.0, '#f44741'],
 ]
 
-cs_rdylgn = [
-    [0.0, '#f44741'],
-    [0.4, '#f44741'],
+cs_gnylrd = [
+    [0.0, '#21d411'],
+    [0.4, '#21d411'],
     [0.45, '#f7e926'],
     [0.475, '#f67513'],
     [0.525, '#ed0c0c'],
@@ -554,7 +554,7 @@ def get_crm(api):
                 orientation='h',
                 marker=dict(
                     color=xs,
-                    colorscale=cs_rdylgn,
+                    colorscale=cs_gnylrd,
                     cmin=0,
                     cmax=1,
                 )
