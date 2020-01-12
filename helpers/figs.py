@@ -567,6 +567,7 @@ def get_crm(api):
             hoverlabel=dict(font=dict(family='Ubuntu')),
             margin=dict(r=10, t=10, b=30, l=150, pad=0),
             xaxis=dict(
+                range=[0, 1],
                 categoryorder='array',
                 categoryarray=[x for _, x in sorted(zip(ys, xs))]
             ),
