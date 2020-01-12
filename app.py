@@ -71,7 +71,7 @@ def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
 
 
 @app.get('/aprs/igate_range')
-def aprs_range_analysis(time_int: str):
+def aprs_igate_range(time_int: str):
     range_aprs = figs.create_range_aprs(time_int)
     data = {}
     data['range_aprs'] = json.loads(range_aprs)
@@ -80,7 +80,7 @@ def aprs_range_analysis(time_int: str):
 
 
 @app.get('/iot/graph')
-def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
+def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
     graph = figs.create_graph_iot(sensor_iot, time_int)
     data = {}
     try:
@@ -92,7 +92,7 @@ def iot_graphs(time_int: str, sensor_iot: List[str] = Query(None)):
 
 
 @app.get('/oilgas/header/details')
-def oilgas_details_graph(api: str):
+def oilgas_header_details(api: str):
     header = figs.get_header_oilgas(str(api))
     try:
         header.pop('_id')
@@ -107,8 +107,8 @@ def oilgas_details_graph(api: str):
     return JSONResponse(content=json_compatible_item_data)
 
 
-@app.get('/oilgas/prod/graph')
-def oilgas_details_graph(api: str):
+@app.get('/oilgas/prodinj/graph')
+def oilgas_prodinj_graph(api: str):
     graph_oilgas = figs.get_graph_oilgas(str(api))
     data = {}
     try:
@@ -165,7 +165,7 @@ def oilgas_offset_graph(api: str):
 
 
 @app.get('/photos/galleries')
-def galleries():
+def photos_galleries():
     rows = flickr.get_gal_rows(5)
     data = {}
     data['rows'] = rows
@@ -174,7 +174,7 @@ def galleries():
 
 
 @app.get('/photos/gallery')
-def gallery_images(id: str):
+def photos_gallery(id: str):
     rows, map_gal, title, count_photos, count_views = flickr.get_photo_rows(
         id, 5)
     data = {}
@@ -188,7 +188,7 @@ def gallery_images(id: str):
 
 
 @app.get('/photos/photo')
-def photos(id: str):
+def photos_photo(id: str):
     image, map_photo = flickr.get_photo(id)
     data = {}
     data['image'] = image
@@ -201,7 +201,7 @@ def photos(id: str):
 
 
 @app.get('/station/history/graphs')
-def station_historical_graphs(time_int: str):
+def station_history_graphs(time_int: str):
     fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
         time_int, sid)
     data = {}
@@ -227,7 +227,7 @@ def station_live_data():
 
 
 @app.get('/weather/aviation/map')
-def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: str, radar: str, analysis: str, lightning: str, precip: str, watchwarn: str, temp: str, visible: str):
+def weather_aviation_map(prop_awc: str, lat: float, lon: float, zoom: int, infrared: str, radar: str, analysis: str, lightning: str, precip: str, watchwarn: str, temp: str, visible: str):
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     data = {}
@@ -237,7 +237,7 @@ def aviation_weather_map(prop_awc: str, lat: float, lon: float, zoom: int, infra
 
 
 @app.get('/weather/soundings/image')
-def sounding_plots(sid: str):
+def weather_soundings_images(sid: str):
     img = figs.get_image(sid)
     json_compatible_item_data = jsonable_encoder(img.decode('unicode_escape'))
     return JSONResponse(content=json_compatible_item_data)
