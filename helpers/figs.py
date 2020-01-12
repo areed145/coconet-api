@@ -548,12 +548,18 @@ def get_crm(api):
                 )
             )
         ]
-        layout = {
-            'xaxis': {
-                'categoryorder': 'array',
-                'categoryarray': [x for _, x in sorted(zip(ys, xs))]
-            }
-        }
+        layout = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            margin=dict(r=10, t=10, b=30, l=150, pad=0),
+            xaxis=dict(
+                categoryorder='array',
+                categoryarray=[x for _, x in sorted(zip(ys, xs))]
+            )
+            yaxis=dict(autorange='reversed'),
+            showlegend=False,
+        )
         graphJSON_crm = json.dumps(
             dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder)
     except:
