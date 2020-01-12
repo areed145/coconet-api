@@ -557,7 +557,7 @@ def get_crm(api):
                     colorscale=cs_rdgn,
                     cmin=0,
                     cmax=1,
-                    reversescale=True
+                    # reversescale=True
                 )
             )
         ]
