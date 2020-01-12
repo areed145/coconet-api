@@ -144,7 +144,7 @@ def oilgas_cyclic_graph(api: str):
 
 
 @app.get('/oilgas/offset/graphs')
-def oilgas_offset_graph(api: str):
+def oilgas_offset_graph(api: str, log: str):
     graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
         str(api), radius=0.1, log=True)
     data = {}

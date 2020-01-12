@@ -556,7 +556,7 @@ def get_crm(api):
             xaxis=dict(
                 categoryorder='array',
                 categoryarray=[x for _, x in sorted(zip(ys, xs))]
-            )
+            ),
             yaxis=dict(autorange='reversed'),
             showlegend=False,
         )
