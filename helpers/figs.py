@@ -992,7 +992,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
               'three_hr_pressure_tendency_mb': [0, 10000, 1, 0, '?'],
               }
 
-    if stations = '1':
+    if stations == '1':
 
         db = client.wx
 
