@@ -9,6 +9,7 @@ from pymongo import MongoClient
 import pandas as pd
 from fastapi import FastAPI, Query, Form
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 import uvicorn
 from typing import List
 
@@ -32,6 +33,11 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+app.add_middleware(
+    GZipMiddleware,
+    minimum_size=500
 )
 
 sid = os.environ['SID']
