@@ -1241,7 +1241,13 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
                 )
             ]
     else:
-        data = []
+        data = [
+            go.Scattermapbox(
+                lat=[],
+                lon=[],
+                mode='markers',
+                name='stations',
+            )]
 
     layers = []
 
