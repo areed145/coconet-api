@@ -1431,10 +1431,8 @@ def create_range_aprs(time):
 
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
-
-
-client.close()
-return graphJSON
+    client.close()
+    return graphJSON
 
 
 def create_map_aprs(script, prop, time):
@@ -1659,10 +1657,8 @@ def create_map_aprs(script, prop, time):
         r['course'] = row['course']
         # r['raw'] = row['raw']
         rows.append(r)
-
-
-client.close()
-return graphJSON_map, graphJSON_speed, graphJSON_alt, graphJSON_course, rows
+    client.close()
+    return graphJSON_map, graphJSON_speed, graphJSON_alt, graphJSON_course, rows
 
 
 def get_wx_latest(sid):
@@ -2286,9 +2282,8 @@ def create_wx_figs(time, sid):
     graphJSON_thp = create_3d_plot(df_wx_raw, 'temp_f', 'dewpoint_f', 'relative_humidity', cs_normal, 'Temperature (F)',
                                    'Dewpoint (F)', 'Humidity (%)', 'rgb(255, 95, 63)', 'rgb(255, 127, 63)', 'rgb(63, 127, 255)')
 
-
-client.close()
-return graphJSON_td, graphJSON_pr, graphJSON_cb, graphJSON_pc, graphJSON_wd, graphJSON_su, graphJSON_wr, graphJSON_thp
+    client.close()
+    return graphJSON_td, graphJSON_pr, graphJSON_cb, graphJSON_pc, graphJSON_wd, graphJSON_su, graphJSON_wr, graphJSON_thp
 
 
 def get_image(name):
