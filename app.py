@@ -5,7 +5,7 @@ import atexit
 import json
 import datetime
 from helpers import figs, flickr
-from pymongo import MongoClient
+# from pymongo import MongoClient
 import pandas as pd
 from fastapi import FastAPI, Query, Form
 from starlette.middleware.cors import CORSMiddleware
@@ -57,7 +57,7 @@ def main():
 
 
 @app.get('/aprs/map')
-def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
+async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
     map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
         type_aprs, prop_aprs, time_int)
     data = {}
@@ -71,7 +71,7 @@ def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
 
 
 @app.get('/aprs/igate_range')
-def aprs_igate_range(time_int: str):
+async def aprs_igate_range(time_int: str):
     range_aprs = figs.create_range_aprs(time_int)
     data = {}
     data['range_aprs'] = json.loads(range_aprs)
@@ -80,7 +80,7 @@ def aprs_igate_range(time_int: str):
 
 
 @app.get('/iot/graph')
-def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
+async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
     graph = figs.create_graph_iot(sensor_iot, time_int)
     data = {}
     try:
@@ -92,7 +92,7 @@ def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
 
 
 @app.get('/oilgas/header/details')
-def oilgas_header_details(api: str):
+async def oilgas_header_details(api: str):
     header = figs.get_header_oilgas(str(api))
     try:
         header.pop('_id')
@@ -108,7 +108,7 @@ def oilgas_header_details(api: str):
 
 
 @app.get('/oilgas/prodinj/graph')
-def oilgas_prodinj_graph(api: str, axis: str):
+async def oilgas_prodinj_graph(api: str, axis: str):
     graph_oilgas = figs.get_graph_oilgas(str(api), axis)
     data = {}
     try:
@@ -120,7 +120,7 @@ def oilgas_prodinj_graph(api: str, axis: str):
 
 
 @app.get('/oilgas/crm/graph')
-def oilgas_crm_graph(api: str):
+async def oilgas_crm_graph(api: str):
     graph_crm = figs.get_crm(str(api))
     data = {}
     try:
@@ -132,7 +132,7 @@ def oilgas_crm_graph(api: str):
 
 
 @app.get('/oilgas/cyclic/graph')
-def oilgas_cyclic_graph(api: str):
+async def oilgas_cyclic_graph(api: str):
     graph_cyclic_jobs = figs.get_cyclic_jobs(str(api))
     data = {}
     try:
@@ -144,7 +144,7 @@ def oilgas_cyclic_graph(api: str):
 
 
 @app.get('/oilgas/offset/graphs')
-def oilgas_offset_graph(api: str, axis: str):
+async def oilgas_offset_graph(api: str, axis: str):
     graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
         str(api), radius=0.1, axis=axis)
     data = {}
@@ -177,7 +177,7 @@ def oilgas_offset_graph(api: str, axis: str):
 
 
 @app.get('/photos/galleries')
-def photos_galleries():
+async def photos_galleries():
     rows = flickr.get_gal_rows(5)
     data = {}
     data['rows'] = rows
@@ -186,7 +186,7 @@ def photos_galleries():
 
 
 @app.get('/photos/gallery')
-def photos_gallery(id: str):
+async def photos_gallery(id: str):
     rows, map_gal, title, count_photos, count_views = flickr.get_photo_rows(
         id, 5)
     data = {}
@@ -200,7 +200,7 @@ def photos_gallery(id: str):
 
 
 @app.get('/photos/photo')
-def photos_photo(id: str):
+async def photos_photo(id: str):
     image, map_photo = flickr.get_photo(id)
     data = {}
     data['image'] = image
@@ -213,7 +213,7 @@ def photos_photo(id: str):
 
 
 @app.get('/station/history/graphs')
-def station_history_graphs(time_int: str):
+async def station_history_graphs(time_int: str):
     fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
         time_int, sid)
     data = {}
@@ -230,7 +230,7 @@ def station_history_graphs(time_int: str):
 
 
 @app.get('/station/live/data')
-def station_live_data():
+async def station_live_data():
     wx = figs.get_wx_latest(sid)
     data = {}
     data['wx'] = wx
@@ -239,7 +239,7 @@ def station_live_data():
 
 
 @app.get('/weather/aviation/map')
-def weather_aviation_map(
+async def weather_aviation_map(
     prop_awc: str = 'flight_category',
     lat: float = 29.78088,
     lon: float = -95.42041,
@@ -263,7 +263,7 @@ def weather_aviation_map(
 
 
 @app.get('/weather/soundings/image')
-def weather_soundings_images(sid: str):
+async def weather_soundings_images(sid: str):
     img = figs.get_image(sid)
     json_compatible_item_data = jsonable_encoder(img.decode('unicode_escape'))
     return JSONResponse(content=json_compatible_item_data)

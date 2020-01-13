@@ -14,9 +14,6 @@ import re
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
 
-
-client = MongoClient(os.environ['MONGODB_CLIENT'], maxPoolSize=10000)
-
 mapbox_access_token = os.environ['MAPBOX_TOKEN']
 
 colorway = [
@@ -259,6 +256,7 @@ def create_3d_plot(df, x, y, z, cs, x_name, y_name, z_name, x_color, y_color, z_
 
 
 def create_graph_iot(sensor, time):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     start, now = get_time_range(time)
     db = client.iot
     df = pd.DataFrame(
@@ -304,10 +302,12 @@ def create_graph_iot(sensor, time):
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
+    client.close()
     return graphJSON
 
 
 def get_prodinj(wells):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
     docs = db.doggr.aggregate(
         [{'$unwind': '$prodinj'}, {'$match': {'api': {'$in': wells}}}, ])
@@ -327,12 +327,13 @@ def get_prodinj(wells):
             df[col] = 0
         if col not in ['date', 'oilgrav', 'pcsg', 'ptbg', 'btu', 'pinjsurf']:
             df[col] = df[col]/30.45
+    client.close()
     return df
 
 
 def get_offsets_oilgas(api, radius, axis):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
-
     docs = db.doggr.find(
         {'api': api}, {'api': 1, 'latitude': 1, 'longitude': 1})
     for x in docs:
@@ -522,11 +523,12 @@ def get_offsets_oilgas(api, radius, axis):
         offsets = None
 
     map_offsets = None
-
+    client.close()
     return graphJSON_offset_oil, graphJSON_offset_stm, graphJSON_offset_wtr, graphJSON_offset_oil_ci, graphJSON_offset_stm_ci, graphJSON_offset_wtr_ci, map_offsets, offsets
 
 
 def get_crm(api):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
     docs = db.doggr.find({'api': api}, {'crm': 1})
     for x in docs:
@@ -577,12 +579,13 @@ def get_crm(api):
             dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON_crm = None
+    client.close()
     return graphJSON_crm
 
 
 def get_cyclic_jobs(api):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
-
     docs = db.doggr.find({'api': api}, {'cyclic_jobs': 1})
     for x in docs:
         header = dict(x)
@@ -652,23 +655,24 @@ def get_cyclic_jobs(api):
             fig_cyclic_jobs, cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON_cyclic_jobs = None
-
+    client.close()
     return graphJSON_cyclic_jobs
 
 
 def get_header_oilgas(api):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
-
     docs = db.doggr.find(
         {'api': api}, {'cyclic_jobs': 0, 'prodinj': 0, 'crm': 0})
     for x in docs:
         header = dict(x)
+    client.close()
     return header
 
 
 def get_graph_oilgas(api, axis):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
-
     try:
         df = get_prodinj([api])
 
@@ -846,11 +850,12 @@ def get_graph_oilgas(api, axis):
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
-
+    client.close()
     return graphJSON
 
 
 def create_map_oilgas():
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
     df_wells = pd.DataFrame(
         list(db.doggr.find({}, {'field': 1, 'lease': 1, 'well': 1, 'operator': 1, 'api': 1, 'latitude': 1, 'longitude': 1, 'oil_cum': 1, 'water_cum': 1, 'gas_cum': 1, 'wtrstm_cum': 1})))
@@ -865,13 +870,6 @@ def create_map_oilgas():
     df_wtrstm = df_wells[df_wells['wtrstm_cum'] > 0]
 
     data = [
-        # go.Densitymapbox(lat=df_oil['latitude'].values,
-        #                  lon=df_oil['longitude'].values,
-        #                  z=df_oil['oil_cum'].values,
-        #                  colorscale=scl_oil,
-        #                  zmin=0,
-        #                  zmax=10000000,
-        #                  radius=10),
         go.Scattermapbox(
             lat=df_water['latitude'].values,
             lon=df_water['longitude'].values,
@@ -993,7 +991,7 @@ def create_map_oilgas():
 
     df_wells = df_wells[['field', 'lease', 'well', 'operator',
                          'api', 'oil_cum', 'water_cum', 'gas_cum', 'wtrstm_cum']]
-
+    client.close()
     return graphJSON, df_wells
 
 
@@ -1026,9 +1024,8 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
     legend = False
 
     if stations == '1':
-
+        client = MongoClient(os.environ['MONGODB_CLIENT'])
         db = client.wx
-
         df = pd.DataFrame(list(db.awc.find()))
 
         if prop == 'temp_dewpoint_spread':
@@ -1247,7 +1244,8 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
                 lon=[],
                 mode='markers',
                 name='stations',
-            )]
+            )
+        ]
 
     layers = []
 
@@ -1349,11 +1347,12 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
 
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
+    client.close()
     return graphJSON
 
 
 def create_range_aprs(time):
-
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     lat = 29.780880
     lon = -95.420410
 
@@ -1433,7 +1432,9 @@ def create_range_aprs(time):
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
 
-    return graphJSON
+
+client.close()
+return graphJSON
 
 
 def create_map_aprs(script, prop, time):
@@ -1441,9 +1442,9 @@ def create_map_aprs(script, prop, time):
               'altitude': [0, 1000, 3.2808, 0, 'ft'],
               'speed': [0, 100, 0.621371, 0, 'mph'],
               'course': [0, 359, 1, 0, 'degrees'], }
-
-    start, now = get_time_range(time)
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.aprs
+    start, now = get_time_range(time)
     if script == 'prefix':
         df = pd.DataFrame(list(db.raw.find({
             'script': script,
@@ -1659,19 +1660,24 @@ def create_map_aprs(script, prop, time):
         # r['raw'] = row['raw']
         rows.append(r)
 
-    return graphJSON_map, graphJSON_speed, graphJSON_alt, graphJSON_course, rows
+
+client.close()
+return graphJSON_map, graphJSON_speed, graphJSON_alt, graphJSON_course, rows
 
 
 def get_wx_latest(sid):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.wx
     wx = list(db.raw.find({'station_id': sid}).sort(
         [('observation_time_rfc822', -1)]).limit(1))[0]
     wx.pop('_id')
+    client.close()
     return wx
 
 
 def create_wx_figs(time, sid):
     start, now = get_time_range(time)
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.wx
     df_wx_raw = pd.DataFrame(list(db.raw.find({
         'station_id': sid,
@@ -2280,10 +2286,13 @@ def create_wx_figs(time, sid):
     graphJSON_thp = create_3d_plot(df_wx_raw, 'temp_f', 'dewpoint_f', 'relative_humidity', cs_normal, 'Temperature (F)',
                                    'Dewpoint (F)', 'Humidity (%)', 'rgb(255, 95, 63)', 'rgb(255, 127, 63)', 'rgb(63, 127, 255)')
 
-    return graphJSON_td, graphJSON_pr, graphJSON_cb, graphJSON_pc, graphJSON_wd, graphJSON_su, graphJSON_wr, graphJSON_thp
+
+client.close()
+return graphJSON_td, graphJSON_pr, graphJSON_cb, graphJSON_pc, graphJSON_wd, graphJSON_su, graphJSON_wr, graphJSON_thp
 
 
 def get_image(name):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.wx_gfx
     fs = gridfs.GridFS(db)
     file = fs.find_one({"filename": name})
@@ -2292,4 +2301,5 @@ def get_image(name):
     img = img[img.find(b'<svg'):]
     img = re.sub(b'height="\d*.\d*pt"', b'height="100%"', img)
     img = re.sub(b'width="\d*.\d*pt"', b'width="100%"', img)
+    client.close()
     return img
