@@ -1237,6 +1237,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
                     )
                 )
             ]
+        client.close()
     else:
         data = [
             go.Scattermapbox(
@@ -1347,7 +1348,6 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
 
     graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
-    client.close()
     return graphJSON
 
 
