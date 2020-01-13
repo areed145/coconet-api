@@ -19,20 +19,20 @@ from starlette.responses import JSONResponse
 app = FastAPI()
 
 origins = [
-    "https://www.kk6gpv.net",
-    "https://api.kk6gpv.net",
-    "https://idpgis.ncep.noaa.gov",
-    "https://nowcoast.noaa.gov",
-    "http://localhost",
-    "http://localhost:3000",
+    'https://www.kk6gpv.net',
+    'https://api.kk6gpv.net',
+    'https://idpgis.ncep.noaa.gov',
+    'https://nowcoast.noaa.gov',
+    'http://localhost',
+    'http://localhost:3000',
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 app.add_middleware(
@@ -51,9 +51,9 @@ def myconverter(o):
         return o.__str__()
 
 
-@app.get("/")
+@app.get('/')
 def main():
-    return {"api": "kk6gpv.net"}
+    return {'api': 'kk6gpv.net'}
 
 
 @app.get('/aprs/map')
@@ -239,7 +239,21 @@ def station_live_data():
 
 
 @app.get('/weather/aviation/map')
-def weather_aviation_map(prop_awc: str, lat: float, lon: float, zoom: int, stations: str, infrared: str, radar: str, analysis: str, lightning: str, precip: str, watchwarn: str, temp: str, visible: str):
+def weather_aviation_map(
+    prop_awc: str = 'flight_category',
+    lat: float = 29.78088,
+    lon: float = -95.42041,
+    zoom: int = 6,
+    stations: str = '1',
+    infrared: str = '0',
+    radar: str = '1',
+    analysis: str = '1',
+    lightning: str = '1',
+    precip: str = '0',
+    watchwarn: str = '0',
+    temp: str = '0',
+    visible: str = '0'
+):
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, stations, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     data = {}
