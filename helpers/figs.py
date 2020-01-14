@@ -1309,7 +1309,8 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
                 # opacity=0.5,
                 sourcetype='raster',
                 source=[
-                    'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:16&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image'
+                    'https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:2&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image',
+                    # 'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/export?transparent=true&format=png32&dpi=300&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image'
                 ]
             )
         )
