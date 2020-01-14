@@ -1297,7 +1297,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
                     'https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/sat_meteo_imagery_time/MapServer/export?transparent=true&format=png32&dpi=300&layers=show:16&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image']
             )
         )
-    if visible == '1' or infrared == '1':
+    if visible == '1':
         layers.append(
             dict(
                 below='traces',
