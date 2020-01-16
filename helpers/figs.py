@@ -673,7 +673,8 @@ def get_header_oilgas(api):
 def get_header_tags_oilgas(tags):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
-    docs = db.doggr.find({'tags': {'$in': tags}}, {'cyclic_jobs': 0, 'prodinj': 0, 'crm': 0})
+    docs = db.doggr.find({'tags': {'$in': tags}}, {
+                         'cyclic_jobs': 0, 'prodinj': 0, 'crm': 0})
     headers = []
     for x in docs:
         headers.append(dict(x))
