@@ -677,8 +677,11 @@ def get_tags_oilgas(api):
         {'api': api}, {'tags': 1})
     for x in docs:
         tags = dict(x)
+    taglist = []
+    for val in tags['tags']:
+        taglist.append({val: val})
     client.close()
-    return tags
+    return taglist
 
 
 def set_tags_oilgas(api, tags):
