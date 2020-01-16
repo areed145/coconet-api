@@ -112,6 +112,11 @@ async def oilgas_tags_set(api: str, tags: List[str] = Query(None)):
     figs.set_tags_oilgas(api, tags)
 
 
+@app.get('/oilgas/header/tags')
+async def oilgas_header_tags(tags: List[str] = Query(None)):
+    figs.get_header_tags_oilgas(tags)
+
+
 @app.get('/oilgas/header/details')
 async def oilgas_header_details(api: str):
     header = figs.get_header_oilgas(str(api))
