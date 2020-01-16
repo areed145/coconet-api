@@ -91,8 +91,8 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
     return JSONResponse(content=json_compatible_item_data)
 
 
-@app.get('/oilgas/get/tags')
-async def oilgas_get_tags(api: str):
+@app.get('/oilgas/tags/get')
+async def oilgas_tags_get(api: str):
     tags = figs.get_tags_oilgas(str(api))
     try:
         tags.pop('_id')
@@ -107,8 +107,8 @@ async def oilgas_get_tags(api: str):
     return JSONResponse(content=json_compatible_item_data)
 
 
-@app.put('/oilgas/set/tags')
-async def oilgas_set_tags(api: str, tags: List[str] = Query(None)):
+@app.put('/oilgas/tags/set')
+async def oilgas_tags_set(api: str, tags: List[str] = Query(None)):
     figs.set_tags_oilgas(api, tags)
 
 
