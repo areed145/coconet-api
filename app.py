@@ -114,7 +114,14 @@ async def oilgas_tags_set(api: str, tags: List[str] = Query(None)):
 
 @app.get('/oilgas/header/tags')
 async def oilgas_header_tags(tags: List[str] = Query(None)):
-    figs.get_header_tags_oilgas(tags)
+    headers = figs.get_header_tags_oilgas(tags)
+    data = {}
+    try:
+        data['headers'] = headers
+    except:
+        pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @app.get('/oilgas/header/details')
