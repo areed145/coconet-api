@@ -683,7 +683,7 @@ def get_tags_oilgas(api):
         #     id = 10
         # if val == 'green':
         #     id = 11
-        taglist.append({id: val, name: val})
+        taglist.append({"id": val, "name": val})
     client.close()
     return taglist
 
