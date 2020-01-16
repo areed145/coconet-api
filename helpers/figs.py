@@ -670,6 +670,24 @@ def get_header_oilgas(api):
     return header
 
 
+def get_tags_oilgas(api):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
+    db = client.petroleum
+    docs = db.doggr.find(
+        {'api': api}, {'tags': 1})
+    for x in docs:
+        tags = dict(x)
+    client.close()
+    return tags
+
+
+def set_tags_oilgas(api, tags):
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
+    db = client.petroleum
+    db.doggr.update({'api': api}, {'$set': {'tags': tags}},
+                    upsert=False, multi=False)
+
+
 def get_graph_oilgas(api, axis):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
