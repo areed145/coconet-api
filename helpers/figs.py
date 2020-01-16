@@ -666,6 +666,10 @@ def get_header_oilgas(api):
         {'api': api}, {'cyclic_jobs': 0, 'prodinj': 0, 'crm': 0})
     for x in docs:
         header = dict(x)
+    try:
+        header.pop('_id')
+    except:
+        pass
     client.close()
     return header
 
@@ -677,7 +681,12 @@ def get_header_tags_oilgas(tags):
                          'cyclic_jobs': 0, 'prodinj': 0, 'crm': 0})
     headers = []
     for x in docs:
-        headers.append(dict(x))
+        header = dict(x)
+        try:
+            header.pop('_id')
+        except:
+            pass
+        headers.append(header)
     client.close()
     return headers
 
