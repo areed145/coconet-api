@@ -679,7 +679,11 @@ def get_tags_oilgas(api):
         tags = dict(x)
     taglist = []
     for val in tags['tags']:
-        taglist.append({val: val})
+        if val == 'cool':
+            id = 10
+        if val == 'green':
+            id = 11
+        taglist.append({id: val})
     client.close()
     return taglist
 
