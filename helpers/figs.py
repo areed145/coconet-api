@@ -954,16 +954,19 @@ def get_decline_oilgas(api, axis):
             )
         )
 
-        forecasts['water'] = forecasts.index
-        forecasts['water'] = forecasts['water'].apply(
-            lambda row: model_func(
-                int((
-                    (row - pd.to_datetime(decline['water']['decline_start']))/np.timedelta64(1, 'M'))),
-                decline['water']['qi'],
-                decline['water']['d'],
-                decline['water']['b']
+        try:
+            forecasts['water'] = forecasts.index
+            forecasts['water'] = forecasts['water'].apply(
+                lambda row: model_func(
+                    int((
+                        (row - pd.to_datetime(decline['water']['decline_start']))/np.timedelta64(1, 'M'))),
+                    decline['water']['qi'],
+                    decline['water']['d'],
+                    decline['water']['b']
+                )
             )
-        )
+        except:
+            pass
 
         try:
             forecasts['gas'] = forecasts.index
@@ -1033,7 +1036,7 @@ def get_decline_oilgas(api, axis):
         ]
 
         # try:
-        data = data.append(
+        data.append(
             go.Scatter(
                 x=prodinj['date'],
                 y=prodinj['water'] / 30.45,
@@ -1051,7 +1054,7 @@ def get_decline_oilgas(api, axis):
         #     pass
 
         # try:
-        data = data.append(
+        data.append(
             go.Scatter(
                 x=forecasts['date'],
                 y=forecasts['water'],
@@ -1070,7 +1073,7 @@ def get_decline_oilgas(api, axis):
         #     pass
 
         # try:
-        data = data.append(
+        data.append(
             go.Scatter(
                 x=prodinj['date'],
                 y=prodinj['gas'] / 30.45,
@@ -1088,7 +1091,7 @@ def get_decline_oilgas(api, axis):
         #     pass
 
         # try:
-        data = data.append(
+        data.append(
             go.Scatter(
                 x=forecasts['date'],
                 y=forecasts['gas'],
