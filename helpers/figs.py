@@ -932,27 +932,34 @@ def get_decline_oilgas(api, axis):
         )
 
         forecasts['date'] = forecasts.index
-        forecasts['oil'] = forecasts.index
-        forecasts['oil'] = forecasts['oil'].apply(
-            lambda row: model_func(
-                int((
-                    (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
-                decline['oil']['qi'],
-                decline['oil']['d'],
-                decline['oil']['b']
-            )
-        )
 
-        forecasts['owr'] = forecasts.index
-        forecasts['owr'] = forecasts['owr'].apply(
-            lambda row: model_func(
-                int((
-                    (row - pd.to_datetime(decline['owr']['decline_start']))/np.timedelta64(1, 'M'))),
-                decline['owr']['qi'],
-                decline['owr']['d'],
-                decline['owr']['b']
+        try:
+            forecasts['oil'] = forecasts.index
+            forecasts['oil'] = forecasts['oil'].apply(
+                lambda row: model_func(
+                    int((
+                        (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
+                    decline['oil']['qi'],
+                    decline['oil']['d'],
+                    decline['oil']['b']
+                )
             )
-        )
+        except:
+            pass
+
+        try:
+            forecasts['oilcut'] = forecasts.index
+            forecasts['oilcut'] = forecasts['oilcut'].apply(
+                lambda row: model_func(
+                    int((
+                        (row - pd.to_datetime(decline['oilcut']['decline_start']))/np.timedelta64(1, 'M'))),
+                    decline['oilcut']['qi'],
+                    decline['oilcut']['d'],
+                    decline['oilcut']['b']
+                )
+            )
+        except:
+            pass
 
         try:
             forecasts['water'] = forecasts.index
@@ -982,129 +989,136 @@ def get_decline_oilgas(api, axis):
         except:
             pass
 
-        data = [
-            go.Scatter(
-                x=prodinj['date'],
-                y=prodinj['oil'] / 30.45,
-                name='oil',
-                line=dict(
-                    color='#50bf37',
-                    shape='spline',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            ),
-            go.Scatter(
-                x=forecasts['date'],
-                y=forecasts['oil'],
-                name='oil_fc',
-                line=dict(
-                    color='#50bf37',
-                    shape='spline',
-                    dash='dot',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            ),
-            go.Scatter(
-                x=prodinj['date'],
-                y=prodinj['oil'] / (prodinj['water'] + prodinj['oil']),
-                name='oilcut',
-                line=dict(
-                    color='#2EF4D6',
-                    shape='spline',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            ),
-            go.Scatter(
-                x=forecasts['date'],
-                y=forecasts['owr'] / 1 + forecasts['owr'],
-                name='oilcut_fc',
-                line=dict(
-                    color='#2EF4D6',
-                    shape='spline',
-                    dash='dot',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            ),
-        ]
+        data = []
 
         try:
             data.append(
-                go.Scatter(
-                    x=prodinj['date'],
-                    y=prodinj['water'] / 30.45,
-                    name='water',
-                    line=dict(
-                        color='#4286f4',
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
+                [
+                    go.Scatter(
+                        x=prodinj['date'],
+                        y=prodinj['oil'] / 30.45,
+                        name='oil',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
                     ),
-                    mode='lines'
-                )
+                    go.Scatter(
+                        x=forecasts['date'],
+                        y=forecasts['oil'],
+                        name='oil_fc',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                ]
             )
         except:
             pass
 
         try:
             data.append(
-                go.Scatter(
-                    x=forecasts['date'],
-                    y=forecasts['water'],
-                    name='water_fc',
-                    line=dict(
-                        color='#4286f4',
-                        shape='spline',
-                        dash='dot',
-                        smoothing=0.3,
-                        width=3
+                [
+                    go.Scatter(
+                        x=prodinj['date'],
+                        y=prodinj['oil'] / (prodinj['water'] + prodinj['oil']),
+                        name='oilcut',
+                        line=dict(
+                            color='#2EF4D6',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
                     ),
-                    mode='lines'
-                )
+                    go.Scatter(
+                        x=forecasts['date'],
+                        y=forecasts['owr'] / 1 + forecasts['owr'],
+                        name='oilcut_fc',
+                        line=dict(
+                            color='#2EF4D6',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                ]
             )
         except:
             pass
 
         try:
             data.append(
-                go.Scatter(
-                    x=prodinj['date'],
-                    y=prodinj['gas'] / 30.45,
-                    name='gas',
-                    line=dict(
-                        color='#ef2626',
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
+                [
+                    go.Scatter(
+                        x=prodinj['date'],
+                        y=prodinj['water'] / 30.45,
+                        name='water',
+                        line=dict(
+                            color='#4286f4',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
                     ),
-                    mode='lines'
-                )
+                    go.Scatter(
+                        x=forecasts['date'],
+                        y=forecasts['water'],
+                        name='water_fc',
+                        line=dict(
+                            color='#4286f4',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    )
+                ]
             )
         except:
             pass
 
         try:
             data.append(
-                go.Scatter(
-                    x=forecasts['date'],
-                    y=forecasts['gas'],
-                    name='gas_fc',
-                    line=dict(
-                        color='#ef2626',
-                        shape='spline',
-                        dash='dot',
-                        smoothing=0.3,
-                        width=3
+                [
+                    go.Scatter(
+                        x=prodinj['date'],
+                        y=prodinj['gas'] / 30.45,
+                        name='gas',
+                        line=dict(
+                            color='#ef2626',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
                     ),
-                    mode='lines'
-                )
+                    go.Scatter(
+                        x=forecasts['date'],
+                        y=forecasts['gas'],
+                        name='gas_fc',
+                        line=dict(
+                            color='#ef2626',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    )
+                ]
             )
         except:
             pass
