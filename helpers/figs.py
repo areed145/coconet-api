@@ -974,8 +974,8 @@ def get_decline_oilgas(api, axis):
             mode='lines'
         ),
         go.Scatter(
-            x=forecast['date'],
-            y=forecast['oil'],
+            x=forecasts['date'],
+            y=forecasts['oil'],
             name='oil_fc',
             line=dict(
                 color='#50bf37',
@@ -987,8 +987,8 @@ def get_decline_oilgas(api, axis):
             mode='lines'
         ),
         go.Scatter(
-            x=forecast['date'],
-            y=forecast['water'],
+            x=forecasts['date'],
+            y=forecasts['water'],
             name='water_fc',
             line=dict(
                 color='#4286f4',
