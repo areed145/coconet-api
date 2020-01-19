@@ -148,6 +148,18 @@ async def oilgas_prodinj_graph(api: str, axis: str):
     return JSONResponse(content=json_compatible_item_data)
 
 
+@app.get('/oilgas/decline/graph')
+async def oilgas_decline_graph(api: str, axis: str):
+    graph_decline = figs.get_decline_oilgas(str(api), axis)
+    data = {}
+    try:
+        data['graph_decline'] = json.loads(graph_decline)
+    except:
+        pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
 @app.get('/oilgas/crm/graph')
 async def oilgas_crm_graph(api: str):
     graph_crm = figs.get_crm(str(api))
