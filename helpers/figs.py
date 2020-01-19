@@ -1982,6 +1982,12 @@ def create_map_aprs(script, prop, time):
     return graphJSON_map, graphJSON_speed, graphJSON_alt, graphJSON_course, rows
 
 
+def convert(seconds):
+    min, sec = divmod(seconds, 60)
+    hour, min = divmod(min, 60)
+    return "%d:%02d:%02d" % (hour, min, sec)
+
+
 def get_aprs_latest():
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.aprs
@@ -1992,7 +1998,8 @@ def get_aprs_latest():
     }).sort([('timestamp_', -1)]).limit(1)))
     last = {}
     last['timestamp_'] = df['timestamp_'].values[0]
-    last['hours_ago'] = (datetime.utcnow() - pd.to_datetime(df['timestamp_'].values[0]))/np.timedelta64(1, 'h')
+    time_ago = int((datetime.utcnow() - pd.to_datetime(df['timestamp_'].values[0]))/np.timedelta64(1, 's'))
+    last['hour'], last['min'], last['sec'] = convert(time_ago)
     last['latitude'] = df['latitude'].values[0]
     last['longitude'] = df['longitude'].values[0]
     return last
