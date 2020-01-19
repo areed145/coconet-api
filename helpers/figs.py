@@ -946,7 +946,7 @@ def get_decline_oilgas(api, axis):
             )
         )
 
-        forecasts['water'] = forecasts['oil'] / forecasts['owr']
+        # forecasts['water'] = forecasts['oil'] / forecasts['owr']
 
         data = [
             go.Scatter(
@@ -963,10 +963,10 @@ def get_decline_oilgas(api, axis):
             ),
             go.Scatter(
                 x=prodinj['date'],
-                y=prodinj['water'] / 30.45,
-                name='water',
+                y=prodinj['water'] / prodinj['oil'],
+                name='wor',
                 line=dict(
-                    color='#4286f4',
+                    color='#2EF4D6',
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -988,10 +988,10 @@ def get_decline_oilgas(api, axis):
             ),
             go.Scatter(
                 x=forecasts['date'],
-                y=forecasts['water'],
-                name='water_fc',
+                y=1 / forecasts['owr'],
+                name='wor_fc',
                 line=dict(
-                    color='#4286f4',
+                    color='#2EF4D6',
                     shape='spline',
                     dash='dot',
                     smoothing=0.3,
