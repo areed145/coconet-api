@@ -1997,7 +1997,8 @@ def get_aprs_latest():
         'latitude': {'$exists': True, '$ne': None}
     }).sort([('timestamp_', -1)]).limit(1)))
     last = {}
-    last['timestamp_'] = df['timestamp_'].apply(ambda x: x.strftime('%Y-%m-%d %H:%M:%S')).values[0]
+    last['timestamp_'] = df['timestamp_'].apply(
+        lambda x: x.strftime('%Y-%m-%d %H:%M:%S')).values[0]
     time_ago = int((datetime.utcnow(
     ) - pd.to_datetime(df['timestamp_'].values[0]))/np.timedelta64(1, 's'))
     last['hour'], last['min'], last['sec'] = convert(time_ago)
