@@ -1970,12 +1970,13 @@ def create_map_aprs(script, prop, time):
         r['timestamp_'] = row['timestamp_']
         r['from'] = row['from']
         r['to'] = row['to']
-        r['latitude'] = row['latitude']
-        r['longitude'] = row['longitude']
+        r['via'] = row['via']
+        # r['latitude'] = row['latitude']
+        # r['longitude'] = row['longitude']
         r['speed'] = row['speed']
         r['altitude'] = row['altitude']
         r['course'] = row['course']
-        # r['raw'] = row['raw']
+        r['comment'] = row['comment']
         rows.append(r)
     client.close()
     return graphJSON_map, graphJSON_speed, graphJSON_alt, graphJSON_course, rows
