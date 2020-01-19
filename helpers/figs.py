@@ -807,6 +807,7 @@ def get_graph_oilgas(api, axis):
                 x=df['date'],
                 y=df['oilgrav'],
                 name='oilgrav',
+                visible='legendonly',
                 line=dict(
                     color='#81d636',
                     shape='spline',
@@ -819,6 +820,7 @@ def get_graph_oilgas(api, axis):
                 x=df['date'],
                 y=df['pcsg'],
                 name='pcsg',
+                visible='legendonly',
                 line=dict(
                     color='#4136d6',
                     shape='spline',
@@ -831,6 +833,7 @@ def get_graph_oilgas(api, axis):
                 x=df['date'],
                 y=df['ptbg'],
                 name='ptbg',
+                visible='legendonly',
                 line=dict(
                     color='#7636d6',
                     shape='spline',
@@ -843,6 +846,7 @@ def get_graph_oilgas(api, axis):
                 x=df['date'],
                 y=df['btu'],
                 name='btu',
+                visible='legendonly',
                 line=dict(
                     color='#d636d1',
                     shape='spline',
@@ -855,6 +859,7 @@ def get_graph_oilgas(api, axis):
                 x=df['date'],
                 y=df['pinjsurf'],
                 name='pinjsurf',
+                visible='legendonly',
                 line=dict(
                     color='#e38f29',
                     shape='spline',
@@ -946,6 +951,20 @@ def get_decline_oilgas(api, axis):
             )
         )
 
+        try:
+            forecasts['gas'] = forecasts.index
+            forecasts['gas'] = forecasts['gas'].apply(
+                lambda row: model_func(
+                    int((
+                        (row - pd.to_datetime(decline['gas']['decline_start']))/np.timedelta64(1, 'M'))),
+                    decline['gas']['qi'],
+                    decline['gas']['d'],
+                    decline['gas']['b']
+                )
+            )
+        except:
+            pass
+
         # forecasts['water'] = forecasts['oil'] / forecasts['owr']
 
         data = [
@@ -955,18 +974,6 @@ def get_decline_oilgas(api, axis):
                 name='oil',
                 line=dict(
                     color='#50bf37',
-                    shape='spline',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            ),
-            go.Scatter(
-                x=prodinj['date'],
-                y=prodinj['water'] / prodinj['oil'],
-                name='wor',
-                line=dict(
-                    color='#2EF4D6',
                     shape='spline',
                     smoothing=0.3,
                     width=3
@@ -987,9 +994,21 @@ def get_decline_oilgas(api, axis):
                 mode='lines'
             ),
             go.Scatter(
+                x=prodinj['date'],
+                y=prodinj['oil'] / (prodinj['water'] + prodinj['oil']),
+                name='oilcut',
+                line=dict(
+                    color='#2EF4D6',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
+            ),
+            go.Scatter(
                 x=forecasts['date'],
-                y=1 / forecasts['owr'],
-                name='wor_fc',
+                y=forecasts['owr'] / 1 + forecasts['owr'],
+                name='oilcut_fc',
                 line=dict(
                     color='#2EF4D6',
                     shape='spline',
@@ -1000,6 +1019,37 @@ def get_decline_oilgas(api, axis):
                 mode='lines'
             )
         ]
+
+        try:
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['gas'],
+                    name='oilcut_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=forecasts['date'],
+                    y=forecasts['gas'],
+                    name='oilcut_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
 
         if axis == 'log':
             layout = go.Layout(
@@ -1025,7 +1075,7 @@ def get_decline_oilgas(api, axis):
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
         graphJSON = json.dumps(dict(data=data, layout=layout),
-                                cls=plotly.utils.PlotlyJSONEncoder)
+                               cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
     client.close()
