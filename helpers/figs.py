@@ -1992,6 +1992,7 @@ def get_aprs_latest():
     }).sort([('timestamp_', -1)]).limit(1)))
     last = {}
     last['timestamp_'] = df['timestamp_'].values[0]
+    last['hours_ago'] = (datetime.utcnow() - pd.to_datetime(df['timestamp_'].values[0]))/np.timedelta64(1, 'H')
     last['latitude'] = df['latitude'].values[0]
     last['longitude'] = df['longitude'].values[0]
     return last
