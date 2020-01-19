@@ -1018,41 +1018,42 @@ def get_decline_oilgas(api, axis):
                     width=3
                 ),
                 mode='lines'
+            ),
+            go.Scatter(
+                x=prodinj['date'],
+                y=prodinj['gas'],
+                name='oilcut_fc',
+                line=dict(
+                    color='#ef2626',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
+            ),
+            go.Scatter(
+                x=forecasts['date'],
+                y=forecasts['gas'],
+                name='oilcut_fc',
+                line=dict(
+                    color='#ef2626',
+                    shape='spline',
+                    dash='dot',
+                    smoothing=0.3,
+                    width=3
+                ),
+                mode='lines'
             )
         ]
 
-        try:
-            data.append(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['gas'],
-                        name='oilcut_fc',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=forecasts['date'],
-                        y=forecasts['gas'],
-                        name='oilcut_fc',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
+        # try:
+        #     data.append(
+        #         [
+
+        #         ]
+        #     )
+        # except:
+        #     pass
 
         if axis == 'log':
             layout = go.Layout(
