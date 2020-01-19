@@ -954,6 +954,17 @@ def get_decline_oilgas(api, axis):
             )
         )
 
+        forecasts['water'] = forecasts.index
+        forecasts['water'] = forecasts['water'].apply(
+            lambda row: model_func(
+                int((
+                    (row - pd.to_datetime(decline['water']['decline_start']))/np.timedelta64(1, 'M'))),
+                decline['water']['qi'],
+                decline['water']['d'],
+                decline['water']['b']
+            )
+        )
+
         try:
             forecasts['gas'] = forecasts.index
             forecasts['gas'] = forecasts['gas'].apply(
@@ -1019,41 +1030,81 @@ def get_decline_oilgas(api, axis):
                 ),
                 mode='lines'
             ),
-            go.Scatter(
-                x=prodinj['date'],
-                y=prodinj['gas'],
-                name='oilcut_fc',
-                line=dict(
-                    color='#ef2626',
-                    shape='spline',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            ),
-            go.Scatter(
-                x=forecasts['date'],
-                y=forecasts['gas'],
-                name='oilcut_fc',
-                line=dict(
-                    color='#ef2626',
-                    shape='spline',
-                    dash='dot',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            )
         ]
 
-        # try:
-        #     data.append(
-        #         [
+        try:
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['water'],
+                    name='water',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
 
-        #         ]
-        #     )
-        # except:
-        #     pass
+        try:
+            data.append(
+                go.Scatter(
+                    x=forecasts['date'],
+                    y=forecasts['water'],
+                    name='water_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['gas'],
+                    name='gas',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data.append(
+                go.Scatter(
+                    x=forecasts['date'],
+                    y=forecasts['gas'],
+                    name='gas_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
 
         if axis == 'log':
             layout = go.Layout(
