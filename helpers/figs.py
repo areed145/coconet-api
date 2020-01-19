@@ -1036,7 +1036,7 @@ def get_decline_oilgas(api, axis):
             data.append(
                 go.Scatter(
                     x=prodinj['date'],
-                    y=prodinj['water'],
+                    y=prodinj['water'] / 30.45,
                     name='water',
                     line=dict(
                         color='#ef2626',
@@ -1073,7 +1073,7 @@ def get_decline_oilgas(api, axis):
             data.append(
                 go.Scatter(
                     x=prodinj['date'],
-                    y=prodinj['gas'],
+                    y=prodinj['gas'] / 30.45,
                     name='gas',
                     line=dict(
                         color='#ef2626',
