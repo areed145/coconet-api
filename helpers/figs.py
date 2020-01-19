@@ -699,9 +699,12 @@ def get_tags_oilgas(api):
     for x in docs:
         tags = dict(x)
     taglist = []
-    for val in tags['tags']:
-        taglist.append({"id": val, "name": val})
-    client.close()
+    try:
+        for val in tags['tags']:
+            taglist.append({"id": val, "name": val})
+        client.close()
+    except:
+        pass
     return taglist
 
 
