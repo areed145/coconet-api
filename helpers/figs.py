@@ -992,7 +992,7 @@ def get_decline_oilgas(api, axis):
         data = []
 
         try:
-            data.append(
+            data.extend(
                 [
                     go.Scatter(
                         x=prodinj['date'],
@@ -1025,7 +1025,7 @@ def get_decline_oilgas(api, axis):
             pass
 
         try:
-            data.append(
+            data.extend(
                 [
                     go.Scatter(
                         x=prodinj['date'],
@@ -1058,7 +1058,7 @@ def get_decline_oilgas(api, axis):
             pass
 
         try:
-            data.append(
+            data.extend(
                 [
                     go.Scatter(
                         x=prodinj['date'],
@@ -1091,7 +1091,7 @@ def get_decline_oilgas(api, axis):
             pass
 
         try:
-            data.append(
+            data.extend(
                 [
                     go.Scatter(
                         x=prodinj['date'],
