@@ -1041,7 +1041,7 @@ def get_decline_oilgas(api, axis):
                     ),
                     go.Scatter(
                         x=forecasts['date'],
-                        y=forecasts['owr'] / 1 + forecasts['owr'],
+                        y=forecasts['oilcut'],
                         name='oilcut_fc',
                         line=dict(
                             color='#2EF4D6',
