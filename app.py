@@ -56,6 +56,15 @@ def main():
     return {'api': 'kk6gpv.net'}
 
 
+@app.get('/aprs/latest')
+async def aprs_latest():
+    last = figs.get_aprs_latest()
+    data = {}
+    data['last'] = last
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
 @app.get('/aprs/map')
 async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
     map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(

@@ -1982,6 +1982,21 @@ def create_map_aprs(script, prop, time):
     return graphJSON_map, graphJSON_speed, graphJSON_alt, graphJSON_course, rows
 
 
+def get_aprs_latest():
+    client = MongoClient(os.environ['MONGODB_CLIENT'])
+    db = client.aprs
+    df = pd.DataFrame(list(db.raw.find({
+        'script': 'prefix',
+        'from': 'KK6GPV',
+        'latitude': {'$exists': True, '$ne': None}
+    }).sort([('timestamp_', -1)]).limit(1)))
+    last = {}
+    last['timestamp_'] = df['timestamp_'].values[0]
+    last['latitude'] = df['latitude'].values[0]
+    last['longitude'] = df['longitude'].values[0]
+    return last
+
+
 def get_wx_latest(sid):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.wx
