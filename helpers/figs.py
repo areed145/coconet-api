@@ -899,135 +899,135 @@ def get_graph_oilgas(api, axis):
 def get_decline_oilgas(api, axis):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
-    try:
+    # try:
 
-        docs = db.doggr.find({'api': str(api)}, {'prodinj': 1, 'decline': 1})
-        for x in docs:
-            doc = dict(x)
-        prodinj = pd.DataFrame(doc['prodinj'])
-        decline = pd.DataFrame(doc['decline'])
+    docs = db.doggr.find({'api': str(api)}, {'prodinj': 1, 'decline': 1})
+    for x in docs:
+        doc = dict(x)
+    prodinj = pd.DataFrame(doc['prodinj'])
+    decline = pd.DataFrame(doc['decline'])
 
-        start = decline.T['decline_start'].min()
-        end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
+    start = decline.T['decline_start'].min()
+    end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
 
-        def model_func(t, qi, d, b):
-            if b == 0:
-                b = 1e-9
-            return qi / ((1 + b * d * t) ** (1/b))
+    def model_func(t, qi, d, b):
+        if b == 0:
+            b = 1e-9
+        return qi / ((1 + b * d * t) ** (1/b))
 
-        forecasts = pd.DataFrame(
-            index=pd.date_range(
-                start=start,
-                end=end,
-                freq='MS'
-            )
+    forecasts = pd.DataFrame(
+        index=pd.date_range(
+            start=start,
+            end=end,
+            freq='MS'
         )
+    )
 
-        forecasts['date'] = forecasts.index
-        forecasts['oil'] = forecasts.index
-        forecasts['oil'] = forecasts['oil'].apply(
-            lambda row: model_func(
-                int((
-                    (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
-                decline['oil']['qi'],
-                decline['oil']['d'],
-                decline['oil']['b']
-            )
+    forecasts['date'] = forecasts.index
+    forecasts['oil'] = forecasts.index
+    forecasts['oil'] = forecasts['oil'].apply(
+        lambda row: model_func(
+            int((
+                (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
+            decline['oil']['qi'],
+            decline['oil']['d'],
+            decline['oil']['b']
         )
+    )
 
-        forecasts['owr'] = forecasts.index
-        forecasts['owr'] = forecasts['owr'].apply(
-            lambda row: model_func(
-                int((
-                    (row - pd.to_datetime(decline['owr']['decline_start']))/np.timedelta64(1, 'M'))),
-                decline['owr']['qi'],
-                decline['owr']['d'],
-                decline['owr']['b']
-            )
+    forecasts['owr'] = forecasts.index
+    forecasts['owr'] = forecasts['owr'].apply(
+        lambda row: model_func(
+            int((
+                (row - pd.to_datetime(decline['owr']['decline_start']))/np.timedelta64(1, 'M'))),
+            decline['owr']['qi'],
+            decline['owr']['d'],
+            decline['owr']['b']
         )
+    )
 
-        forecasts['water'] = forecasts['oil'] / forecasts['owr']
+    forecasts['water'] = forecasts['oil'] / forecasts['owr']
 
-        data = [
-            go.Scatter(
-                x=df['date'],
-                y=df['oil'] / 30.45,
-                name='oil',
-                line=dict(
-                    color='#50bf37',
-                    shape='spline',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
+    data = [
+        go.Scatter(
+            x=df['date'],
+            y=df['oil'] / 30.45,
+            name='oil',
+            line=dict(
+                color='#50bf37',
+                shape='spline',
+                smoothing=0.3,
+                width=3
             ),
-            go.Scatter(
-                x=df['date'],
-                y=df['water'] / 30.45,
-                name='water',
-                line=dict(
-                    color='#4286f4',
-                    shape='spline',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df['date'],
+            y=df['water'] / 30.45,
+            name='water',
+            line=dict(
+                color='#4286f4',
+                shape='spline',
+                smoothing=0.3,
+                width=3
             ),
-            go.Scatter(
-                x=df['date'],
-                y=forecast['oil'],
-                name='oil_fc',
-                line=dict(
-                    color='#50bf37',
-                    shape='spline',
-                    dash='dot',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df['date'],
+            y=forecast['oil'],
+            name='oil_fc',
+            line=dict(
+                color='#50bf37',
+                shape='spline',
+                dash='dot',
+                smoothing=0.3,
+                width=3
             ),
-            go.Scatter(
-                x=df['date'],
-                y=forecast['water'],
-                name='water_fc',
-                line=dict(
-                    color='#4286f4',
-                    shape='spline',
-                    dash='dot',
-                    smoothing=0.3,
-                    width=3
-                ),
-                mode='lines'
-            )
-        ]
+            mode='lines'
+        ),
+        go.Scatter(
+            x=df['date'],
+            y=forecast['water'],
+            name='water_fc',
+            line=dict(
+                color='#4286f4',
+                shape='spline',
+                dash='dot',
+                smoothing=0.3,
+                width=3
+            ),
+            mode='lines'
+        )
+    ]
 
-        if axis == 'log':
-            layout = go.Layout(
-                autosize=True,
-                font=dict(family='Ubuntu'),
-                hovermode='closest',
-                hoverlabel=dict(font=dict(family='Ubuntu')),
-                showlegend=True,
-                legend=dict(orientation='h'),
-                yaxis=dict(type='log'),
-                uirevision=True,
-                margin=dict(r=50, t=30, b=30, l=60, pad=0),
-            )
-        else:
-            layout = go.Layout(
-                autosize=True,
-                font=dict(family='Ubuntu'),
-                hovermode='closest',
-                hoverlabel=dict(font=dict(family='Ubuntu')),
-                showlegend=True,
-                legend=dict(orientation='h'),
-                uirevision=True,
-                margin=dict(r=50, t=30, b=30, l=60, pad=0),
-            )
-        graphJSON = json.dumps(dict(data=data, layout=layout),
-                               cls=plotly.utils.PlotlyJSONEncoder)
-    except:
-        graphJSON = None
+    if axis == 'log':
+        layout = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hovermode='closest',
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            showlegend=True,
+            legend=dict(orientation='h'),
+            yaxis=dict(type='log'),
+            uirevision=True,
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        )
+    else:
+        layout = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hovermode='closest',
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            showlegend=True,
+            legend=dict(orientation='h'),
+            uirevision=True,
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        )
+    graphJSON = json.dumps(dict(data=data, layout=layout),
+                            cls=plotly.utils.PlotlyJSONEncoder)
+    # except:
+    #     graphJSON = None
     client.close()
     return graphJSON
 
