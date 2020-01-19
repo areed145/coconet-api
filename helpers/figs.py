@@ -1033,7 +1033,7 @@ def get_decline_oilgas(api, axis):
         ]
 
         # try:
-        data.append(
+        data = data.append(
             go.Scatter(
                 x=prodinj['date'],
                 y=prodinj['water'] / 30.45,
@@ -1051,7 +1051,7 @@ def get_decline_oilgas(api, axis):
         #     pass
 
         # try:
-        data.append(
+        data = data.append(
             go.Scatter(
                 x=forecasts['date'],
                 y=forecasts['water'],
@@ -1070,7 +1070,7 @@ def get_decline_oilgas(api, axis):
         #     pass
 
         # try:
-        data.append(
+        data = data.append(
             go.Scatter(
                 x=prodinj['date'],
                 y=prodinj['gas'] / 30.45,
@@ -1088,7 +1088,7 @@ def get_decline_oilgas(api, axis):
         #     pass
 
         # try:
-        data.append(
+        data = data.append(
             go.Scatter(
                 x=forecasts['date'],
                 y=forecasts['gas'],
