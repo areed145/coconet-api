@@ -1985,7 +1985,7 @@ def create_map_aprs(script, prop, time):
 def convert(seconds):
     min, sec = divmod(seconds, 60)
     hour, min = divmod(min, 60)
-    return "%d:%02d:%02d" % (hour, min, sec)
+    return hour, min, sec
 
 
 def get_aprs_latest():
