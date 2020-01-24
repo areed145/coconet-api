@@ -338,191 +338,191 @@ def get_offsets_oilgas(api, radius, axis):
         {'api': api}, {'api': 1, 'latitude': 1, 'longitude': 1})
     for x in docs:
         header = dict(x)
-    try:
-        r = radius/100
-        lat = header['latitude']
-        lon = header['longitude']
-        df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
-                                              'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
-        df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
-                               * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
-        df = df[df['dist'] <= radius]
-        df.sort_values(by='dist', inplace=True)
-        df = df[:25]
-        offsets = df['api'].tolist()
-        dists = df['dist'].tolist()
+    # try:
+    r = radius/100
+    lat = header['latitude']
+    lon = header['longitude']
+    df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
+                                            'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
+    df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
+                            * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
+    df = df[df['dist'] <= radius]
+    df.sort_values(by='dist', inplace=True)
+    df = df[:25]
+    offsets = df['api'].tolist()
+    dists = df['dist'].tolist()
 
-        df_offsets = pd.DataFrame()
-        for idx in range(len(df)):
-            try:
-                # df_ = pd.DataFrame(df['prodinj'].iloc[idx])
-                df_ = get_prodinj(df['api'].iloc[idx])
-                df_['api'] = df['api'].iloc[idx]
-                df_['date'] = pd.to_datetime(df_['date'])
-                df_offsets = df_offsets.append(df_)
-            except:
-                pass
+    df_offsets = pd.DataFrame()
+    for idx in range(len(df)):
+        # try:
+        # df_ = pd.DataFrame(df['prodinj'].iloc[idx])
+        df_ = get_prodinj(df['api'].iloc[idx])
+        df_['api'] = df['api'].iloc[idx]
+        df_['date'] = pd.to_datetime(df_['date'])
+        df_offsets = df_offsets.append(df_)
+        # except:
+        #     pass
 
-        df_offsets['distapi'] = df_offsets['api'].apply(
-            lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
-        df_offsets.sort_values(by='distapi', inplace=True)
+    df_offsets['distapi'] = df_offsets['api'].apply(
+        lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
+    df_offsets.sort_values(by='distapi', inplace=True)
 
-        def ci_plot(df_offsets, prop, api, c1, c2, c3):
-            df_ci = df_offsets.pivot_table(
-                index='date', columns='api', values=prop)
-            df_ci = df_ci.replace(0, pd.np.nan)
-            # df_ci = df_ci / 30.45
-            # df_mean = df_ci.mean(axis=1)
-            # df_std = df_ci.std(axis=1)
-            # ci_lb = df_mean - df_std
-            # ci_ub = df_mean + df_std
-            count = df_ci.count(axis=1).fillna(0)
-            sums = df_ci.sum(axis=1).fillna(0)
-            ci_lb = df_ci.quantile(0.25, axis=1).fillna(0)
-            ci_ub = df_ci.quantile(0.75, axis=1).fillna(0)
-            val = df_ci[api]
+    def ci_plot(df_offsets, prop, api, c1, c2, c3):
+        df_ci = df_offsets.pivot_table(
+            index='date', columns='api', values=prop)
+        df_ci = df_ci.replace(0, pd.np.nan)
+        # df_ci = df_ci / 30.45
+        # df_mean = df_ci.mean(axis=1)
+        # df_std = df_ci.std(axis=1)
+        # ci_lb = df_mean - df_std
+        # ci_ub = df_mean + df_std
+        count = df_ci.count(axis=1).fillna(0)
+        sums = df_ci.sum(axis=1).fillna(0)
+        ci_lb = df_ci.quantile(0.25, axis=1).fillna(0)
+        ci_ub = df_ci.quantile(0.75, axis=1).fillna(0)
+        val = df_ci[api]
 
-            return [
-                go.Scatter(
-                    x=df_ci.index,
-                    y=ci_ub,
-                    name='offest_upper_75ci',
-                    fill=None,
-                    mode='lines',
-                    line=dict(
-                        color=c1,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
+        return [
+            go.Scatter(
+                x=df_ci.index,
+                y=ci_ub,
+                name='offest_upper_75ci',
+                fill=None,
+                mode='lines',
+                line=dict(
+                    color=c1,
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
                 ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=ci_lb,
-                    name='offset_lower_75ci',
-                    fill='tonexty',
-                    mode='lines',
-                    line=dict(
-                        color=c1,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=count,
-                    name='offset_count',
-                    mode='lines',
-                    line=dict(
-                        color='#8c8c8c',
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=sums,
-                    name='offset_sum',
-                    mode='lines',
-                    line=dict(
-                        color=c2,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=val,
-                    name='current_well',
-                    mode='lines',
-                    line=dict(
-                        color=c3,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                )
-            ]
-
-        data_offset_oil = [
-            go.Heatmap(
-                z=df_offsets['oil']/30.45,
-                x=df_offsets['date'],
-                y=df_offsets['distapi'],
-                colorscale=scl_oil_log,
             ),
+            go.Scatter(
+                x=df_ci.index,
+                y=ci_lb,
+                name='offset_lower_75ci',
+                fill='tonexty',
+                mode='lines',
+                line=dict(
+                    color=c1,
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+            ),
+            go.Scatter(
+                x=df_ci.index,
+                y=count,
+                name='offset_count',
+                mode='lines',
+                line=dict(
+                    color='#8c8c8c',
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+            ),
+            go.Scatter(
+                x=df_ci.index,
+                y=sums,
+                name='offset_sum',
+                mode='lines',
+                line=dict(
+                    color=c2,
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+            ),
+            go.Scatter(
+                x=df_ci.index,
+                y=val,
+                name='current_well',
+                mode='lines',
+                line=dict(
+                    color=c3,
+                    shape='spline',
+                    smoothing=0.3,
+                    width=3
+                ),
+            )
         ]
 
-        data_offset_stm = [
-            go.Heatmap(
-                z=df_offsets['steam']/30.45,
-                x=df_offsets['date'],
-                y=df_offsets['distapi'],
-                colorscale=scl_stm_log,
-            ),
-        ]
+    data_offset_oil = [
+        go.Heatmap(
+            z=df_offsets['oil']/30.45,
+            x=df_offsets['date'],
+            y=df_offsets['distapi'],
+            colorscale=scl_oil_log,
+        ),
+    ]
 
-        data_offset_wtr = [
-            go.Heatmap(
-                z=df_offsets['water']/30.45,
-                x=df_offsets['date'],
-                y=df_offsets['distapi'],
-                colorscale=scl_wtr_log,
-            ),
-        ]
+    data_offset_stm = [
+        go.Heatmap(
+            z=df_offsets['steam']/30.45,
+            x=df_offsets['date'],
+            y=df_offsets['distapi'],
+            colorscale=scl_stm_log,
+        ),
+    ]
 
-        layout = go.Layout(
+    data_offset_wtr = [
+        go.Heatmap(
+            z=df_offsets['water']/30.45,
+            x=df_offsets['date'],
+            y=df_offsets['distapi'],
+            colorscale=scl_wtr_log,
+        ),
+    ]
+
+    layout = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        margin=dict(r=10, t=10, b=30, l=150, pad=0),
+        yaxis=dict(autorange='reversed'),
+        showlegend=False,
+    )
+    if axis == 'log':
+        layout_ = go.Layout(
             autosize=True,
             font=dict(family='Ubuntu'),
             hoverlabel=dict(font=dict(family='Ubuntu')),
-            margin=dict(r=10, t=10, b=30, l=150, pad=0),
-            yaxis=dict(autorange='reversed'),
-            showlegend=False,
+            showlegend=True,
+            legend=dict(orientation='h'),
+            yaxis=dict(type='log'),
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
         )
-        if axis == 'log':
-            layout_ = go.Layout(
-                autosize=True,
-                font=dict(family='Ubuntu'),
-                hoverlabel=dict(font=dict(family='Ubuntu')),
-                showlegend=True,
-                legend=dict(orientation='h'),
-                yaxis=dict(type='log'),
-                margin=dict(r=50, t=30, b=30, l=60, pad=0),
-            )
-        else:
-            layout_ = go.Layout(
-                autosize=True,
-                font=dict(family='Ubuntu'),
-                hoverlabel=dict(font=dict(family='Ubuntu')),
-                showlegend=True,
-                legend=dict(orientation='h'),
-                margin=dict(r=50, t=30, b=30, l=60, pad=0),
-            )
+    else:
+        layout_ = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            showlegend=True,
+            legend=dict(orientation='h'),
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        )
 
-        graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
-                                          cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
-                                          cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
-                                          cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
-                                             cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
-                                             cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
-                                             cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
+                                        cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
+                                        cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
+                                        cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
+                                            cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
+                                            cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
+                                            cls=plotly.utils.PlotlyJSONEncoder)
 
-    except:
-        graphJSON_offset_oil = None
-        graphJSON_offset_stm = None
-        graphJSON_offset_wtr = None
-        graphJSON_offset_oil_ci = None
-        graphJSON_offset_stm_ci = None
-        graphJSON_offset_wtr_ci = None
-        offsets = None
+    # except:
+    #     graphJSON_offset_oil = None
+    #     graphJSON_offset_stm = None
+    #     graphJSON_offset_wtr = None
+    #     graphJSON_offset_oil_ci = None
+    #     graphJSON_offset_stm_ci = None
+    #     graphJSON_offset_wtr_ci = None
+    #     offsets = None
 
     map_offsets = None
     client.close()
