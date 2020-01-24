@@ -343,18 +343,20 @@ def get_offsets_oilgas(api, radius, axis):
         lat = header['latitude']
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
-                                              'longitude': {'$gt': lon-r, '$lt': lon+r}})))
+                                              'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
         df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
                                * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
         df = df[df['dist'] <= radius]
         df.sort_values(by='dist', inplace=True)
+        df = df[:25]
         offsets = df['api'].tolist()
         dists = df['dist'].tolist()
 
         df_offsets = pd.DataFrame()
         for idx in range(len(df)):
             try:
-                df_ = pd.DataFrame(df['prodinj'].iloc[idx])
+                # df_ = pd.DataFrame(df['prodinj'].iloc[idx])
+                df_ = get_prodinj(df['api'].iloc[idx])
                 df_['api'] = df['api'].iloc[idx]
                 df_['date'] = pd.to_datetime(df_['date'])
                 df_offsets = df_offsets.append(df_)
@@ -369,7 +371,7 @@ def get_offsets_oilgas(api, radius, axis):
             df_ci = df_offsets.pivot_table(
                 index='date', columns='api', values=prop)
             df_ci = df_ci.replace(0, pd.np.nan)
-            df_ci = df_ci / 30.45
+            # df_ci = df_ci / 30.45
             # df_mean = df_ci.mean(axis=1)
             # df_std = df_ci.std(axis=1)
             # ci_lb = df_mean - df_std
