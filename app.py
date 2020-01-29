@@ -10,8 +10,7 @@ import pandas as pd
 from fastapi import FastAPI, Query, Form
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
-# import uvicorn
-import hypercorn
+import uvicorn
 from typing import List
 
 from fastapi.encoders import jsonable_encoder
