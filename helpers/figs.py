@@ -8,7 +8,7 @@ import gridfs
 import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import orjson
+import json
 from datetime import datetime, timedelta
 import base64
 import re
@@ -252,7 +252,7 @@ def create_3d_plot(df, x, y, z, cs, x_name, y_name, z_name, x_color, y_color, z_
                },
                }
     )
-    graphJSON = orjson.dumps(dict(data=data, layout=layout),
+    graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
@@ -300,14 +300,14 @@ def create_graph_iot(sensor, time):
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
     try:
-        graphJSON = orjson.dumps(dict(data=data, layout=layout),
+        graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
     client.close()
     return graphJSON
 
-@jit(nopython=True)
+@jit(nopython=True, parallel=True)
 def get_prodinj(wells):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
@@ -503,17 +503,17 @@ def get_offsets_oilgas(api, radius, axis):
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
 
-        graphJSON_offset_oil = orjson.dumps(dict(data=data_offset_oil, layout=layout),
+        graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
                                             cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_stm = orjson.dumps(dict(data=data_offset_stm, layout=layout),
+        graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
                                             cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_wtr = orjson.dumps(dict(data=data_offset_wtr, layout=layout),
+        graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
                                             cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_oil_ci = orjson.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
+        graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
                                                 cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_wtr_ci = orjson.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
+        graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
                                                 cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_offset_stm_ci = orjson.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
+        graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
                                                 cls=plotly.utils.PlotlyJSONEncoder)
 
     except:
@@ -578,7 +578,7 @@ def get_crm(api):
             yaxis=dict(autorange='reversed'),
             showlegend=False,
         )
-        graphJSON_crm = orjson.dumps(
+        graphJSON_crm = json.dumps(
             dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON_crm = None
@@ -654,7 +654,7 @@ def get_cyclic_jobs(api):
             font=dict(family='Ubuntu'),
         )
 
-        graphJSON_cyclic_jobs = orjson.dumps(
+        graphJSON_cyclic_jobs = json.dumps(
             fig_cyclic_jobs, cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON_cyclic_jobs = None
@@ -899,7 +899,7 @@ def get_graph_oilgas(api, axis):
                 uirevision=True,
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
-        graphJSON = orjson.dumps(dict(data=data, layout=layout),
+        graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
@@ -1149,7 +1149,7 @@ def get_decline_oilgas(api, axis):
                 uirevision=True,
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
-        graphJSON = orjson.dumps(dict(data=data, layout=layout),
+        graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
@@ -1289,7 +1289,7 @@ def create_map_oilgas():
             zoom=5
         )
     )
-    graphJSON = orjson.dumps(dict(data=data, layout=layout),
+    graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
 
     df_wells = df_wells[['field', 'lease', 'well', 'operator',
@@ -1669,7 +1669,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
             layers=layers,
             zoom=zoom))
 
-    graphJSON = orjson.dumps(dict(data=data, layout=layout),
+    graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON
 
@@ -1752,7 +1752,7 @@ def create_range_aprs(time):
         #     showlegend=False,
     )
 
-    graphJSON = orjson.dumps(dict(data=data, layout=layout),
+    graphJSON = json.dumps(dict(data=data, layout=layout),
                            cls=plotly.utils.PlotlyJSONEncoder)
     client.close()
     return graphJSON
@@ -1947,16 +1947,16 @@ def create_map_aprs(script, prop, time):
         showlegend=False,
     )
 
-    graphJSON_map = orjson.dumps(dict(data=data_map, layout=layout_map),
+    graphJSON_map = json.dumps(dict(data=data_map, layout=layout_map),
                                cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_speed = orjson.dumps(dict(data=data_speed, layout=layout_speed),
+    graphJSON_speed = json.dumps(dict(data=data_speed, layout=layout_speed),
                                  cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_alt = orjson.dumps(dict(data=data_alt, layout=layout_alt),
+    graphJSON_alt = json.dumps(dict(data=data_alt, layout=layout_alt),
                                cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_course = orjson.dumps(dict(data=data_course, layout=layout_course),
+    graphJSON_course = json.dumps(dict(data=data_course, layout=layout_course),
                                   cls=plotly.utils.PlotlyJSONEncoder)
 
     df['timestamp_'] = df['timestamp_'].apply(
@@ -2607,25 +2607,25 @@ def create_wx_figs(time, sid):
         ),
     )
 
-    graphJSON_td = orjson.dumps(dict(data=data_td, layout=layout_td),
+    graphJSON_td = json.dumps(dict(data=data_td, layout=layout_td),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_pr = orjson.dumps(dict(data=data_pr, layout=layout_pr),
+    graphJSON_pr = json.dumps(dict(data=data_pr, layout=layout_pr),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_pc = orjson.dumps(dict(data=data_pc, layout=layout_pc),
+    graphJSON_pc = json.dumps(dict(data=data_pc, layout=layout_pc),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_cb = orjson.dumps(dict(data=data_cb, layout=layout_cb),
+    graphJSON_cb = json.dumps(dict(data=data_cb, layout=layout_cb),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_wd = orjson.dumps(dict(data=data_wd, layout=layout_wd),
+    graphJSON_wd = json.dumps(dict(data=data_wd, layout=layout_wd),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_su = orjson.dumps(dict(data=data_su, layout=layout_su),
+    graphJSON_su = json.dumps(dict(data=data_su, layout=layout_su),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_wr = orjson.dumps(dict(data=data_wr, layout=layout_wr),
+    graphJSON_wr = json.dumps(dict(data=data_wr, layout=layout_wr),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
     graphJSON_thp = create_3d_plot(df_wx_raw, 'temp_f', 'dewpoint_f', 'relative_humidity', cs_normal, 'Temperature (F)',
