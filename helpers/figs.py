@@ -1094,9 +1094,9 @@ def get_decline_oilgas(api, axis):
                     go.Scatter(
                         x=prodinj['oil'].cumsum(),
                         y=prodinj['oil'] / (prodinj['water'] + prodinj['oil']),
-                        name='oil',
+                        name='oilcut',
                         line=dict(
-                            color='#50bf37',
+                            color='#2EF4D6',
                             shape='spline',
                             smoothing=0.3,
                             width=3
@@ -1106,9 +1106,9 @@ def get_decline_oilgas(api, axis):
                     go.Scatter(
                         x=prodinj['oil'].cumsum(),
                         y=forecasts['oilcut'],
-                        name='oil_fc',
+                        name='oilcut_fc',
                         line=dict(
-                            color='#50bf37',
+                            color='#2EF4D6',
                             shape='spline',
                             dash='dot',
                             smoothing=0.3,
@@ -1156,9 +1156,9 @@ def get_decline_oilgas(api, axis):
                     go.Scatter(
                         x=prodinj['water'].cumsum(),
                         y=prodinj['water'] / 30.45,
-                        name='oil',
+                        name='water',
                         line=dict(
-                            color='#50bf37',
+                            color='#4286f4',
                             shape='spline',
                             smoothing=0.3,
                             width=3
@@ -1168,9 +1168,9 @@ def get_decline_oilgas(api, axis):
                     go.Scatter(
                         x=prodinj['water'].cumsum(),
                         y=forecasts['water'],
-                        name='oil_fc',
+                        name='water_fc',
                         line=dict(
-                            color='#50bf37',
+                            color='#4286f4',
                             shape='spline',
                             dash='dot',
                             smoothing=0.3,
@@ -1218,9 +1218,9 @@ def get_decline_oilgas(api, axis):
                     go.Scatter(
                         x=prodinj['gas'].cumsum(),
                         y=prodinj['gas'] / 30.45,
-                        name='oil',
+                        name='gas',
                         line=dict(
-                            color='#50bf37',
+                            color='#ef2626',
                             shape='spline',
                             smoothing=0.3,
                             width=3
@@ -1230,9 +1230,9 @@ def get_decline_oilgas(api, axis):
                     go.Scatter(
                         x=prodinj['gas'].cumsum(),
                         y=forecasts['gas'],
-                        name='oil_fc',
+                        name='gas_fc',
                         line=dict(
-                            color='#50bf37',
+                            color='#ef2626',
                             shape='spline',
                             dash='dot',
                             smoothing=0.3,
