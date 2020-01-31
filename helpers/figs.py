@@ -2271,8 +2271,8 @@ def create_wx_figs(time, sid):
     td_max = max(df_wx_raw['temp_f'].max(), df_wx_raw['dewpt_f'].max()) + 1
     td_min = min(df_wx_raw['temp_f'].min(), df_wx_raw['dewpt_f'].min()) - 1
 
-    df_wx_raw.loc[df_wx_raw['heat_index_f'] == df_wx_raw['temp_f']] = pd.np.nan
-    df_wx_raw.loc[df_wx_raw['windchill_f'] == df_wx_raw['temp_f']] = pd.np.nan
+    df_wx_raw.loc[df_wx_raw['heat_index_f'] == df_wx_raw['temp_f'], 'heat_index_f'] = pd.np.nan
+    df_wx_raw.loc[df_wx_raw['windchill_f'] == df_wx_raw['temp_f'], 'windchill_f'] = pd.np.nan
 
     data_td = [
         go.Scatter(
