@@ -675,6 +675,9 @@ def get_header_oilgas(api):
         header.pop('_id')
     except:
         pass
+
+    header = {k: 0 if v == 'NaN' else v for k, v in header.items()}
+
     client.close()
     return header
 
