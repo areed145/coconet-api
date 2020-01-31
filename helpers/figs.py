@@ -2182,7 +2182,7 @@ def create_wx_figs(time, sid):
             '$gt': start,
             '$lte': now
         }}).sort([('obs_time_utc', -1)])))
-    df_wx_raw.index = df_wx_raw['obs_time_utc']
+    df_wx_raw.index = df_wx_raw['obs_time_local']
     # df_wx_raw = df_wx_raw.tz_localize('UTC').tz_convert('US/Central')
 
     for col in df_wx_raw.columns:
