@@ -922,383 +922,382 @@ def get_graph_oilgas(api, axis):
 def get_decline_oilgas(api, axis):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
+    # try:
+    docs = db.doggr.find({'api': str(api)}, {'prodinj': 1, 'decline': 1})
+    for x in docs:
+        doc = dict(x)
+    prodinj = pd.DataFrame(doc['prodinj'])
+    decline = pd.DataFrame(doc['decline'])
+
+    prodinj = prodinj.sort_values(by='date')
+
+    # start = decline.T['decline_start'].min()
+    start = pd.to_datetime(prodinj['date'].max())
+    end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
+
+    def model_func(t, qi, d, b):
+        if b == 0:
+            b = 1e-9
+        return qi / ((1 + b * d * t) ** (1/b))
+
+    forecasts = pd.DataFrame(
+        index=pd.date_range(
+            start=start,
+            end=end,
+            freq='MS'
+        )
+    )
+
+    forecasts['date'] = forecasts.index
+
+    prodinj = pd.concat([forecasts, prodinj[['oil','water','gas']]], axis=0)
+    prodinj = prodinj.loc[~forecasts.index.duplicated(keep='first')]
+
     try:
-
-        docs = db.doggr.find({'api': str(api)}, {'prodinj': 1, 'decline': 1})
-        for x in docs:
-            doc = dict(x)
-        prodinj = pd.DataFrame(doc['prodinj'])
-        decline = pd.DataFrame(doc['decline'])
-
-        prodinj = prodinj.sort_values(by='date')
-
-        # start = decline.T['decline_start'].min()
-        start = pd.to_datetime(prodinj['date'].max())
-        end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
-
-        def model_func(t, qi, d, b):
-            if b == 0:
-                b = 1e-9
-            return qi / ((1 + b * d * t) ** (1/b))
-
-        forecasts = pd.DataFrame(
-            index=pd.date_range(
-                start=start,
-                end=end,
-                freq='MS'
+        prodinj['oil_fc'] = prodinj.index
+        prodinj['oil_fc'] = prodinj['oil_fc'].apply(
+            lambda row: model_func(
+                int((
+                    (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
+                decline['oil']['qi'],
+                decline['oil']['d'],
+                decline['oil']['b']
             )
         )
-
-        forecasts['date'] = forecasts.index
-
-        prodinj = pd.concat([forecasts, prodinj[['oil','water','gas']]], axis=0)
-        prodinj = prodinj.loc[~forecasts.index.duplicated(keep='first')]
-
-        try:
-            prodinj['oil_fc'] = prodinj.index
-            prodinj['oil_fc'] = prodinj['oil_fc'].apply(
-                lambda row: model_func(
-                    int((
-                        (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
-                    decline['oil']['qi'],
-                    decline['oil']['d'],
-                    decline['oil']['b']
-                )
-            )
-            prodinj['oil_fc'] = prodinj['oil_fc'] * 30.45
-            prodinj.loc[prodinj['date'] < decline['oil']['decline_start'], 'oil_fc'] = prodinj['oil']
-        except:
-            pass
-
-        try:
-            prodinj['oilcut'] = prodinj['oil'] / (prodinj['water'] + prodinj['oil'])
-            prodinj['oilcut_fc'] = prodinj.index
-            prodinj['oilcut_fc'] = prodinj['oilcut_fc'].apply(
-                lambda row: model_func(
-                    int((
-                        (row - pd.to_datetime(decline['oilcut']['decline_start']))/np.timedelta64(1, 'M'))),
-                    decline['oilcut']['qi'],
-                    decline['oilcut']['d'],
-                    decline['oilcut']['b']
-                )
-            )
-            prodinj.loc[prodinj['date'] < decline['oilcut']['decline_start'], 'oilcut_fc'] = prodinj['oilcut']
-        except:
-            pass
-
-        try:
-            prodinj['water_fc'] = prodinj.index
-            prodinj['water_fc'] = prodinj['water_fc'].apply(
-                lambda row: model_func(
-                    int((
-                        (row - pd.to_datetime(decline['water']['decline_start']))/np.timedelta64(1, 'M'))),
-                    decline['water']['qi'],
-                    decline['water']['d'],
-                    decline['water']['b']
-                )
-            )
-            prodinj['water_fc'] = prodinj['water_fc'] * 30.45
-            prodinj.loc[forecasts['date'] < decline['water']['decline_start'], 'water_fc'] = prodinj['water']
-        except:
-            pass
-
-        try:
-            prodinj['gas_fc'] = prodinj.index
-            prodinj['gas_fc'] = prodinj['gas_fc'].apply(
-                lambda row: model_func(
-                    int((
-                        (row - pd.to_datetime(decline['gas']['decline_start']))/np.timedelta64(1, 'M'))),
-                    decline['gas']['qi'],
-                    decline['gas']['d'],
-                    decline['gas']['b']
-                )
-            )
-            prodinj['gas_fc'] = prodinj['gas_fc'] * 30.45
-            prodinj.loc[forecasts['date'] < decline['gas']['decline_start'], 'gas_fc'] = prodinj['gas']
-        except:
-            pass
-
-        data = []
-        data_cum = []
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oil'] / 30.45,
-                        name='oil',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oil_fc'] / 30.45,
-                        name='oil_fc',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                ]
-            )
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['oil'].cumsum(),
-                        y=prodinj['oil'] / 30.45,
-                        name='oil',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['oil_fc'].cumsum(),
-                        y=prodinj['oil_fc'] / 30.45,
-                        name='oil_fc',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oilcut'],
-                        name='oilcut',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oilcut_fc'],
-                        name='oilcut_fc',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                ]
-            )
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['oil'].cumsum(),
-                        y=prodinj['oilcut'],
-                        name='oilcut',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['oil'].cumsum(),
-                        y=prodinj['oilcut_fc'],
-                        name='oilcut_fc',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['water'] / 30.45,
-                        name='water',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['water_fc'] / 30.45,
-                        name='water_fc',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['water'].cumsum(),
-                        y=prodinj['water'] / 30.45,
-                        name='water',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['water_fc'].cumsum(),
-                        y=prodinj['water_fc'] / 30.45,
-                        name='water_fc',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['gas'] / 30.45,
-                        name='gas',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['gas_fc'] / 30.45,
-                        name='gas_fc',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['gas'].cumsum(),
-                        y=prodinj['gas'] / 30.45,
-                        name='gas',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                    go.Scatter(
-                        x=prodinj['gas_fc'].cumsum(),
-                        y=prodinj['gas_fc'] / 30.45,
-                        name='gas_fc',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    ),
-                ]
-            )
-        except:
-            pass
-
-        if axis == 'log':
-            layout = go.Layout(
-                autosize=True,
-                font=dict(family='Ubuntu'),
-                hovermode='closest',
-                hoverlabel=dict(font=dict(family='Ubuntu')),
-                showlegend=True,
-                legend=dict(orientation='h'),
-                yaxis=dict(type='log'),
-                uirevision=True,
-                margin=dict(r=50, t=30, b=30, l=60, pad=0),
-            )
-        else:
-            layout = go.Layout(
-                autosize=True,
-                font=dict(family='Ubuntu'),
-                hovermode='closest',
-                hoverlabel=dict(font=dict(family='Ubuntu')),
-                showlegend=True,
-                legend=dict(orientation='h'),
-                uirevision=True,
-                margin=dict(r=50, t=30, b=30, l=60, pad=0),
-            )
-        graphJSON = json.dumps(dict(data=data, layout=layout),
-                               cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON_cum = json.dumps(dict(data=data_cum, layout=layout),
-                                   cls=plotly.utils.PlotlyJSONEncoder)
+        prodinj['oil_fc'] = prodinj['oil_fc'] * 30.45
+        prodinj.loc[prodinj['date'] < decline['oil']['decline_start'], 'oil_fc'] = prodinj['oil']
     except:
-        graphJSON = None
-        graphJSON_cum = None
+        pass
+
+    try:
+        prodinj['oilcut'] = prodinj['oil'] / (prodinj['water'] + prodinj['oil'])
+        prodinj['oilcut_fc'] = prodinj.index
+        prodinj['oilcut_fc'] = prodinj['oilcut_fc'].apply(
+            lambda row: model_func(
+                int((
+                    (row - pd.to_datetime(decline['oilcut']['decline_start']))/np.timedelta64(1, 'M'))),
+                decline['oilcut']['qi'],
+                decline['oilcut']['d'],
+                decline['oilcut']['b']
+            )
+        )
+        prodinj.loc[prodinj['date'] < decline['oilcut']['decline_start'], 'oilcut_fc'] = prodinj['oilcut']
+    except:
+        pass
+
+    try:
+        prodinj['water_fc'] = prodinj.index
+        prodinj['water_fc'] = prodinj['water_fc'].apply(
+            lambda row: model_func(
+                int((
+                    (row - pd.to_datetime(decline['water']['decline_start']))/np.timedelta64(1, 'M'))),
+                decline['water']['qi'],
+                decline['water']['d'],
+                decline['water']['b']
+            )
+        )
+        prodinj['water_fc'] = prodinj['water_fc'] * 30.45
+        prodinj.loc[forecasts['date'] < decline['water']['decline_start'], 'water_fc'] = prodinj['water']
+    except:
+        pass
+
+    try:
+        prodinj['gas_fc'] = prodinj.index
+        prodinj['gas_fc'] = prodinj['gas_fc'].apply(
+            lambda row: model_func(
+                int((
+                    (row - pd.to_datetime(decline['gas']['decline_start']))/np.timedelta64(1, 'M'))),
+                decline['gas']['qi'],
+                decline['gas']['d'],
+                decline['gas']['b']
+            )
+        )
+        prodinj['gas_fc'] = prodinj['gas_fc'] * 30.45
+        prodinj.loc[forecasts['date'] < decline['gas']['decline_start'], 'gas_fc'] = prodinj['gas']
+    except:
+        pass
+
+    data = []
+    data_cum = []
+
+    try:
+        data.extend(
+            [
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oil'] / 30.45,
+                    name='oil',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oil_fc'] / 30.45,
+                    name='oil_fc',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            ]
+        )
+        data_cum.extend(
+            [
+                go.Scatter(
+                    x=prodinj['oil'].cumsum(),
+                    y=prodinj['oil'] / 30.45,
+                    name='oil',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['oil_fc'].cumsum(),
+                    y=prodinj['oil_fc'] / 30.45,
+                    name='oil_fc',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            ]
+        )
+    except:
+        pass
+
+    try:
+        data.extend(
+            [
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oilcut'],
+                    name='oilcut',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oilcut_fc'],
+                    name='oilcut_fc',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            ]
+        )
+        data_cum.extend(
+            [
+                go.Scatter(
+                    x=prodinj['oil'].cumsum(),
+                    y=prodinj['oilcut'],
+                    name='oilcut',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['oil'].cumsum(),
+                    y=prodinj['oilcut_fc'],
+                    name='oilcut_fc',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            ]
+        )
+    except:
+        pass
+
+    try:
+        data.extend(
+            [
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['water'] / 30.45,
+                    name='water',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['water_fc'] / 30.45,
+                    name='water_fc',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            ]
+        )
+        data_cum.extend(
+            [
+                go.Scatter(
+                    x=prodinj['water'].cumsum(),
+                    y=prodinj['water'] / 30.45,
+                    name='water',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['water_fc'].cumsum(),
+                    y=prodinj['water_fc'] / 30.45,
+                    name='water_fc',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            ]
+        )
+    except:
+        pass
+
+    try:
+        data.extend(
+            [
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['gas'] / 30.45,
+                    name='gas',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['gas_fc'] / 30.45,
+                    name='gas_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            ]
+        )
+        data_cum.extend(
+            [
+                go.Scatter(
+                    x=prodinj['gas'].cumsum(),
+                    y=prodinj['gas'] / 30.45,
+                    name='gas',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+                go.Scatter(
+                    x=prodinj['gas_fc'].cumsum(),
+                    y=prodinj['gas_fc'] / 30.45,
+                    name='gas_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            ]
+        )
+    except:
+        pass
+
+    if axis == 'log':
+        layout = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hovermode='closest',
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            showlegend=True,
+            legend=dict(orientation='h'),
+            yaxis=dict(type='log'),
+            uirevision=True,
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        )
+    else:
+        layout = go.Layout(
+            autosize=True,
+            font=dict(family='Ubuntu'),
+            hovermode='closest',
+            hoverlabel=dict(font=dict(family='Ubuntu')),
+            showlegend=True,
+            legend=dict(orientation='h'),
+            uirevision=True,
+            margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        )
+    graphJSON = json.dumps(dict(data=data, layout=layout),
+                            cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_cum = json.dumps(dict(data=data_cum, layout=layout),
+                                cls=plotly.utils.PlotlyJSONEncoder)
+    # except:
+    #     graphJSON = None
+    #     graphJSON_cum = None
     client.close()
     return graphJSON, graphJSON_cum
 
