@@ -922,7 +922,7 @@ def get_graph_oilgas(api, axis):
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
         graphJSON = orjson.dumps(dict(data=data, layout=layout),
-                               cls=plotly.utils.PlotlyJSONEncoder)
+                               option=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
     client.close()
