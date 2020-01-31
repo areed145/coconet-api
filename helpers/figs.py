@@ -10,7 +10,7 @@ import json
 from datetime import datetime, timedelta
 import base64
 import re
-# import matplotlib.pyplot as plt
+import math
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
 
@@ -676,7 +676,7 @@ def get_header_oilgas(api):
     except:
         pass
 
-    header = {k: 0 if v == pd.np.nan else v for k, v in header.items()}
+    header = {k: 0 if math.isnan(v) else v for k, v in header.items()}
 
     client.close()
     return header
