@@ -1,7 +1,5 @@
 import os
 import numpy as np
-import numba
-from numba import jit
 import pandas as pd
 from pymongo import MongoClient
 import gridfs
@@ -662,7 +660,6 @@ def get_cyclic_jobs(api):
     return graphJSON_cyclic_jobs
 
 
-@jit(nopython=True, parallel=True)
 def get_header_oilgas(api):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
