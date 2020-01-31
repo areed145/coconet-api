@@ -2430,7 +2430,7 @@ def create_wx_figs(time, sid):
     data_pc = [
         go.Scatter(
             x=df_wx_raw.index,
-            y=df_wx_raw['precip_1hr_in'],
+            y=df_wx_raw['precip_rate'],
             name='Precip (in/hr)',
             line=dict(
                 color='rgb(31, 190, 255)',
