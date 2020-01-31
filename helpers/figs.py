@@ -945,13 +945,14 @@ def get_decline_oilgas(api, axis):
                 end=end,
                 freq='MS'
             ),
-            columns = ['oil','water','gas']
+            columns=['oil', 'water', 'gas']
         )
         forecasts['date'] = forecasts.index
 
-        prodinj = prodinj[['date','oil','water','gas']]
+        prodinj = prodinj[['date', 'oil', 'water', 'gas']]
 
-        prodinj = pd.concat([prodinj[['date','oil','water','gas']],forecasts], axis=0)
+        prodinj = pd.concat(
+            [prodinj[['date', 'oil', 'water', 'gas']], forecasts], axis=0)
         prodinj['date'] = pd.to_datetime(prodinj['date'])
         prodinj.index = prodinj['date']
         prodinj = prodinj.drop_duplicates(subset=['date'])
@@ -968,12 +969,14 @@ def get_decline_oilgas(api, axis):
                 )
             )
             prodinj['oil_fc'] = prodinj['oil_fc'] * 30.45
-            prodinj.loc[prodinj['date'] < decline['oil']['decline_start'], 'oil_fc'] = prodinj['oil']
+            prodinj.loc[prodinj['date'] < decline['oil']
+                        ['decline_start'], 'oil_fc'] = prodinj['oil']
         except:
             pass
 
         try:
-            prodinj['oilcut'] = prodinj['oil'] / (prodinj['water'] + prodinj['oil'])
+            prodinj['oilcut'] = prodinj['oil'] / \
+                (prodinj['water'] + prodinj['oil'])
             prodinj['oilcut_fc'] = prodinj['date']
             prodinj['oilcut_fc'] = prodinj['oilcut_fc'].apply(
                 lambda row: model_func(
@@ -984,7 +987,8 @@ def get_decline_oilgas(api, axis):
                     decline['oilcut']['b']
                 )
             )
-            prodinj.loc[prodinj['date'] < decline['oilcut']['decline_start'], 'oilcut_fc'] = prodinj['oilcut']
+            prodinj.loc[prodinj['date'] < decline['oilcut']
+                        ['decline_start'], 'oilcut_fc'] = prodinj['oilcut']
         except:
             pass
 
@@ -1000,7 +1004,8 @@ def get_decline_oilgas(api, axis):
                 )
             )
             prodinj['water_fc'] = prodinj['water_fc'] * 30.45
-            prodinj.loc[prodinj['date'] < decline['water']['decline_start'], 'water_fc'] = prodinj['water']
+            prodinj.loc[prodinj['date'] < decline['water']
+                        ['decline_start'], 'water_fc'] = prodinj['water']
         except:
             pass
 
@@ -1016,7 +1021,8 @@ def get_decline_oilgas(api, axis):
                 )
             )
             prodinj['gas_fc'] = prodinj['gas_fc'] * 30.45
-            prodinj.loc[prodinj['date'] < decline['gas']['decline_start'], 'gas_fc'] = prodinj['gas']
+            prodinj.loc[prodinj['date'] < decline['gas']
+                        ['decline_start'], 'gas_fc'] = prodinj['gas']
         except:
             pass
 
@@ -1295,9 +1301,9 @@ def get_decline_oilgas(api, axis):
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
             )
         graphJSON = json.dumps(dict(data=data, layout=layout),
-                                cls=plotly.utils.PlotlyJSONEncoder)
+                               cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_cum = json.dumps(dict(data=data_cum, layout=layout),
-                                    cls=plotly.utils.PlotlyJSONEncoder)
+                                   cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
         graphJSON_cum = None
