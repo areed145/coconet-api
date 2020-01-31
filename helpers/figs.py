@@ -922,7 +922,8 @@ def get_decline_oilgas(api, axis):
 
         prodinj = prodinj.sort_values(by='date')
 
-        start = decline.T['decline_start'].min()
+        # start = decline.T['decline_start'].min()
+        start = pd.to_datetime(prodinj['date'].min())
         end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
 
         def model_func(t, qi, d, b):
@@ -951,6 +952,7 @@ def get_decline_oilgas(api, axis):
                     decline['oil']['b']
                 )
             )
+            forecasts.loc[forecasts['date'] < decline['oil']['decline_start'], 'oil'] = prodinj['oil'] / 30.45
         except:
             pass
 
@@ -965,6 +967,7 @@ def get_decline_oilgas(api, axis):
                     decline['oilcut']['b']
                 )
             )
+            forecasts.loc[forecasts['date'] < decline['oilcut']['decline_start'], 'oilcut'] = prodinj['oil'] / (prodinj['water'] + prodinj['oil'])
         except:
             pass
 
@@ -979,6 +982,7 @@ def get_decline_oilgas(api, axis):
                     decline['water']['b']
                 )
             )
+            forecasts.loc[forecasts['date'] < decline['water']['decline_start'], 'water'] = prodinj['water'] / 30.45
         except:
             pass
 
@@ -993,6 +997,7 @@ def get_decline_oilgas(api, axis):
                     decline['gas']['b']
                 )
             )
+            forecasts.loc[forecasts['gas'] < decline['oilcut']['decline_start'], 'gas'] = prodinj['gas'] / 30.45
         except:
             pass
 
@@ -1273,7 +1278,7 @@ def get_decline_oilgas(api, axis):
         graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_cum = json.dumps(dict(data=data_cum, layout=layout),
-                               cls=plotly.utils.PlotlyJSONEncoder)
+                                   cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
         graphJSON_cum = None
