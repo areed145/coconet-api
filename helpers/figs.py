@@ -307,7 +307,7 @@ def create_graph_iot(sensor, time):
     client.close()
     return graphJSON
 
-@jit(nopython=True, parallel=True)
+
 def get_prodinj(wells):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
@@ -345,9 +345,9 @@ def get_offsets_oilgas(api, radius, axis):
         lat = header['latitude']
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
-                                                'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
+                                              'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
         df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
-                                * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
+                               * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
         df = df[df['dist'] <= radius]
         df.sort_values(by='dist', inplace=True)
         df = df[:25]
@@ -504,17 +504,17 @@ def get_offsets_oilgas(api, radius, axis):
             )
 
         graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
-                                            cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
-                                            cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
-                                            cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
-                                                cls=plotly.utils.PlotlyJSONEncoder)
+                                             cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
-                                                cls=plotly.utils.PlotlyJSONEncoder)
+                                             cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
-                                                cls=plotly.utils.PlotlyJSONEncoder)
+                                             cls=plotly.utils.PlotlyJSONEncoder)
 
     except:
         graphJSON_offset_oil = None
@@ -662,6 +662,7 @@ def get_cyclic_jobs(api):
     return graphJSON_cyclic_jobs
 
 
+@jit(nopython=True, parallel=True)
 def get_header_oilgas(api):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
