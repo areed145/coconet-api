@@ -147,6 +147,7 @@ async def oilgas_header_details(api: str):
 async def oilgas_prodinj_graph(api: str, axis: str):
     graph_oilgas = figs.get_graph_oilgas(str(api), axis)
     data = {}
+    data['graph_oilgas'] = orjson.loads(graph_oilgas)
     try:
         data['graph_oilgas'] = orjson.loads(graph_oilgas)
     except:
