@@ -952,7 +952,7 @@ def get_decline_oilgas(api, axis):
 
     prodinj = pd.concat([forecasts, prodinj[['oil','water','gas']]], axis=0)
     prodinj = prodinj.loc[~prodinj.index.duplicated(keep='first')]
-
+    prodinj.index = prodinj['date']
     # try:
     prodinj['oil_fc'] = prodinj.index
     prodinj['oil_fc'] = prodinj['oil_fc'].apply(
