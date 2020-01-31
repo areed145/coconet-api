@@ -2166,7 +2166,7 @@ def get_wx_latest(sid):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.wx
     wx = list(db.raw.find({'station_id': sid}).sort(
-        [('observation_time_rfc822', -1)]).limit(1))[0]
+        [('obs_time_utc', -1)]).limit(1))[0]
     wx.pop('_id')
     client.close()
     return wx
@@ -2178,11 +2178,11 @@ def create_wx_figs(time, sid):
     db = client.wx
     df_wx_raw = pd.DataFrame(list(db.raw.find({
         'station_id': sid,
-        'observation_time_rfc822': {
+        'obs_time_utc': {
             '$gt': start,
             '$lte': now
-        }}).sort([('observation_time_rfc822', -1)])))
-    df_wx_raw.index = df_wx_raw['observation_time_rfc822']
+        }}).sort([('obs_time_utc', -1)])))
+    df_wx_raw.index = df_wx_raw['obs_time_utc']
     # df_wx_raw = df_wx_raw.tz_localize('UTC').tz_convert('US/Central')
 
     for col in df_wx_raw.columns:
@@ -2192,7 +2192,7 @@ def create_wx_figs(time, sid):
             pass
 
     df_wx_raw['cloudbase'] = (
-        (df_wx_raw['temp_f'] - df_wx_raw['dewpoint_f']) / 4.4) * 1000 + 50
+        (df_wx_raw['temp_f'] - df_wx_raw['dewpt_f']) / 4.4) * 1000 + 50
     df_wx_raw.loc[df_wx_raw['pressure_in'] < 0, 'pressure_in'] = pd.np.nan
 
     # df_wx_raw2 = df_wx_raw.resample('5T').mean().interpolate()
@@ -2224,27 +2224,27 @@ def create_wx_figs(time, sid):
     df_wx_raw['date'] = df_wx_raw.index.date
     df_wx_raw['hour'] = df_wx_raw.index.hour
 
-    df_wx_raw.loc[df_wx_raw['wind_mph'] == 0, 'wind_cat'] = 'calm'
-    df_wx_raw.loc[df_wx_raw['wind_mph'] > 0, 'wind_cat'] = '0-1'
-    df_wx_raw.loc[df_wx_raw['wind_mph'] > 1, 'wind_cat'] = '1-2'
-    df_wx_raw.loc[df_wx_raw['wind_mph'] > 2, 'wind_cat'] = '2-5'
-    df_wx_raw.loc[df_wx_raw['wind_mph'] > 5, 'wind_cat'] = '5-10'
-    df_wx_raw.loc[df_wx_raw['wind_mph'] > 10, 'wind_cat'] = '>10'
+    df_wx_raw.loc[df_wx_raw['wind_speed_mph'] == 0, 'wind_cat'] = 'calm'
+    df_wx_raw.loc[df_wx_raw['wind_speed_mph'] > 0, 'wind_cat'] = '0-1'
+    df_wx_raw.loc[df_wx_raw['wind_speed_mph'] > 1, 'wind_cat'] = '1-2'
+    df_wx_raw.loc[df_wx_raw['wind_speed_mph'] > 2, 'wind_cat'] = '2-5'
+    df_wx_raw.loc[df_wx_raw['wind_speed_mph'] > 5, 'wind_cat'] = '5-10'
+    df_wx_raw.loc[df_wx_raw['wind_speed_mph'] > 10, 'wind_cat'] = '>10'
 
-    df_wx_raw['wind_degrees_cat'] = np.floor(
-        df_wx_raw['wind_degrees'] / 15) * 15
-    df_wx_raw.loc[df_wx_raw['wind_degrees_cat'] == 360, 'wind_degrees_cat'] = 0
-    df_wx_raw['wind_degrees_cat'] = df_wx_raw['wind_degrees_cat'].fillna(
+    df_wx_raw['wind_deg_cat'] = np.floor(
+        df_wx_raw['wind_deg'] / 15) * 15
+    df_wx_raw.loc[df_wx_raw['wind_deg_cat'] == 360, 'wind_deg_cat'] = 0
+    df_wx_raw['wind_deg_cat'] = df_wx_raw['wind_deg_cat'].fillna(
         0).astype(int).astype(str)
 
-    df_wx_raw.loc[df_wx_raw['wind_mph'] == 0, 'wind_degrees'] = pd.np.nan
+    df_wx_raw.loc[df_wx_raw['wind_speed_mph'] == 0, 'wind_deg'] = pd.np.nan
 
-    wind = df_wx_raw[['wind_cat', 'wind_degrees_cat']]
+    wind = df_wx_raw[['wind_cat', 'wind_deg_cat']]
     wind.loc[:, 'count'] = 1
     # wind['count'] = 1
     ct = len(wind)
     wind = pd.pivot_table(wind, values='count', index=[
-        'wind_degrees_cat'], columns=['wind_cat'], aggfunc=np.sum)
+        'wind_deg_cat'], columns=['wind_cat'], aggfunc=np.sum)
     ix = np.arange(0, 360, 5)
     col = ['calm', '0-1', '1-2', '2-5', '5-10', '>10']
     wind_temp = pd.DataFrame(data=0, index=ix, columns=col)
@@ -2268,8 +2268,8 @@ def create_wx_figs(time, sid):
     dt_min = df_wx_raw.index.min()
     dt_max = df_wx_raw.index.max()
 
-    td_max = max(df_wx_raw['temp_f'].max(), df_wx_raw['dewpoint_f'].max()) + 1
-    td_min = min(df_wx_raw['temp_f'].min(), df_wx_raw['dewpoint_f'].min()) - 1
+    td_max = max(df_wx_raw['temp_f'].max(), df_wx_raw['dewpt_f'].max()) + 1
+    td_min = min(df_wx_raw['temp_f'].min(), df_wx_raw['dewpt_f'].min()) - 1
 
     data_td = [
         go.Scatter(
@@ -2316,7 +2316,7 @@ def create_wx_figs(time, sid):
         ),
         go.Scatter(
             x=df_wx_raw.index,
-            y=df_wx_raw['dewpoint_f'],
+            y=df_wx_raw['dewpt_f'],
             name='Dewpoint (F)',
             line=dict(
                 color='rgb(63, 127, 255)',
@@ -2380,7 +2380,7 @@ def create_wx_figs(time, sid):
         ),
         go.Scatter(
             x=df_wx_raw.index,
-            y=df_wx_raw['relative_humidity'],
+            y=df_wx_raw['humidity'],
             name='Humidity (%)',
             line=dict(
                 color='rgb(127, 255, 63)',
@@ -2535,7 +2535,7 @@ def create_wx_figs(time, sid):
     data_wd = [
         go.Scatter(
             x=df_wx_raw.index,
-            y=df_wx_raw['wind_degrees'],
+            y=df_wx_raw['wind_deg'],
             name='Wind Direction (degrees)',
             marker=dict(
                 color='rgb(190, 63, 255)',
@@ -2562,7 +2562,7 @@ def create_wx_figs(time, sid):
         ),
         go.Scatter(
             x=df_wx_raw.index,
-            y=df_wx_raw['wind_mph'] * 0.869,
+            y=df_wx_raw['wind_speed_mph'] * 0.869,
             name='Wind Speed (kts)',
             line=dict(
                 color='rgb(127, 255, 31)',
@@ -2616,7 +2616,7 @@ def create_wx_figs(time, sid):
     data_su = [
         go.Scatter(
             x=df_wx_raw.index,
-            y=df_wx_raw['solar_radiation'],
+            y=df_wx_raw['solar'],
             name='Solar Radiation (W/m<sup>2</sup>)',
             line=dict(
                 color='rgb(255, 63, 127)',
@@ -2629,7 +2629,7 @@ def create_wx_figs(time, sid):
             mode='lines'),
         go.Scatter(
             x=df_wx_raw.index,
-            y=df_wx_raw['UV'],
+            y=df_wx_raw['uv'],
             name='UV',
             line=dict(
                 color='rgb(255, 190, 63)',
@@ -2780,7 +2780,7 @@ def create_wx_figs(time, sid):
     graphJSON_wr = json.dumps(dict(data=data_wr, layout=layout_wr),
                               cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON_thp = create_3d_plot(df_wx_raw, 'temp_f', 'dewpoint_f', 'relative_humidity', cs_normal, 'Temperature (F)',
+    graphJSON_thp = create_3d_plot(df_wx_raw, 'temp_f', 'dewpt_f', 'humidity', cs_normal, 'Temperature (F)',
                                    'Dewpoint (F)', 'Humidity (%)', 'rgb(255, 95, 63)', 'rgb(255, 127, 63)', 'rgb(63, 127, 255)')
 
     client.close()
