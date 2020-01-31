@@ -920,6 +920,8 @@ def get_decline_oilgas(api, axis):
         prodinj = pd.DataFrame(doc['prodinj'])
         decline = pd.DataFrame(doc['decline'])
 
+        prodinj = prodinj.sort_values(by='date')
+
         start = decline.T['decline_start'].min()
         end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
 
