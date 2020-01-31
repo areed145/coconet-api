@@ -933,7 +933,7 @@ def get_decline_oilgas(api, axis):
         prodinj = prodinj.sort_values(by='date')
 
         # start = decline.T['decline_start'].min()
-        start = pd.to_datetime(prodinj['date'].min())
+        start = pd.to_datetime(prodinj['date'].max())
         end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
 
         def model_func(t, qi, d, b):
@@ -951,9 +951,12 @@ def get_decline_oilgas(api, axis):
 
         forecasts['date'] = forecasts.index
 
+        prodinj = pd.concat([forecasts, prodinj[['oil','water','gas']]], axis=0)
+        prodinj = prodinj.loc[~forecasts.index.duplicated(keep='first')]
+
         try:
-            forecasts['oil'] = forecasts.index
-            forecasts['oil'] = forecasts['oil'].apply(
+            prodinj['oil_fc'] = prodinj.index
+            prodinj['oil_fc'] = prodinj['oil_fc'].apply(
                 lambda row: model_func(
                     int((
                         (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
@@ -962,13 +965,15 @@ def get_decline_oilgas(api, axis):
                     decline['oil']['b']
                 )
             )
-            forecasts.loc[forecasts['date'] < decline['oil']['decline_start'], 'oil'] = pd.np.nan
+            prodinj['oil_fc'] = prodinj['oil_fc'] * 30.45
+            prodinj.loc[prodinj['date'] < decline['oil']['decline_start'], 'oil_fc'] = prodinj['oil']
         except:
             pass
 
         try:
-            forecasts['oilcut'] = forecasts.index
-            forecasts['oilcut'] = forecasts['oilcut'].apply(
+            prodinj['oilcut'] = prodinj['oil'] / (prodinj['water'] + prodinj['oil'])
+            prodinj['oilcut_fc'] = prodinj.index
+            prodinj['oilcut_fc'] = prodinj['oilcut_fc'].apply(
                 lambda row: model_func(
                     int((
                         (row - pd.to_datetime(decline['oilcut']['decline_start']))/np.timedelta64(1, 'M'))),
@@ -977,13 +982,13 @@ def get_decline_oilgas(api, axis):
                     decline['oilcut']['b']
                 )
             )
-            forecasts.loc[forecasts['date'] < decline['oilcut']['decline_start'], 'oilcut'] = pd.np.nan
+            prodinj.loc[prodinj['date'] < decline['oilcut']['decline_start'], 'oilcut_fc'] = prodinj['oilcut']
         except:
             pass
 
         try:
-            forecasts['water'] = forecasts.index
-            forecasts['water'] = forecasts['water'].apply(
+            prodinj['water_fc'] = prodinj.index
+            prodinj['water_fc'] = prodinj['water_fc'].apply(
                 lambda row: model_func(
                     int((
                         (row - pd.to_datetime(decline['water']['decline_start']))/np.timedelta64(1, 'M'))),
@@ -992,13 +997,14 @@ def get_decline_oilgas(api, axis):
                     decline['water']['b']
                 )
             )
-            forecasts.loc[forecasts['date'] < decline['water']['decline_start'], 'water'] = pd.np.nan
+            prodinj['water_fc'] = prodinj['water_fc'] * 30.45
+            prodinj.loc[forecasts['date'] < decline['water']['decline_start'], 'water_fc'] = prodinj['water']
         except:
             pass
 
         try:
-            forecasts['gas'] = forecasts.index
-            forecasts['gas'] = forecasts['gas'].apply(
+            prodinj['gas_fc'] = prodinj.index
+            prodinj['gas_fc'] = prodinj['gas_fc'].apply(
                 lambda row: model_func(
                     int((
                         (row - pd.to_datetime(decline['gas']['decline_start']))/np.timedelta64(1, 'M'))),
@@ -1007,7 +1013,8 @@ def get_decline_oilgas(api, axis):
                     decline['gas']['b']
                 )
             )
-            forecasts.loc[forecasts['gas'] < decline['oilcut']['decline_start'], 'gas'] = pd.np.nan
+            prodinj['gas_fc'] = prodinj['gas_fc'] * 30.45
+            prodinj.loc[forecasts['date'] < decline['gas']['decline_start'], 'gas_fc'] = prodinj['gas']
         except:
             pass
 
@@ -1030,8 +1037,8 @@ def get_decline_oilgas(api, axis):
                         mode='lines'
                     ),
                     go.Scatter(
-                        x=forecasts['date'],
-                        y=forecasts['oil'],
+                        x=prodinj['date'],
+                        y=prodinj['oil_fc'] / 30.45,
                         name='oil_fc',
                         line=dict(
                             color='#50bf37',
@@ -1059,8 +1066,8 @@ def get_decline_oilgas(api, axis):
                         mode='lines'
                     ),
                     go.Scatter(
-                        x=prodinj['oil'].cumsum(),
-                        y=forecasts['oil'],
+                        x=prodinj['oil_fc'].cumsum(),
+                        y=prodinj['oil_fc'] / 30.45,
                         name='oil_fc',
                         line=dict(
                             color='#50bf37',
@@ -1081,7 +1088,7 @@ def get_decline_oilgas(api, axis):
                 [
                     go.Scatter(
                         x=prodinj['date'],
-                        y=prodinj['oil'] / (prodinj['water'] + prodinj['oil']),
+                        y=prodinj['oilcut'],
                         name='oilcut',
                         line=dict(
                             color='#2EF4D6',
@@ -1092,8 +1099,8 @@ def get_decline_oilgas(api, axis):
                         mode='lines'
                     ),
                     go.Scatter(
-                        x=forecasts['date'],
-                        y=forecasts['oilcut'],
+                        x=prodinj['date'],
+                        y=prodinj['oilcut_fc'],
                         name='oilcut_fc',
                         line=dict(
                             color='#2EF4D6',
@@ -1110,7 +1117,7 @@ def get_decline_oilgas(api, axis):
                 [
                     go.Scatter(
                         x=prodinj['oil'].cumsum(),
-                        y=prodinj['oil'] / (prodinj['water'] + prodinj['oil']),
+                        y=prodinj['oilcut'],
                         name='oilcut',
                         line=dict(
                             color='#2EF4D6',
@@ -1122,7 +1129,7 @@ def get_decline_oilgas(api, axis):
                     ),
                     go.Scatter(
                         x=prodinj['oil'].cumsum(),
-                        y=forecasts['oilcut'],
+                        y=prodinj['oilcut_fc'],
                         name='oilcut_fc',
                         line=dict(
                             color='#2EF4D6',
@@ -1154,8 +1161,8 @@ def get_decline_oilgas(api, axis):
                         mode='lines'
                     ),
                     go.Scatter(
-                        x=forecasts['date'],
-                        y=forecasts['water'],
+                        x=prodinj['date'],
+                        y=prodinj['water_fc'] / 30.45,
                         name='water_fc',
                         line=dict(
                             color='#4286f4',
@@ -1183,8 +1190,8 @@ def get_decline_oilgas(api, axis):
                         mode='lines'
                     ),
                     go.Scatter(
-                        x=prodinj['water'].cumsum(),
-                        y=forecasts['water'],
+                        x=prodinj['water_fc'].cumsum(),
+                        y=prodinj['water_fc'] / 30.45,
                         name='water_fc',
                         line=dict(
                             color='#4286f4',
@@ -1216,8 +1223,8 @@ def get_decline_oilgas(api, axis):
                         mode='lines'
                     ),
                     go.Scatter(
-                        x=forecasts['date'],
-                        y=forecasts['gas'],
+                        x=prodinj['date'],
+                        y=prodinj['gas_fc'] / 30.45,
                         name='gas_fc',
                         line=dict(
                             color='#ef2626',
@@ -1245,8 +1252,8 @@ def get_decline_oilgas(api, axis):
                         mode='lines'
                     ),
                     go.Scatter(
-                        x=prodinj['gas'].cumsum(),
-                        y=forecasts['gas'],
+                        x=prodinj['gas_fc'].cumsum(),
+                        y=prodinj['gas_fc'] / 30.45,
                         name='gas_fc',
                         line=dict(
                             color='#ef2626',
