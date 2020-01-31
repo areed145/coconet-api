@@ -375,9 +375,8 @@ def get_offsets_oilgas(api, radius, axis):
     offsets = df['api'].tolist()
     dists = df['dist'].tolist()
 
-    df_offsets = pd.DataFrame(offsets)
-    df_ = get_prodinj([df['api'].iloc[idx]])
-    df_['date'] = pd.to_datetime(df_['date'])
+    df_offsets = get_prodinj(offsets)
+    df_offsets['date'] = pd.to_datetime(df_offsets['date'])
 
     # for idx in range(len(df)):
     #     try:
