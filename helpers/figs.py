@@ -364,9 +364,9 @@ def get_offsets_oilgas(api, radius, axis):
         lat = header['latitude']
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
-                                                'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
+                                              'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
 
-        df['dist'] = haversine_np(lon,lat,df['longitude'],df['latitude'])
+        df['dist'] = haversine_np(lon, lat, df['longitude'], df['latitude'])
         df = df[df['dist'] <= radius]
         df.sort_values(by='dist', inplace=True)
         df = df[:25]
@@ -511,17 +511,17 @@ def get_offsets_oilgas(api, radius, axis):
             )
 
         graphJSON_offset_oil = json.dumps(dict(data=data_offset_oil, layout=layout),
-                                            cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_stm = json.dumps(dict(data=data_offset_stm, layout=layout),
-                                            cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_wtr = json.dumps(dict(data=data_offset_wtr, layout=layout),
-                                            cls=plotly.utils.PlotlyJSONEncoder)
+                                          cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_oil_ci = json.dumps(dict(data=ci_plot(df_offsets, 'oil', header['api'], scl_oil[0][1], scl_oil[1][1], scl_oil[2][1]), layout=layout_),
-                                                cls=plotly.utils.PlotlyJSONEncoder)
+                                             cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_wtr_ci = json.dumps(dict(data=ci_plot(df_offsets, 'water', header['api'], scl_wtr[0][1], scl_wtr[1][1], scl_wtr[2][1]), layout=layout_),
-                                                cls=plotly.utils.PlotlyJSONEncoder)
+                                             cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_offset_stm_ci = json.dumps(dict(data=ci_plot(df_offsets, 'steam', header['api'], scl_stm[0][1], scl_stm[1][1], scl_stm[2][1]), layout=layout_),
-                                                cls=plotly.utils.PlotlyJSONEncoder)
+                                             cls=plotly.utils.PlotlyJSONEncoder)
 
     except:
         graphJSON_offset_oil = None
@@ -547,7 +547,7 @@ def get_crm(api):
         df = pd.DataFrame(header['crm']['cons'])
         df['gain'] = df['gain'].apply(lambda x: '%.3f' % x)
         df['gain'] = df['gain'].astype(float)
-        df['dist'] = haversine_np(df['x0'],df['y0'],df['x1'],df['y1'])
+        df['dist'] = haversine_np(df['x0'], df['y0'], df['x1'], df['y1'])
         df['distapi'] = df.apply(lambda x: str(
             np.round(x['dist'], 3))+' mi - '+str(x['to']), axis=1)
         df = df.sort_values(by='distapi', ascending=True).reset_index()
@@ -995,6 +995,7 @@ def get_decline_oilgas(api, axis):
             pass
 
         data = []
+        data_cum = []
 
         try:
             data.extend(
@@ -1013,6 +1014,35 @@ def get_decline_oilgas(api, axis):
                     ),
                     go.Scatter(
                         x=forecasts['date'],
+                        y=forecasts['oil'],
+                        name='oil_fc',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                ]
+            )
+            data_cum.extend(
+                [
+                    go.Scatter(
+                        x=prodinj['oil'].cumsum(),
+                        y=prodinj['oil'] / 30.45,
+                        name='oil',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                    go.Scatter(
+                        x=prodinj['oil'].cumsum(),
                         y=forecasts['oil'],
                         name='oil_fc',
                         line=dict(
@@ -1059,6 +1089,35 @@ def get_decline_oilgas(api, axis):
                     ),
                 ]
             )
+            data_cum.extend(
+                [
+                    go.Scatter(
+                        x=prodinj['oil'].cumsum(),
+                        y=prodinj['oil'] / (prodinj['water'] + prodinj['oil']),
+                        name='oil',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                    go.Scatter(
+                        x=prodinj['oil'].cumsum(),
+                        y=forecasts['oilcut'],
+                        name='oil_fc',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                ]
+            )
         except:
             pass
 
@@ -1090,6 +1149,35 @@ def get_decline_oilgas(api, axis):
                         ),
                         mode='lines'
                     )
+                ]
+            )
+            data_cum.extend(
+                [
+                    go.Scatter(
+                        x=prodinj['water'].cumsum(),
+                        y=prodinj['water'] / 30.45,
+                        name='oil',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                    go.Scatter(
+                        x=prodinj['water'].cumsum(),
+                        y=forecasts['water'],
+                        name='oil_fc',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
                 ]
             )
         except:
@@ -1125,6 +1213,35 @@ def get_decline_oilgas(api, axis):
                     )
                 ]
             )
+            data_cum.extend(
+                [
+                    go.Scatter(
+                        x=prodinj['gas'].cumsum(),
+                        y=prodinj['gas'] / 30.45,
+                        name='oil',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                    go.Scatter(
+                        x=prodinj['gas'].cumsum(),
+                        y=forecasts['gas'],
+                        name='oil_fc',
+                        line=dict(
+                            color='#50bf37',
+                            shape='spline',
+                            dash='dot',
+                            smoothing=0.3,
+                            width=3
+                        ),
+                        mode='lines'
+                    ),
+                ]
+            )
         except:
             pass
 
@@ -1153,10 +1270,13 @@ def get_decline_oilgas(api, axis):
             )
         graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_cum = json.dumps(dict(data=data_cum, layout=layout),
+                               cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
+        graphJSON_cum = None
     client.close()
-    return graphJSON
+    return graphJSON, graphJSON_cum
 
 
 def create_map_oilgas():
@@ -1688,7 +1808,7 @@ def create_range_aprs(time):
         'latitude': {'$exists': True, '$ne': None},
         'timestamp_': {'$gt': start, '$lte': now}
     }).sort([('timestamp_', -1)])))
-    df['dist'] = haversine_np(lon,lat,df['longitude'],df['latitude'])
+    df['dist'] = haversine_np(lon, lat, df['longitude'], df['latitude'])
     df['month'] = df['timestamp_'].apply(
         lambda row: str(row.year)+'-'+str(row.month).zfill(2))
     df['dist_'] = np.round(df['dist'] * 1) / 1

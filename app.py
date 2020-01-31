@@ -155,10 +155,11 @@ async def oilgas_prodinj_graph(api: str, axis: str):
 
 @app.get('/oilgas/decline/graph')
 async def oilgas_decline_graph(api: str, axis: str):
-    graph_decline = figs.get_decline_oilgas(str(api), axis)
+    graph_decline, graph_decline_cum = figs.get_decline_oilgas(str(api), axis)
     data = {}
     try:
         data['graph_decline'] = json.loads(graph_decline)
+        data['graph_decline_cum'] = json.loads(graph_decline_cum)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
