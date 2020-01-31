@@ -20,7 +20,7 @@ modin[ray]
 numpy==1.17.2
 oauth2==1.9.0.post1
 orjson
-pandas==0.25.1
+pandas==0.25.3
 plotly==4.1.1
 pylint==2.3.1
 pymongo==3.9.0
