@@ -931,7 +931,6 @@ def get_decline_oilgas(api, axis):
 
     prodinj = prodinj.sort_values(by='date')
 
-    # start = decline.T['decline_start'].min()
     start = pd.to_datetime(prodinj['date'].max())
     end = pd.to_datetime(prodinj['date'].max()) + np.timedelta64(48, 'M')
 
@@ -945,35 +944,37 @@ def get_decline_oilgas(api, axis):
             start=start,
             end=end,
             freq='MS'
-        )
+        ),
+        columns = ['oil','water','gas']
     )
-
     forecasts['date'] = forecasts.index
 
-    prodinj = pd.concat([forecasts, prodinj[['oil','water','gas']]], axis=0)
-    prodinj = prodinj.loc[~prodinj.index.duplicated(keep='first')]
-    prodinj.index = prodinj['date']
+    prodinj = prodinj[['date','oil','water','gas']]
 
-    print(prodinj)
-    # try:
-    prodinj['oil_fc'] = prodinj.index
-    prodinj['oil_fc'] = prodinj['oil_fc'].apply(
-        lambda row: model_func(
-            int((
-                (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
-            decline['oil']['qi'],
-            decline['oil']['d'],
-            decline['oil']['b']
+    prodinj = pd.concat([prodinj[['date','oil','water','gas']],forecasts], axis=0)
+    prodinj['date'] = pd.to_datetime(prodinj['date'])
+    prodinj.index = prodinj['date']
+    prodinj = prodinj.drop_duplicates(subset=['date'])
+
+    try:
+        prodinj['oil_fc'] = prodinj['date']
+        prodinj['oil_fc'] = prodinj['oil_fc'].apply(
+            lambda row: model_func(
+                int((
+                    (row - pd.to_datetime(decline['oil']['decline_start']))/np.timedelta64(1, 'M'))),
+                decline['oil']['qi'],
+                decline['oil']['d'],
+                decline['oil']['b']
+            )
         )
-    )
-    prodinj['oil_fc'] = prodinj['oil_fc'] * 30.45
-    prodinj.loc[prodinj['date'] < decline['oil']['decline_start'], 'oil_fc'] = prodinj['oil']
-    # except:
-    #     pass
+        prodinj['oil_fc'] = prodinj['oil_fc'] * 30.45
+        prodinj.loc[prodinj['date'] < decline['oil']['decline_start'], 'oil_fc'] = prodinj['oil']
+    except:
+        pass
 
     try:
         prodinj['oilcut'] = prodinj['oil'] / (prodinj['water'] + prodinj['oil'])
-        prodinj['oilcut_fc'] = prodinj.index
+        prodinj['oilcut_fc'] = prodinj['date']
         prodinj['oilcut_fc'] = prodinj['oilcut_fc'].apply(
             lambda row: model_func(
                 int((
@@ -988,7 +989,7 @@ def get_decline_oilgas(api, axis):
         pass
 
     try:
-        prodinj['water_fc'] = prodinj.index
+        prodinj['water_fc'] = prodinj['date']
         prodinj['water_fc'] = prodinj['water_fc'].apply(
             lambda row: model_func(
                 int((
@@ -999,12 +1000,12 @@ def get_decline_oilgas(api, axis):
             )
         )
         prodinj['water_fc'] = prodinj['water_fc'] * 30.45
-        prodinj.loc[forecasts['date'] < decline['water']['decline_start'], 'water_fc'] = prodinj['water']
+        prodinj.loc[prodinj['date'] < decline['water']['decline_start'], 'water_fc'] = prodinj['water']
     except:
         pass
 
     try:
-        prodinj['gas_fc'] = prodinj.index
+        prodinj['gas_fc'] = prodinj['date']
         prodinj['gas_fc'] = prodinj['gas_fc'].apply(
             lambda row: model_func(
                 int((
@@ -1015,7 +1016,7 @@ def get_decline_oilgas(api, axis):
             )
         )
         prodinj['gas_fc'] = prodinj['gas_fc'] * 30.45
-        prodinj.loc[forecasts['date'] < decline['gas']['decline_start'], 'gas_fc'] = prodinj['gas']
+        prodinj.loc[prodinj['date'] < decline['gas']['decline_start'], 'gas_fc'] = prodinj['gas']
     except:
         pass
 
