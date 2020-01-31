@@ -7,7 +7,6 @@ import gridfs
 import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-# import json
 import orjson
 from datetime import datetime, timedelta
 import base64

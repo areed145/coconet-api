@@ -7,7 +7,7 @@ import os
 import numpy as np
 import plotly
 import plotly.graph_objs as go
-import json
+import orjson
 
 client = MongoClient(os.environ['MONGODB_CLIENT'])
 db = client.flickr
@@ -124,14 +124,14 @@ def get_photo_rows(id, width):
         )
     )
 
-    graphJSON = json.dumps(
+    graphorjson = orjson.dumps(
         dict(
             data=data,
             layout=layout
         ),
-        cls=plotly.utils.PlotlyJSONEncoder
+        cls=plotly.utils.PlotlyorjsonEncoder
     )
-    return rows, graphJSON, gal['title'], gal['count_photos'], gal['count_views']
+    return rows, graphorjson, gal['title'], gal['count_photos'], gal['count_views']
 
 
 def get_photo(id):
@@ -176,13 +176,13 @@ def get_photo(id):
             )
         )
 
-        graphJSON = json.dumps(
+        graphorjson = orjson.dumps(
             dict(
                 data=data,
                 layout=layout
             ),
-            cls=plotly.utils.PlotlyJSONEncoder
+            cls=plotly.utils.PlotlyorjsonEncoder
         )
     except:
-        graphJSON = None
-    return image, graphJSON
+        graphorjson = None
+    return image, graphorjson
