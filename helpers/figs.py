@@ -331,6 +331,27 @@ def get_prodinj(wells):
     return df
 
 
+def haversine_np(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+
+    All args must be of equal length.
+
+    """
+    lon1, lat1, lon2, lat2 = map(np.radians, [lon1, lat1, lon2, lat2])
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = np.sin(dlat/2.0)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2.0)**2
+
+    c = 2 * np.arcsin(np.sqrt(a))
+    km = 6367 * c
+    mi = km * 0.621371
+    return mi
+
+
 def get_offsets_oilgas(api, radius, axis):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
@@ -344,8 +365,10 @@ def get_offsets_oilgas(api, radius, axis):
         lon = header['longitude']
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
                                               'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
-        df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
-                               * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
+
+        df['dist'] = haversine_np(lon,lat,df['longitude'],df['latitude'])
+        # df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
+        #                        * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
         df = df[df['dist'] <= radius]
         df.sort_values(by='dist', inplace=True)
         df = df[:25]
@@ -538,12 +561,13 @@ def get_crm(api):
         df = pd.DataFrame(header['crm']['cons'])
         df['gain'] = df['gain'].apply(lambda x: '%.3f' % x)
         df['gain'] = df['gain'].astype(float)
-        df['dist'] = np.arccos(
-            np.sin(df['y0']*np.pi/180) *
-            np.sin(df['y1']*np.pi/180) +
-            np.cos(df['y0']*np.pi/180) *
-            np.cos(df['y1']*np.pi/180) *
-            np.cos((df['x1']*np.pi/180) - (df['x0']*np.pi/180))) * 6371
+        df['dist'] = haversine_np(df['x0'],df['y0'],df['x1'],df['y1'])
+        # df['dist'] = np.arccos(
+        #     np.sin(df['y0']*np.pi/180) *
+        #     np.sin(df['y1']*np.pi/180) +
+        #     np.cos(df['y0']*np.pi/180) *
+        #     np.cos(df['y1']*np.pi/180) *
+        #     np.cos((df['x1']*np.pi/180) - (df['x0']*np.pi/180))) * 6371
         df['distapi'] = df.apply(lambda x: str(
             np.round(x['dist'], 3))+' mi - '+str(x['to']), axis=1)
         df = df.sort_values(by='distapi', ascending=True).reset_index()
@@ -1684,9 +1708,9 @@ def create_range_aprs(time):
         'latitude': {'$exists': True, '$ne': None},
         'timestamp_': {'$gt': start, '$lte': now}
     }).sort([('timestamp_', -1)])))
-    df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
-                           * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
-
+    df['dist'] = haversine_np(lon,lat,df['longitude'],df['latitude'])
+    # df['dist'] = np.arccos(np.sin(lat*np.pi/180) * np.sin(df['latitude']*np.pi/180) + np.cos(lat*np.pi/180)
+    #                        * np.cos(df['latitude']*np.pi/180) * np.cos((df['longitude']*np.pi/180) - (lon*np.pi/180))) * 6371
     df['month'] = df['timestamp_'].apply(
         lambda row: str(row.year)+'-'+str(row.month).zfill(2))
     df['dist_'] = np.round(df['dist'] * 1) / 1
