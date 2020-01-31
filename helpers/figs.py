@@ -952,7 +952,7 @@ def get_decline_oilgas(api, axis):
                     decline['oil']['b']
                 )
             )
-            forecasts.loc[forecasts['date'] < decline['oil']['decline_start'], 'oil'] = prodinj['oil'] / 30.45
+            forecasts.loc[forecasts['date'] < decline['oil']['decline_start'], 'oil'] = pd.np.nan
         except:
             pass
 
@@ -967,7 +967,7 @@ def get_decline_oilgas(api, axis):
                     decline['oilcut']['b']
                 )
             )
-            forecasts.loc[forecasts['date'] < decline['oilcut']['decline_start'], 'oilcut'] = prodinj['oil'] / (prodinj['water'] + prodinj['oil'])
+            forecasts.loc[forecasts['date'] < decline['oilcut']['decline_start'], 'oilcut'] = pd.np.nan
         except:
             pass
 
@@ -982,7 +982,7 @@ def get_decline_oilgas(api, axis):
                     decline['water']['b']
                 )
             )
-            forecasts.loc[forecasts['date'] < decline['water']['decline_start'], 'water'] = prodinj['water'] / 30.45
+            forecasts.loc[forecasts['date'] < decline['water']['decline_start'], 'water'] = pd.np.nan
         except:
             pass
 
@@ -997,7 +997,7 @@ def get_decline_oilgas(api, axis):
                     decline['gas']['b']
                 )
             )
-            forecasts.loc[forecasts['gas'] < decline['oilcut']['decline_start'], 'gas'] = prodinj['gas'] / 30.45
+            forecasts.loc[forecasts['gas'] < decline['oilcut']['decline_start'], 'gas'] = pd.np.nan
         except:
             pass
 
