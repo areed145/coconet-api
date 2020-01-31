@@ -2198,7 +2198,7 @@ def create_wx_figs(time, sid):
     # df_wx_raw2 = df_wx_raw.resample('5T').mean().interpolate()
     # df_wx_raw2['dat'] = df_wx_raw2.index
     # df_wx_raw2['temp_delta'] = df_wx_raw2.temp_f.diff()
-    # df_wx_raw2['precip_today_delta'] = df_wx_raw2.precip_today_in.diff()
+    # df_wx_raw2['precip_today_delta'] = df_wx_raw2.precip_total.diff()
     # df_wx_raw2.loc[df_wx_raw2['precip_today_delta'] < 0, 'precip_today_delta'] = 0
     # df_wx_raw2['precip_cum_in'] = df_wx_raw2.precip_today_delta.cumsum()
     # df_wx_raw2['pres_delta'] = df_wx_raw2.pressure_in.diff()
@@ -2212,7 +2212,7 @@ def create_wx_figs(time, sid):
     df_wx_raw['dat'] = df_wx_raw.index
     df_wx_raw.sort_values(by='dat', inplace=True)
     df_wx_raw['temp_delta'] = df_wx_raw.temp_f.diff()
-    df_wx_raw['precip_today_delta'] = df_wx_raw.precip_today_in.diff()
+    df_wx_raw['precip_today_delta'] = df_wx_raw.precip_total.diff()
     df_wx_raw.loc[df_wx_raw['precip_today_delta']
                   < 0, 'precip_today_delta'] = 0
     df_wx_raw['precip_cum_in'] = df_wx_raw.precip_today_delta.cumsum()
