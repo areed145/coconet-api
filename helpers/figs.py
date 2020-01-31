@@ -676,7 +676,14 @@ def get_header_oilgas(api):
     except:
         pass
 
-    header = {k: 0 if math.isnan(v) else v for k, v in header.items()}
+    for k, v in header.items():
+        try:
+            if math.isnan(v):
+                header[k] = 0
+            else:
+                header[k] = v
+        except:
+            pass
 
     client.close()
     return header
