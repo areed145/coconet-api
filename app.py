@@ -1,6 +1,6 @@
 import os
 import atexit
-import orjson
+import json
 import datetime
 
 from helpers import figs, flickr
@@ -66,10 +66,10 @@ async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
     map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
         type_aprs, prop_aprs, time_int)
     data = {}
-    data['map_aprs'] = orjson.loads(map_aprs)
-    data['plot_speed'] = orjson.loads(plot_speed)
-    data['plot_alt'] = orjson.loads(plot_alt)
-    data['plot_course'] = orjson.loads(plot_course)
+    data['map_aprs'] = json.loads(map_aprs)
+    data['plot_speed'] = json.loads(plot_speed)
+    data['plot_alt'] = json.loads(plot_alt)
+    data['plot_course'] = json.loads(plot_course)
     data['rows'] = rows
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
@@ -79,7 +79,7 @@ async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
 async def aprs_igate_range(time_int: str):
     range_aprs = figs.create_range_aprs(time_int)
     data = {}
-    data['range_aprs'] = orjson.loads(range_aprs)
+    data['range_aprs'] = json.loads(range_aprs)
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
@@ -89,7 +89,7 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
     graph = figs.create_graph_iot(sensor_iot, time_int)
     data = {}
     try:
-        data['graph'] = orjson.loads(graph)
+        data['graph'] = json.loads(graph)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -145,9 +145,8 @@ async def oilgas_header_details(api: str):
 async def oilgas_prodinj_graph(api: str, axis: str):
     graph_oilgas = figs.get_graph_oilgas(str(api), axis)
     data = {}
-    data['graph_oilgas'] = orjson.loads(graph_oilgas)
     try:
-        data['graph_oilgas'] = orjson.loads(graph_oilgas)
+        data['graph_oilgas'] = json.loads(graph_oilgas)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -159,7 +158,7 @@ async def oilgas_decline_graph(api: str, axis: str):
     graph_decline = figs.get_decline_oilgas(str(api), axis)
     data = {}
     try:
-        data['graph_decline'] = orjson.loads(graph_decline)
+        data['graph_decline'] = json.loads(graph_decline)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -171,7 +170,7 @@ async def oilgas_crm_graph(api: str):
     graph_crm = figs.get_crm(str(api))
     data = {}
     try:
-        data['graph_crm'] = orjson.loads(graph_crm)
+        data['graph_crm'] = json.loads(graph_crm)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -183,7 +182,7 @@ async def oilgas_cyclic_graph(api: str):
     graph_cyclic_jobs = figs.get_cyclic_jobs(str(api))
     data = {}
     try:
-        data['graph_cyclic_jobs'] = orjson.loads(graph_cyclic_jobs)
+        data['graph_cyclic_jobs'] = json.loads(graph_cyclic_jobs)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -196,27 +195,27 @@ async def oilgas_offset_graph(api: str, axis: str):
         str(api), radius=0.1, axis=axis)
     data = {}
     try:
-        data['graph_offset_oil'] = orjson.loads(graph_offset_oil)
+        data['graph_offset_oil'] = json.loads(graph_offset_oil)
     except:
         pass
     try:
-        data['graph_offset_stm'] = orjson.loads(graph_offset_stm)
+        data['graph_offset_stm'] = json.loads(graph_offset_stm)
     except:
         pass
     try:
-        data['graph_offset_wtr'] = orjson.loads(graph_offset_wtr)
+        data['graph_offset_wtr'] = json.loads(graph_offset_wtr)
     except:
         pass
     try:
-        data['graph_offset_oil_ci'] = orjson.loads(graph_offset_oil_ci)
+        data['graph_offset_oil_ci'] = json.loads(graph_offset_oil_ci)
     except:
         pass
     try:
-        data['graph_offset_stm_ci'] = orjson.loads(graph_offset_stm_ci)
+        data['graph_offset_stm_ci'] = json.loads(graph_offset_stm_ci)
     except:
         pass
     try:
-        data['graph_offset_wtr_ci'] = orjson.loads(graph_offset_wtr_ci)
+        data['graph_offset_wtr_ci'] = json.loads(graph_offset_wtr_ci)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -241,7 +240,7 @@ async def photos_gallery(id: str):
     data['count_photos'] = count_photos
     data['count_views'] = count_views
     data['rows'] = rows
-    data['map'] = orjson.loads(map_gal)
+    data['map'] = json.loads(map_gal)
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
@@ -252,7 +251,7 @@ async def photos_photo(id: str):
     data = {}
     data['image'] = image
     try:
-        data['map'] = orjson.loads(map_photo)
+        data['map'] = json.loads(map_photo)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -264,14 +263,14 @@ async def station_history_graphs(time_int: str):
     fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
         time_int, sid)
     data = {}
-    data['fig_td'] = orjson.loads(fig_td)
-    data['fig_pr'] = orjson.loads(fig_pr)
-    data['fig_cb'] = orjson.loads(fig_cb)
-    data['fig_pc'] = orjson.loads(fig_pc)
-    data['fig_wd'] = orjson.loads(fig_wd)
-    data['fig_su'] = orjson.loads(fig_su)
-    data['fig_wr'] = orjson.loads(fig_wr)
-    data['fig_thp'] = orjson.loads(fig_thp)
+    data['fig_td'] = json.loads(fig_td)
+    data['fig_pr'] = json.loads(fig_pr)
+    data['fig_cb'] = json.loads(fig_cb)
+    data['fig_pc'] = json.loads(fig_pc)
+    data['fig_wd'] = json.loads(fig_wd)
+    data['fig_su'] = json.loads(fig_su)
+    data['fig_wr'] = json.loads(fig_wr)
+    data['fig_thp'] = json.loads(fig_thp)
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
@@ -304,7 +303,7 @@ async def weather_aviation_map(
     graphJSON = figs.create_map_awc(
         prop_awc, lat, lon, zoom, stations, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     data = {}
-    data['map'] = orjson.loads(graphJSON)
+    data['map'] = json.loads(graphJSON)
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
