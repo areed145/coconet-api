@@ -1,7 +1,8 @@
 import os
 import numpy as np
-# import pandas as pd
-import modin.pandas as pd
+import numba
+from numba import jit
+import pandas as pd
 from pymongo import MongoClient
 import gridfs
 import plotly
@@ -306,7 +307,7 @@ def create_graph_iot(sensor, time):
     client.close()
     return graphJSON
 
-
+@jit(nopython=True)
 def get_prodinj(wells):
     client = MongoClient(os.environ['MONGODB_CLIENT'])
     db = client.petroleum
