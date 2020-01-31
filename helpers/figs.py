@@ -375,15 +375,18 @@ def get_offsets_oilgas(api, radius, axis):
         offsets = df['api'].tolist()
         dists = df['dist'].tolist()
 
-        df_offsets = pd.DataFrame()
-        for idx in range(len(df)):
-            try:
-                df_ = get_prodinj([df['api'].iloc[idx]])
-                df_['api'] = df['api'].iloc[idx]
-                df_['date'] = pd.to_datetime(df_['date'])
-                df_offsets = df_offsets.append(df_)
-            except:
-                pass
+        df_offsets = pd.DataFrame(offsets)
+        df_ = get_prodinj([df['api'].iloc[idx]])
+        df_['date'] = pd.to_datetime(df_['date'])
+
+        # for idx in range(len(df)):
+        #     try:
+        #         df_ = get_prodinj([df['api'].iloc[idx]])
+        #         df_['api'] = df['api'].iloc[idx]
+        #         df_['date'] = pd.to_datetime(df_['date'])
+        #         df_offsets = df_offsets.append(df_)
+        #     except:
+        #         pass
 
         df_offsets['distapi'] = df_offsets['api'].apply(
             lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
