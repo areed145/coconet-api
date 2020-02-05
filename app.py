@@ -33,7 +33,7 @@ app.add_middleware(
 
 app.add_middleware(
     GZipMiddleware,
-    minimum_size=200
+    minimum_size=500
 )
 
 sid = os.environ['SID']
