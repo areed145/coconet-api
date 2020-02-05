@@ -617,7 +617,10 @@ def get_decline_oilgas(api, axis):
         for x in docs:
             doc = dict(x)
         prodinj = pd.DataFrame(doc['prodinj'])
-        decline = pd.DataFrame(doc['decline'])
+        try:
+            decline = pd.DataFrame(doc['decline'])
+        except:
+            pass
 
         prodinj = prodinj.sort_values(by='date')
 
