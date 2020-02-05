@@ -102,7 +102,6 @@ class decline_curve:
         return qi, d, b, lookback
 
     def get_most_likely(self, stream):
-        #         try:
         params = {}
         values = self.streams[stream]['iters'].T.values
         kde = stats.gaussian_kde(values)
@@ -119,9 +118,6 @@ class decline_curve:
         self.params[stream]['decline_start'] = self.prodinj['date'][self.streams[stream]
                                                                     ['params']['lookback']]
 
-#         except:
-#             pass
-
     def decline_curve(self, stream, lookback_use=None):
         print(stream)
         vol_flag = self.clean_sample(stream)
@@ -133,7 +129,7 @@ class decline_curve:
             exp = 2
             success = False
             while success == False:
-                for i in [300, 500, 1500]:
+                for i in range(2*(10**exp)):
                     window = random.randint(7, 301)
                     try:
                         qi, d, b, lookback = self.decline_sample(
@@ -177,12 +173,6 @@ class decline_curve:
                         df_['lookback'] = lookbacks
                         print(len(df_))
                         self.streams[stream]['iters'] = df_
-    #                     self.get_most_likely(stream=stream)
-    #                     print(self.streams[stream]['params'])
-    #                     self.plot_decline(stream=stream, yaxis='log')
-    # #                     self.plot_owr(stream=stream)
-    # #                     self.plot_kdes(stream=stream)
-    #                     self.plot_cum_decline(stream=stream)
                         break
                     else:
                         exp += 1
@@ -270,17 +260,12 @@ class decline_curve:
         fig.show()
 
     def get_prodinj(self):
-        client = MongoClient(os.environ['MONGODB_CLIENT'])
-        db = client.petroleum
         docs = db.doggr.find({'api': self.api}, {'prodinj': 1})
         for x in docs:
             doc = dict(x)
         self.prodinj = pd.DataFrame(doc['prodinj'])
-        client.close()
 
     def write_declines(self):
-        client = MongoClient(os.environ['MONGODB_CLIENT'])
-        db = client.petroleum
         params = self.params
         for dict_value in params.keys():
             for v in params[dict_value]:
@@ -301,7 +286,6 @@ class decline_curve:
         db.doggr.update_one({'api': self.api}, {
                             '$set': {'decline': params}}, upsert=False)
         print(self.api, ' written')
-        client.close()
 
     def __init__(self, api):
         self.api = api
