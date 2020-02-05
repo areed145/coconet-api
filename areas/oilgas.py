@@ -720,329 +720,297 @@ def get_decline_oilgas(api, axis):
         data_cum = []
 
         try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oil'] / 30.45,
-                        name='oil',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oil_fc'] / 30.45,
-                        name='oil_fc',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oil'] / 30.45,
+                    name='oil',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
                     ),
-                ]
+                    mode='lines'
+                )
             )
         except:
             pass
 
         try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['oil'].cumsum(),
-                        y=prodinj['oil'] / 30.45,
-                        name='oil',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['oil_fc'].cumsum(),
-                        y=prodinj['oil_fc'] / 30.45,
-                        name='oil_fc',
-                        line=dict(
-                            color='#50bf37',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oil_fc'] / 30.45,
+                    name='oil_fc',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
                     ),
-                ]
+                    mode='lines'
+                ),
             )
         except:
             pass
 
         try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oilcut'],
-                        name='oilcut',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['oilcut_fc'],
-                        name='oilcut_fc',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['oil'].cumsum(),
+                    y=prodinj['oil'] / 30.45,
+                    name='oil',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
                     ),
-                ]
+                    mode='lines'
+                )
             )
         except:
             pass
 
         try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['oil'].cumsum(),
-                        y=prodinj['oilcut'],
-                        name='oilcut',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['oil'].cumsum(),
-                        y=prodinj['oilcut_fc'],
-                        name='oilcut_fc',
-                        line=dict(
-                            color='#2EF4D6',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['oil_fc'].cumsum(),
+                    y=prodinj['oil_fc'] / 30.45,
+                    name='oil_fc',
+                    line=dict(
+                        color='#50bf37',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
                     ),
-                ]
+                    mode='lines'
+                ),
             )
         except:
             pass
 
         try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['water'] / 30.45,
-                        name='water',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['water_fc'] / 30.45,
-                        name='water_fc',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['water'].cumsum(),
-                        y=prodinj['water'] / 30.45,
-                        name='water',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['water_fc'].cumsum(),
-                        y=prodinj['water_fc'] / 30.45,
-                        name='water_fc',
-                        line=dict(
-                            color='#4286f4',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oilcut'],
+                    name='oilcut',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
                     ),
-                ]
+                    mode='lines'
+                )
             )
         except:
             pass
 
         try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['gas'] / 30.45,
-                        name='gas',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['date'],
-                        y=prodinj['gas_fc'] / 30.45,
-                        name='gas_fc',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['gas'].cumsum(),
-                        y=prodinj['gas'] / 30.45,
-                        name='gas',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
-
-        try:
-            data_cum.extend(
-                [
-                    go.Scatter(
-                        x=prodinj['gas_fc'].cumsum(),
-                        y=prodinj['gas_fc'] / 30.45,
-                        name='gas_fc',
-                        line=dict(
-                            color='#ef2626',
-                            shape='spline',
-                            dash='dot',
-                            smoothing=0.3,
-                            width=3
-                        ),
-                        mode='lines'
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['oilcut_fc'],
+                    name='oilcut_fc',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
                     ),
-                ]
+                    mode='lines'
+                ),
+            )
+        except:
+            pass
+
+        try:
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['oil'].cumsum(),
+                    y=prodinj['oilcut'],
+                    name='oilcut',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['oil'].cumsum(),
+                    y=prodinj['oilcut_fc'],
+                    name='oilcut_fc',
+                    line=dict(
+                        color='#2EF4D6',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            )
+        except:
+            pass
+
+        try:
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['water'] / 30.45,
+                    name='water',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['water_fc'] / 30.45,
+                    name='water_fc',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['water'].cumsum(),
+                    y=prodinj['water'] / 30.45,
+                    name='water',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['water_fc'].cumsum(),
+                    y=prodinj['water_fc'] / 30.45,
+                    name='water_fc',
+                    line=dict(
+                        color='#4286f4',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
+            )
+        except:
+            pass
+
+        try:
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['gas'] / 30.45,
+                    name='gas',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data.append(
+                go.Scatter(
+                    x=prodinj['date'],
+                    y=prodinj['gas_fc'] / 30.45,
+                    name='gas_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['gas'].cumsum(),
+                    y=prodinj['gas'] / 30.45,
+                    name='gas',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                )
+            )
+        except:
+            pass
+
+        try:
+            data_cum.append(
+                go.Scatter(
+                    x=prodinj['gas_fc'].cumsum(),
+                    y=prodinj['gas_fc'] / 30.45,
+                    name='gas_fc',
+                    line=dict(
+                        color='#ef2626',
+                        shape='spline',
+                        dash='dot',
+                        smoothing=0.3,
+                        width=3
+                    ),
+                    mode='lines'
+                ),
             )
         except:
             pass
