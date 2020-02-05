@@ -115,6 +115,7 @@ async def oilgas_tags_get(api: str):
 @app.put('/oilgas/tags/set')
 async def oilgas_tags_set(api: str, tags: List[str] = Query(None)):
     oilgas.set_tags_oilgas(api, tags)
+    return {'success'}
 
 
 @app.get('/oilgas/header/tags')
@@ -156,6 +157,7 @@ async def oilgas_prodinj_graph(api: str, axis: str):
 @app.put('/oilgas/decline/solve')
 async def oilgas_tags_set(api: str):
     oilgas.set_decline_oilgas(api)
+    return {'success'}
 
 
 async def oilgas_decline_graph(api: str, axis: str):
