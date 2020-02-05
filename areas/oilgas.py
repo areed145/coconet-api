@@ -860,6 +860,9 @@ def get_decline_oilgas(api, axis):
                 ]
             )
         except:
+            pass
+
+        try:
             data_cum.extend(
                 [
                     go.Scatter(
