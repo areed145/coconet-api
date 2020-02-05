@@ -1,5 +1,5 @@
 import os
-import atexit
+# import atexit
 import json
 import datetime
 
@@ -33,7 +33,7 @@ app.add_middleware(
 
 app.add_middleware(
     GZipMiddleware,
-    minimum_size=500
+    minimum_size=200
 )
 
 sid = os.environ['SID']

@@ -1,7 +1,4 @@
-#from __future__ import print_function
-
 import flickr_api as f
-import pickle
 from pymongo import MongoClient
 import os
 import numpy as np

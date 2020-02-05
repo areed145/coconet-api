@@ -2,15 +2,10 @@ import os
 import numpy as np
 import pandas as pd
 from pymongo import MongoClient
-import gridfs
 import plotly
 import plotly.graph_objs as go
-from plotly.subplots import make_subplots
 import json
 from datetime import datetime, timedelta
-import base64
-import re
-import math
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
 from utils import config, helpers
@@ -28,7 +23,8 @@ def create_range_aprs(time):
         'latitude': {'$exists': True, '$ne': None},
         'timestamp_': {'$gt': start, '$lte': now}
     }).sort([('timestamp_', -1)])))
-    df['dist'] = helpers.haversine_np(lon, lat, df['longitude'], df['latitude'])
+    df['dist'] = helpers.haversine_np(
+        lon, lat, df['longitude'], df['latitude'])
     df['month'] = df['timestamp_'].apply(
         lambda row: str(row.year)+'-'+str(row.month).zfill(2))
     df['dist_'] = np.round(df['dist'] * 1) / 1

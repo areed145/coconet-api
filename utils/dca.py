@@ -5,10 +5,9 @@ from datetime import date, datetime, timedelta, time
 import json
 import random
 import os
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import scipy as sp
-import scipy.optimize
+# import scipy.optimize
 from scipy import stats
 from bson import json_util
 
@@ -176,88 +175,6 @@ class decline_curve:
                         break
                     else:
                         exp += 1
-
-    def plot_decline(self, stream, yaxis=None):
-        try:
-            vals_outliers = self.streams[stream]['vals_outliers']
-            plt.scatter(vals_outliers.index,
-                        vals_outliers.values, color='green')
-        except:
-            pass
-        try:
-            vals_clean = self.streams[stream]['vals_clean']
-            plt.plot(vals_clean.index, vals_clean.values, color='yellowgreen')
-        except:
-            pass
-        try:
-            roll = self.streams[stream]['roll']
-            plt.plot(roll.index, roll.values, color='darkgreen')
-        except:
-            pass
-        try:
-            params = self.streams[stream]['params']
-            x = np.array(range(int(len(vals_clean)-params['lookback']+(12*6))))
-            plt.scatter(x+params['lookback'], self.model_func(x,
-                                                              params['qi'], params['d'], params['b']), color='magenta')
-        except:
-            pass
-        if yaxis == 'log':
-            plt.yscale('log')
-        plt.grid(True)
-        plt.show()
-
-    def plot_cum_decline(self, stream):
-        try:
-            vals_clean = self.streams[stream]['vals_clean']
-            plt.scatter(vals_clean.cumsum().values,
-                        vals_clean.values, color='darkgreen')
-            plt.grid(True)
-            plt.show()
-        except:
-            pass
-
-    def plot_owr(self, stream):
-        try:
-            vals_clean = self.streams[stream]['vals_clean']
-            vals_owr = self.prodinj['oil'] / self.prodinj['water']
-            plt.scatter(vals_owr.index, vals_owr.values, color='blue')
-            plt.yscale('log')
-    #         plt.grid(True)
-            plt.show()
-        except:
-            pass
-
-    def plot_kdes(self, stream):
-        for col in self.streams[stream]['iters'].columns[:-1]:
-            try:
-                print(col)
-                plt.scatter(self.streams[stream]['iters'][col],
-                            self.streams[stream]['iters']['density'])
-                plt.grid(True)
-                plt.show()
-            except:
-                pass
-
-    def plot_kdes3d(self):
-        fig = go.Figure(
-            data=[
-                go.Scatter3d(
-                    x=x,
-                    y=l,
-                    z=z,
-                    mode='markers',
-                    marker=dict(
-                        size=12,
-                        color=density,
-                        colorscale='Viridis',
-                        opacity=0.8
-                    )
-                )
-            ]
-        )
-        # tight layout
-        fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
-        fig.show()
 
     def get_prodinj(self):
         client = MongoClient(os.environ['MONGODB_CLIENT'])

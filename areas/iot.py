@@ -2,17 +2,10 @@ import os
 import numpy as np
 import pandas as pd
 from pymongo import MongoClient
-import gridfs
 import plotly
 import plotly.graph_objs as go
-from plotly.subplots import make_subplots
 import json
 from datetime import datetime, timedelta
-import base64
-import re
-import math
-from matplotlib import cm
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
 from utils import config, helpers
 
 
