@@ -135,15 +135,15 @@ class decline_curve:
             while success == False:
                 for i in [300, 500, 1500]:
                     window = random.randint(7, 301)
-                    # try:
-                    qi, d, b, lookback = self.decline_sample(
-                        window, stream, lookback_use)
-                    qis.append(qi)
-                    ds.append(d)
-                    bs.append(b)
-                    lookbacks.append(lookback)
-                    # except:
-                    #     pass
+                    try:
+                        qi, d, b, lookback = self.decline_sample(
+                            window, stream, lookback_use)
+                        qis.append(qi)
+                        ds.append(d)
+                        bs.append(b)
+                        lookbacks.append(lookback)
+                    except:
+                        pass
                 try:
                     df_ = pd.DataFrame()
                     df_['qi'] = qis
