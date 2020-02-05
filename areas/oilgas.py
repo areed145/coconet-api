@@ -645,7 +645,7 @@ def get_decline_oilgas(api, axis):
         prodinj = prodinj[['date', 'oil', 'water', 'gas']]
 
         prodinj = pd.concat(
-            [prodinj[['date', 'oil', 'water', 'gas']], forecasts], axis=0)
+            [prodinj[['date', 'oil', 'water', 'gas']], forecasts], sort=True, axis=0)
         prodinj['date'] = pd.to_datetime(prodinj['date'])
         prodinj.index = prodinj['date']
         prodinj = prodinj.drop_duplicates(subset=['date'])
