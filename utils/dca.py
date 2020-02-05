@@ -7,7 +7,6 @@ import random
 import os
 import plotly.graph_objects as go
 import scipy as sp
-# import scipy.optimize
 from scipy import stats
 from bson import json_util
 
