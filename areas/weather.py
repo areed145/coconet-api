@@ -44,6 +44,7 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
         client = MongoClient(os.environ['MONGODB_CLIENT'])
         db = client.wx
         df = pd.DataFrame(list(db.awc.find()))
+        client.close()
 
         if prop == 'temp_dewpoint_spread':
             df['temp_dewpoint_spread'] = df['temp_c'] - df['dewpoint_c']
@@ -254,7 +255,6 @@ def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', ra
                     )
                 )
             ]
-        client.close()
     else:
         data = [
             go.Scattermapbox(
@@ -393,8 +393,8 @@ def get_wx_latest(sid):
     db = client.wx
     wx = list(db.raw.find({'station_id': sid}).sort(
         [('obs_time_utc', -1)]).limit(1))[0]
-    wx.pop('_id')
     client.close()
+    wx.pop('_id')
     return wx
 
 
@@ -408,6 +408,7 @@ def create_wx_figs(time, sid):
             '$gt': start,
             '$lte': now
         }}).sort([('obs_time_utc', -1)])))
+    client.close()
     df_wx_raw.index = df_wx_raw['obs_time_local']
     # df_wx_raw = df_wx_raw.tz_localize('UTC').tz_convert('US/Central')
 
@@ -1024,7 +1025,6 @@ def create_wx_figs(time, sid):
     graphJSON_thp = helpers.create_3d_plot(df_wx_raw, 'temp_f', 'dewpt_f', 'humidity', config.cs_normal, 'Temperature (F)',
                                    'Dewpoint (F)', 'Humidity (%)', 'rgb(255, 95, 63)', 'rgb(255, 127, 63)', 'rgb(63, 127, 255)')
 
-    client.close()
     return graphJSON_td, graphJSON_pr, graphJSON_cb, graphJSON_pc, graphJSON_wd, graphJSON_su, graphJSON_wr, graphJSON_thp
 
 
@@ -1035,8 +1035,8 @@ def get_image(name):
     file = fs.find_one({"filename": name})
     img = fs.get(file._id).read()
     img = base64.b64decode(img)
+    client.close()
     img = img[img.find(b'<svg'):]
     img = re.sub(b'height="\d*.\d*pt"', b'height="100%"', img)
     img = re.sub(b'width="\d*.\d*pt"', b'width="100%"', img)
-    client.close()
     return img

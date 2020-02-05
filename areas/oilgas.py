@@ -23,6 +23,8 @@ def get_prodinj(wells):
         df_['api'] = doc['api']
         df = df.append(df_)
 
+    client.close()
+
     df.sort_values(by=['api', 'date'], inplace=True)
     df.reset_index(drop=True, inplace=True)
     df.fillna(0, inplace=True)
@@ -32,8 +34,83 @@ def get_prodinj(wells):
             df[col] = 0
         if col not in ['date', 'oilgrav', 'pcsg', 'ptbg', 'btu', 'pinjsurf']:
             df[col] = df[col]/30.45
-    client.close()
     return df
+
+
+def ci_plot(df_offsets, prop, api, c1, c2, c3):
+    df_ci = df_offsets.pivot_table(
+        index='date', columns='api', values=prop)
+    df_ci = df_ci.replace(0, pd.np.nan)
+    count = df_ci.count(axis=1).fillna(0)
+    sums = df_ci.sum(axis=1).fillna(0)
+    ci_lb = df_ci.quantile(0.25, axis=1).fillna(0)
+    ci_ub = df_ci.quantile(0.75, axis=1).fillna(0)
+    val = df_ci[api]
+
+    return [
+        go.Scatter(
+            x=df_ci.index,
+            y=ci_ub,
+            name='offest_upper_75ci',
+            fill=None,
+            mode='lines',
+            line=dict(
+                color=c1,
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+        ),
+        go.Scatter(
+            x=df_ci.index,
+            y=ci_lb,
+            name='offset_lower_75ci',
+            fill='tonexty',
+            mode='lines',
+            line=dict(
+                color=c1,
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+        ),
+        go.Scatter(
+            x=df_ci.index,
+            y=count,
+            name='offset_count',
+            mode='lines',
+            line=dict(
+                color='#8c8c8c',
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+        ),
+        go.Scatter(
+            x=df_ci.index,
+            y=sums,
+            name='offset_sum',
+            mode='lines',
+            line=dict(
+                color=c2,
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+        ),
+        go.Scatter(
+            x=df_ci.index,
+            y=val,
+            name='current_well',
+            mode='lines',
+            line=dict(
+                color=c3,
+                shape='spline',
+                smoothing=0.3,
+                width=3
+            ),
+        )
+    ]
 
 
 def get_offsets_oilgas(api, radius, axis):
@@ -64,81 +141,6 @@ def get_offsets_oilgas(api, radius, axis):
         df_offsets['distapi'] = df_offsets['api'].apply(
             lambda x: str(np.round(dists[offsets.index(x)], 3))+' mi - '+x)
         df_offsets.sort_values(by='distapi', inplace=True)
-
-        def ci_plot(df_offsets, prop, api, c1, c2, c3):
-            df_ci = df_offsets.pivot_table(
-                index='date', columns='api', values=prop)
-            df_ci = df_ci.replace(0, pd.np.nan)
-            count = df_ci.count(axis=1).fillna(0)
-            sums = df_ci.sum(axis=1).fillna(0)
-            ci_lb = df_ci.quantile(0.25, axis=1).fillna(0)
-            ci_ub = df_ci.quantile(0.75, axis=1).fillna(0)
-            val = df_ci[api]
-
-            return [
-                go.Scatter(
-                    x=df_ci.index,
-                    y=ci_ub,
-                    name='offest_upper_75ci',
-                    fill=None,
-                    mode='lines',
-                    line=dict(
-                        color=c1,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=ci_lb,
-                    name='offset_lower_75ci',
-                    fill='tonexty',
-                    mode='lines',
-                    line=dict(
-                        color=c1,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=count,
-                    name='offset_count',
-                    mode='lines',
-                    line=dict(
-                        color='#8c8c8c',
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=sums,
-                    name='offset_sum',
-                    mode='lines',
-                    line=dict(
-                        color=c2,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                ),
-                go.Scatter(
-                    x=df_ci.index,
-                    y=val,
-                    name='current_well',
-                    mode='lines',
-                    line=dict(
-                        color=c3,
-                        shape='spline',
-                        smoothing=0.3,
-                        width=3
-                    ),
-                )
-            ]
 
         data_offset_oil = [
             go.Heatmap(
