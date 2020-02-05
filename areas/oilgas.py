@@ -17,8 +17,7 @@ import scipy as sp
 import scipy.optimize
 from scipy import stats
 from bson import json_util
-from utils import config, helpers
-from dca import decline_curve
+from utils import config, helpers, decline_curve
 
 
 def get_prodinj(wells):
