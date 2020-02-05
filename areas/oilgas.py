@@ -733,7 +733,15 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            pass
+
+        try:
+            data.extend(
+                [
                     go.Scatter(
                         x=prodinj['date'],
                         y=prodinj['oil_fc'] / 30.45,
@@ -749,6 +757,10 @@ def get_decline_oilgas(api, axis):
                     ),
                 ]
             )
+        except:
+            pass
+
+        try:
             data_cum.extend(
                 [
                     go.Scatter(
@@ -762,7 +774,15 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            pass
+
+        try:
+            data_cum.extend(
+                [
                     go.Scatter(
                         x=prodinj['oil_fc'].cumsum(),
                         y=prodinj['oil_fc'] / 30.45,
@@ -795,7 +815,15 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            pass
+
+        try:
+            data.extend(
+                [
                     go.Scatter(
                         x=prodinj['date'],
                         y=prodinj['oilcut_fc'],
@@ -811,6 +839,10 @@ def get_decline_oilgas(api, axis):
                     ),
                 ]
             )
+        except:
+            pass
+
+        try:
             data_cum.extend(
                 [
                     go.Scatter(
@@ -824,7 +856,12 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            data_cum.extend(
+                [
                     go.Scatter(
                         x=prodinj['oil'].cumsum(),
                         y=prodinj['oilcut_fc'],
@@ -857,7 +894,15 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            pass
+
+        try:
+            data.extend(
+                [
                     go.Scatter(
                         x=prodinj['date'],
                         y=prodinj['water_fc'] / 30.45,
@@ -873,6 +918,10 @@ def get_decline_oilgas(api, axis):
                     )
                 ]
             )
+        except:
+            pass
+
+        try:
             data_cum.extend(
                 [
                     go.Scatter(
@@ -886,7 +935,15 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            pass
+
+        try:
+            data_cum.extend(
+                [
                     go.Scatter(
                         x=prodinj['water_fc'].cumsum(),
                         y=prodinj['water_fc'] / 30.45,
@@ -919,7 +976,15 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            pass
+
+        try:
+            data.extend(
+                [
                     go.Scatter(
                         x=prodinj['date'],
                         y=prodinj['gas_fc'] / 30.45,
@@ -935,6 +1000,10 @@ def get_decline_oilgas(api, axis):
                     )
                 ]
             )
+        except:
+            pass
+
+        try:
             data_cum.extend(
                 [
                     go.Scatter(
@@ -948,7 +1017,15 @@ def get_decline_oilgas(api, axis):
                             width=3
                         ),
                         mode='lines'
-                    ),
+                    )
+                ]
+            )
+        except:
+            pass
+
+        try:
+            data_cum.extend(
+                [
                     go.Scatter(
                         x=prodinj['gas_fc'].cumsum(),
                         y=prodinj['gas_fc'] / 30.45,
