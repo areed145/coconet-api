@@ -135,15 +135,15 @@ class decline_curve:
             while success == False:
                 for i in [300, 500, 1500]:
                     window = random.randint(7, 301)
-                    try:
-                        qi, d, b, lookback = self.decline_sample(
-                            window, stream, lookback_use)
-                        qis.append(qi)
-                        ds.append(d)
-                        bs.append(b)
-                        lookbacks.append(lookback)
-                    except:
-                        pass
+                    # try:
+                    qi, d, b, lookback = self.decline_sample(
+                        window, stream, lookback_use)
+                    qis.append(qi)
+                    ds.append(d)
+                    bs.append(b)
+                    lookbacks.append(lookback)
+                    # except:
+                    #     pass
                 try:
                     df_ = pd.DataFrame()
                     df_['qi'] = qis
@@ -154,10 +154,6 @@ class decline_curve:
                     self.streams[stream]['iters'] = df_
                     self.get_most_likely(stream=stream)
                     print(self.streams[stream]['params'])
-    #                 self.plot_decline(stream=stream, yaxis='log')
-    # #                 self.plot_owr(stream=stream)
-    # #                 self.plot_kdes(stream=stream)
-    #                 self.plot_cum_decline(stream=stream)
                     success = True
                 except:
                     if exp == 4:
@@ -168,15 +164,12 @@ class decline_curve:
                         lookbacks = []
                         for i in range(100):
                             window = random.randint(7, 301)
-    #                         try:
                             qi, d, b, lookback = self.average_sample(
                                 window, stream, lookback_use)
                             qis.append(qi)
                             ds.append(d)
                             bs.append(b)
                             lookbacks.append(lookback)
-    #                         except:
-    #                             pass
                         df_ = pd.DataFrame()
                         df_['qi'] = qis
                         df_['d'] = ds
