@@ -13,8 +13,7 @@ import re
 import math
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
-import helpers
-import config
+import utils
 
 
 def get_prodinj(wells):
