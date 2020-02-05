@@ -7,12 +7,14 @@ import os
 import numpy as np
 import plotly
 import plotly.graph_objs as go
-import orjson
+import json
+import helpers
+import config
 
 client = MongoClient(os.environ['MONGODB_CLIENT'])
 db = client.flickr
 
-mapbox_access_token = os.environ['MAPBOX_TOKEN']
+os.environ['MAPBOX_TOKEN'] = os.environ['MAPBOX_TOKEN']
 
 
 def load_gals():
@@ -117,21 +119,21 @@ def get_photo_rows(id, width):
         mapbox=dict(
             bearing=0,
             center=dict(lat=lat_c, lon=lon_c),
-            accesstoken=mapbox_access_token,
+            accesstoken=os.environ['MAPBOX_TOKEN'],
             style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
             pitch=0,
             zoom=4
         )
     )
 
-    graphorjson = orjson.dumps(
+    graphjson = json.dumps(
         dict(
             data=data,
             layout=layout
         ),
-        cls=plotly.utils.PlotlyorjsonEncoder
+        cls=plotly.utils.PlotlyjsonEncoder
     )
-    return rows, graphorjson, gal['title'], gal['count_photos'], gal['count_views']
+    return rows, graphjson, gal['title'], gal['count_photos'], gal['count_views']
 
 
 def get_photo(id):
@@ -169,20 +171,20 @@ def get_photo(id):
                     lat=lat_c,
                     lon=lon_c
                 ),
-                accesstoken=mapbox_access_token,
+                accesstoken=os.environ['MAPBOX_TOKEN'],
                 style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
                 pitch=0,
                 zoom=13
             )
         )
 
-        graphorjson = orjson.dumps(
+        graphjson = json.dumps(
             dict(
                 data=data,
                 layout=layout
             ),
-            cls=plotly.utils.PlotlyorjsonEncoder
+            cls=plotly.utils.PlotlyjsonEncoder
         )
     except:
-        graphorjson = None
-    return image, graphorjson
+        graphjson = None
+    return image, graphjson

@@ -3,7 +3,7 @@ import atexit
 import json
 import datetime
 
-from helpers import figs, flickr
+from areas import aprs, flickr, iot, oilgas, weather
 from fastapi import FastAPI, Query, Form
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
@@ -54,7 +54,7 @@ def main():
 
 @app.get('/aprs/latest')
 async def aprs_latest():
-    last = figs.get_aprs_latest()
+    last = aprs.get_aprs_latest()
     data = {}
     data['last'] = last
     json_compatible_item_data = jsonable_encoder(data)
@@ -63,7 +63,7 @@ async def aprs_latest():
 
 @app.get('/aprs/map')
 async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
-    map_aprs, plot_speed, plot_alt, plot_course, rows = figs.create_map_aprs(
+    map_aprs, plot_speed, plot_alt, plot_course, rows = aprs.create_map_aprs(
         type_aprs, prop_aprs, time_int)
     data = {}
     data['map_aprs'] = json.loads(map_aprs)
@@ -77,7 +77,7 @@ async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
 
 @app.get('/aprs/igate_range')
 async def aprs_igate_range(time_int: str):
-    range_aprs = figs.create_range_aprs(time_int)
+    range_aprs = aprs.create_range_aprs(time_int)
     data = {}
     data['range_aprs'] = json.loads(range_aprs)
     json_compatible_item_data = jsonable_encoder(data)
@@ -86,7 +86,7 @@ async def aprs_igate_range(time_int: str):
 
 @app.get('/iot/graph')
 async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
-    graph = figs.create_graph_iot(sensor_iot, time_int)
+    graph = iot.create_graph_iot(sensor_iot, time_int)
     data = {}
     try:
         data['graph'] = json.loads(graph)
@@ -98,7 +98,7 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
 
 @app.get('/oilgas/tags/get')
 async def oilgas_tags_get(api: str):
-    tags = figs.get_tags_oilgas(str(api))
+    tags = oilgas.get_tags_oilgas(str(api))
     try:
         tags.pop('_id')
     except:
@@ -114,12 +114,12 @@ async def oilgas_tags_get(api: str):
 
 @app.put('/oilgas/tags/set')
 async def oilgas_tags_set(api: str, tags: List[str] = Query(None)):
-    figs.set_tags_oilgas(api, tags)
+    oilgas.set_tags_oilgas(api, tags)
 
 
 @app.get('/oilgas/header/tags')
 async def oilgas_header_tags(tags: List[str] = Query(None)):
-    headers = figs.get_header_tags_oilgas(tags)
+    headers = oilgas.get_header_tags_oilgas(tags)
     data = {}
     try:
         data['headers'] = headers
@@ -131,7 +131,7 @@ async def oilgas_header_tags(tags: List[str] = Query(None)):
 
 @app.get('/oilgas/header/details')
 async def oilgas_header_details(api: str):
-    header = figs.get_header_oilgas(str(api))
+    header = oilgas.get_header_oilgas(str(api))
     data = {}
     try:
         data['header'] = header
@@ -143,7 +143,7 @@ async def oilgas_header_details(api: str):
 
 @app.get('/oilgas/prodinj/graph')
 async def oilgas_prodinj_graph(api: str, axis: str):
-    graph_oilgas = figs.get_graph_oilgas(str(api), axis)
+    graph_oilgas = oilgas.get_graph_oilgas(str(api), axis)
     data = {}
     try:
         data['graph_oilgas'] = json.loads(graph_oilgas)
@@ -155,7 +155,7 @@ async def oilgas_prodinj_graph(api: str, axis: str):
 
 @app.get('/oilgas/decline/graph')
 async def oilgas_decline_graph(api: str, axis: str):
-    graph_decline, graph_decline_cum = figs.get_decline_oilgas(str(api), axis)
+    graph_decline, graph_decline_cum = oilgas.get_decline_oilgas(str(api), axis)
     data = {}
     try:
         data['graph_decline'] = json.loads(graph_decline)
@@ -168,7 +168,7 @@ async def oilgas_decline_graph(api: str, axis: str):
 
 @app.get('/oilgas/crm/graph')
 async def oilgas_crm_graph(api: str):
-    graph_crm = figs.get_crm(str(api))
+    graph_crm = oilgas.get_crm(str(api))
     data = {}
     try:
         data['graph_crm'] = json.loads(graph_crm)
@@ -180,7 +180,7 @@ async def oilgas_crm_graph(api: str):
 
 @app.get('/oilgas/cyclic/graph')
 async def oilgas_cyclic_graph(api: str):
-    graph_cyclic_jobs = figs.get_cyclic_jobs(str(api))
+    graph_cyclic_jobs = oilgas.get_cyclic_jobs(str(api))
     data = {}
     try:
         data['graph_cyclic_jobs'] = json.loads(graph_cyclic_jobs)
@@ -192,7 +192,7 @@ async def oilgas_cyclic_graph(api: str):
 
 @app.get('/oilgas/offset/graphs')
 async def oilgas_offset_graph(api: str, axis: str):
-    graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = figs.get_offsets_oilgas(
+    graph_offset_oil, graph_offset_stm, graph_offset_wtr, graph_offset_oil_ci, graph_offset_stm_ci, graph_offset_wtr_ci, map_offsets, offsets = oilgas.get_offsets_oilgas(
         str(api), radius=0.1, axis=axis)
     data = {}
     try:
@@ -261,7 +261,7 @@ async def photos_photo(id: str):
 
 @app.get('/station/history/graphs')
 async def station_history_graphs(time_int: str):
-    fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = figs.create_wx_figs(
+    fig_td, fig_pr, fig_cb, fig_pc, fig_wd, fig_su, fig_wr, fig_thp = weather.create_wx_figs(
         time_int, sid)
     data = {}
     data['fig_td'] = json.loads(fig_td)
@@ -278,7 +278,7 @@ async def station_history_graphs(time_int: str):
 
 @app.get('/station/live/data')
 async def station_live_data():
-    wx = figs.get_wx_latest(sid)
+    wx = weather.get_wx_latest(sid)
     data = {}
     data['wx'] = wx
     json_compatible_item_data = jsonable_encoder(data)
@@ -301,7 +301,7 @@ async def weather_aviation_map(
     temp: str = '0',
     visible: str = '0'
 ):
-    graphJSON = figs.create_map_awc(
+    graphJSON = weather.create_map_awc(
         prop_awc, lat, lon, zoom, stations, infrared, radar, lightning, analysis, precip, watchwarn, temp, visible)
     data = {}
     data['map'] = json.loads(graphJSON)
@@ -311,6 +311,6 @@ async def weather_aviation_map(
 
 @app.get('/weather/soundings/image')
 async def weather_soundings_images(sid: str):
-    img = figs.get_image(sid)
+    img = weather.get_image(sid)
     json_compatible_item_data = jsonable_encoder(img.decode('unicode_escape'))
     return JSONResponse(content=json_compatible_item_data)
