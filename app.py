@@ -153,9 +153,28 @@ async def oilgas_prodinj_graph(api: str, axis: str):
     return JSONResponse(content=json_compatible_item_data)
 
 
+@app.put('/oilgas/decline/solve')
+async def oilgas_tags_set(api: str):
+    oilgas.set_decline_oilgas(api)
+
+
+async def oilgas_decline_graph(api: str, axis: str):
+    graph_decline, graph_decline_cum = oilgas.get_decline_oilgas(
+        str(api), axis)
+    data = {}
+    try:
+        data['graph_decline'] = json.loads(graph_decline)
+        data['graph_decline_cum'] = json.loads(graph_decline_cum)
+    except:
+        pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
 @app.get('/oilgas/decline/graph')
 async def oilgas_decline_graph(api: str, axis: str):
-    graph_decline, graph_decline_cum = oilgas.get_decline_oilgas(str(api), axis)
+    graph_decline, graph_decline_cum = oilgas.get_decline_oilgas(
+        str(api), axis)
     data = {}
     try:
         data['graph_decline'] = json.loads(graph_decline)

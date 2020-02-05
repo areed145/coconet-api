@@ -13,7 +13,12 @@ import re
 import math
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
+import scipy as sp
+import scipy.optimize
+from scipy import stats
+from bson import json_util
 from utils import config, helpers
+from dca import decline_curve
 
 
 def get_prodinj(wells):
@@ -55,7 +60,8 @@ def get_offsets_oilgas(api, radius, axis):
         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
                                               'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
 
-        df['dist'] = helpers.haversine_np(lon, lat, df['longitude'], df['latitude'])
+        df['dist'] = helpers.haversine_np(
+            lon, lat, df['longitude'], df['latitude'])
         df = df[df['dist'] <= radius]
         df.sort_values(by='dist', inplace=True)
         df = df[:25]
@@ -236,7 +242,8 @@ def get_crm(api):
         df = pd.DataFrame(header['crm']['cons'])
         df['gain'] = df['gain'].apply(lambda x: '%.3f' % x)
         df['gain'] = df['gain'].astype(float)
-        df['dist'] = helpers.haversine_np(df['x0'], df['y0'], df['x1'], df['y1'])
+        df['dist'] = helpers.haversine_np(
+            df['x0'], df['y0'], df['x1'], df['y1'])
         df['distapi'] = df.apply(lambda x: str(
             np.round(x['dist'], 3))+' mi - '+str(x['to']), axis=1)
         df = df.sort_values(by='distapi', ascending=True).reset_index()
@@ -606,6 +613,10 @@ def get_graph_oilgas(api, axis):
         graphJSON = None
     client.close()
     return graphJSON
+
+
+def set_decline_oilgas(api):
+    decline_curve(str(api))
 
 
 def get_decline_oilgas(api, axis):
