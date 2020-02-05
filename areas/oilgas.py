@@ -17,7 +17,7 @@ import scipy as sp
 import scipy.optimize
 from scipy import stats
 from bson import json_util
-from utils import config, helpers, decline_curve
+from utils import config, helpers, dca
 
 
 def get_prodinj(wells):
@@ -615,7 +615,7 @@ def get_graph_oilgas(api, axis):
 
 
 def set_decline_oilgas(api):
-    decline_curve(str(api))
+    dca.decline_curve(str(api))
 
 
 def get_decline_oilgas(api, axis):
