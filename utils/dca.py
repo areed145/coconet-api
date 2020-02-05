@@ -260,10 +260,13 @@ class decline_curve:
         fig.show()
 
     def get_prodinj(self):
+        client = MongoClient(os.environ['MONGODB_CLIENT'])
+        db = client.petroleum
         docs = db.doggr.find({'api': self.api}, {'prodinj': 1})
         for x in docs:
             doc = dict(x)
         self.prodinj = pd.DataFrame(doc['prodinj'])
+        client.close()
 
     def write_declines(self):
         params = self.params
@@ -282,10 +285,12 @@ class decline_curve:
 
                 if isinstance(v, np.float64):
                     params[dict_value][v] = float(v)
-
+        client = MongoClient(os.environ['MONGODB_CLIENT'])
+        db = client.petroleum
         db.doggr.update_one({'api': self.api}, {
                             '$set': {'decline': params}}, upsert=False)
         print(self.api, ' written')
+        client.close()
 
     def __init__(self, api):
         self.api = api
