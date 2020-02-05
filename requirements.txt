@@ -16,10 +16,8 @@ lazy-object-proxy==1.4.2
 MarkupSafe==1.1.1
 matplotlib==3.1.1
 mccabe==0.6.1
-numba
 numpy==1.17.2
 oauth2==1.9.0.post1
-orjson
 pandas==0.25.3
 plotly==4.1.1
 pylint==2.3.1
@@ -28,7 +26,7 @@ python-dateutil==2.8.0
 pytz==2019.2
 requests==2.22.0
 retrying==1.3.3
-scipy
+scipy==1.3.1
 six==1.12.0
 typed-ast==1.4.0
 tzlocal==2.0.0
