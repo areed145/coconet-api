@@ -13,7 +13,7 @@ import re
 import math
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
-import utils
+from utils import config, helpers
 
 
 def create_graph_iot(sensor, time):

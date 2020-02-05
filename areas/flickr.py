@@ -8,7 +8,7 @@ import numpy as np
 import plotly
 import plotly.graph_objs as go
 import json
-import utils
+from utils import config, helpers
 
 client = MongoClient(os.environ['MONGODB_CLIENT'])
 db = client.flickr

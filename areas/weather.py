@@ -13,7 +13,7 @@ import re
 import math
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap, rgb2hex, to_rgba
-import utils
+from utils import config, helpers
 
 
 def create_map_awc(prop, lat=38, lon=-96, zoom=3, stations='1', infrared='0', radar='0', lightning='0', analysis='0', precip='0', watchwarn='0', temp='0', visible='0'):
