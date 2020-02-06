@@ -96,6 +96,18 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
     return JSONResponse(content=json_compatible_item_data)
 
 
+@app.get('/iot/anomaly')
+async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
+    graph = iot.create_anomaly_iot(sensor_iot, time_int)
+    data = {}
+    try:
+        data['graph'] = json.loads(graph)
+    except:
+        pass
+    json_compatible_item_data = jsonable_encoder(data)
+    return JSONResponse(content=json_compatible_item_data)
+
+
 @app.get('/oilgas/tags/get')
 async def oilgas_tags_get(api: str):
     tags = oilgas.get_tags_oilgas(str(api))
