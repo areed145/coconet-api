@@ -93,7 +93,7 @@ def create_spectrogram_iot(sensor, time):
         )
     )
 
-    f, t, Sxx = signal.spectrogram(df_s['state'], window='hanning', mode='magnitude', fs=1.0)
+    f, t, Sxx = signal.spectrogram(df_s['state'], window='hanning', mode='magnitude', fs=1/120)
     data_spectro.append(
         go.Heatmap(
             x=t,
