@@ -133,11 +133,11 @@ def create_spectrogram_iot(sensor, time):
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
 
-    graphJSON_spectro = json.dumps(dict(data=spectro, layout=layout_spectro),
+    graphJSON_spectro = json.dumps(dict(data=data_spectro, layout=layout_spectro),
                                    cls=plotly.utils.PlotlyJSONEncoder)
 
     client.close()
-    return graphJSON, data_spectro
+    return graphJSON, graphJSON_spectro
 
 
 def create_anomaly_iot(sensor, time):
