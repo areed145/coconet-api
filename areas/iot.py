@@ -28,7 +28,7 @@ def create_graph_iot(sensor, time):
                 go.Scatter(
                     x=df_s['timestamp_'],
                     y=df_s['state'],
-                    name=df_s['entity_id'].values[0],
+                    name=s,
                     line=dict(
                         shape='spline',
                         smoothing=0.7,
@@ -76,13 +76,14 @@ def create_spectrogram_iot(sensor, time):
     for s in sensor:
         # try:
         df_s = df[df['entity_id'] == s]
-        df_s.index = df_s['timestamp_']
+        df_s.index = pd.to_datetime(df_s['timestamp_'])
+        df_s['state'] = df_s['state'].astype(float)
         df_s = df_s[['state']].resample('1S').mean()
         data.append(
             go.Scatter(
-                x=df_s['timestamp_'],
+                x=df_s.index,
                 y=df_s['state'],
-                name=df_s['entity_id'].values[0],
+                name=s,
                 line=dict(
                     shape='spline',
                     smoothing=0.7,
@@ -99,13 +100,7 @@ def create_spectrogram_iot(sensor, time):
                     x=t,
                     y=f,
                     z=Sxx,
-                    name=df_s['entity_id'].values[0],
-                    line=dict(
-                        shape='spline',
-                        smoothing=0.7,
-                        width=3
-                    ),
-                    mode='lines'
+                    name=s,
                 )
             ]
         )
@@ -126,7 +121,7 @@ def create_spectrogram_iot(sensor, time):
     )
     try:
         graphJSON = json.dumps(dict(data=data, layout=layout),
-                               cls=plotly.utils.PlotlyJSONEncoder)
+                            cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
 
@@ -144,7 +139,7 @@ def create_spectrogram_iot(sensor, time):
 
     for idx, spectro in enumerate(data_spectro):
         data_spectro[idx] = json.dumps(dict(data=spectro, layout=layout_spectro),
-                                       cls=plotly.utils.PlotlyJSONEncoder)
+                                    cls=plotly.utils.PlotlyJSONEncoder)
 
     client.close()
     return graphJSON, data_spectro
@@ -168,7 +163,7 @@ def create_anomaly_iot(sensor, time):
                 go.Scatter(
                     x=df_s['timestamp_'],
                     y=df_s['state'],
-                    name=df_s['entity_id'].values[0],
+                    name=s,
                     line=dict(
                         shape='spline',
                         smoothing=0.7,
