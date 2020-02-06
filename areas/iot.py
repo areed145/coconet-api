@@ -77,7 +77,7 @@ def create_spectrogram_iot(sensor, time):
     df_s = df
     df_s.index = pd.to_datetime(df_s['timestamp_'])
     df_s['state'] = df_s['state'].astype(float)
-    df_s = df_s[['state']].resample('2T').mean()
+    df_s = df_s[['state']].resample('1T').mean()
     df_s = df_s.interpolate()
     data.append(
         go.Scatter(
@@ -96,7 +96,7 @@ def create_spectrogram_iot(sensor, time):
     nperseg = np.minimum(len(df_s['state']), 256)
     noverlap = int(7/8*nperseg)
 
-    f, t, Sxx = signal.spectrogram(df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=1/120)
+    f, t, Sxx = signal.spectrogram(df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=1/60)
     data_spectro.append(
         go.Heatmap(
             x=t,
