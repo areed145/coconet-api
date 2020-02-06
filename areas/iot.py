@@ -77,7 +77,7 @@ def create_spectrogram_iot(sensor, time):
         # try:
         df_s = df[df['entity_id'] == s]
         df_s.index = df_s['timestamp_']
-        df_s = df_s.resample('1S').mean()
+        df_s = df_s[['state']].resample('1S').mean()
         data.append(
             go.Scatter(
                 x=df_s['timestamp_'],
