@@ -83,7 +83,7 @@ def create_spectrogram_iot(sensor, time):
         go.Scatter(
             x=df_s.index,
             y=df_s['state'],
-            name=s,
+            name=sensor,
             line=dict(
                 shape='spline',
                 smoothing=0.7,
@@ -99,7 +99,7 @@ def create_spectrogram_iot(sensor, time):
             x=t,
             y=f,
             z=Sxx,
-            name=s,
+            name=sensor,
         )
     )
 
