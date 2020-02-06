@@ -102,7 +102,7 @@ def create_spectrogram_iot(sensor, time):
         go.Heatmap(
             x=t,
             y=f,
-            z=Sxx,
+            z=np.log(Sxx),
             name=sensor,
             colorscale='Viridis',
         )
