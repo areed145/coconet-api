@@ -228,13 +228,9 @@ def create_anomaly_iot(sensor, time):
 
     scaler = preprocessing.MinMaxScaler()
 
-    X_train = pd.DataFrame(scaler.fit_transform(Sxx.T[:ntrain]),
-                           columns=dataset_train.columns,
-                           index=dataset_train.index)
+    X_train = scaler.fit_transform(Sxx.T[:ntrain])
 
-    X_test = pd.DataFrame(scaler.transform(Sxx.T[ntrain:]),
-                          columns=dataset_test.columns,
-                          index=dataset_test.index)
+    X_test = scaler.transform(Sxx.T[ntrain:])
 
     pca = PCA(n_components=2, svd_solver='full')
 
