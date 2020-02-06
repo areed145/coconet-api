@@ -74,14 +74,31 @@ def create_spectrogram_iot(sensor, time):
     data = []
     data_spectro = []
     for s in sensor:
-        try:
-            df_s = df[df['entity_id'] == s]
-            df_s.index = df_s['timestamp_']
-            df_s = df_s.resample('1S').mean()
-            data.append(
-                go.Scatter(
-                    x=df_s['timestamp_'],
-                    y=df_s['state'],
+        # try:
+        df_s = df[df['entity_id'] == s]
+        df_s.index = df_s['timestamp_']
+        df_s = df_s.resample('1S').mean()
+        data.append(
+            go.Scatter(
+                x=df_s['timestamp_'],
+                y=df_s['state'],
+                name=df_s['entity_id'].values[0],
+                line=dict(
+                    shape='spline',
+                    smoothing=0.7,
+                    width=3
+                ),
+                mode='lines'
+            )
+        )
+
+        f, t, Sxx = signal.spectrogram(df_s['state'], fs=1.0)
+        data_spectro.extend(
+            [
+                go.Heatmap(
+                    x=t,
+                    y=f,
+                    z=Sxx,
                     name=df_s['entity_id'].values[0],
                     line=dict(
                         shape='spline',
@@ -90,26 +107,10 @@ def create_spectrogram_iot(sensor, time):
                     ),
                     mode='lines'
                 )
-            )
-            f, t, Sxx = signal.spectrogram(df_s['state'], fs=1.0)
-            data_spectro.extend(
-                [
-                    go.Heatmap(
-                        x=t,
-                        y=f,
-                        z=Sxx,
-                        name=df_s['entity_id'].values[0],
-                        line=dict(
-                            shape='spline',
-                            smoothing=0.7,
-                            width=3
-                        ),
-                        mode='lines'
-                    )
-                ]
-            )
-        except:
-            pass
+            ]
+        )
+        # except:
+        #     pass
 
     layout = go.Layout(
         autosize=True,
@@ -129,13 +130,24 @@ def create_spectrogram_iot(sensor, time):
     except:
         graphJSON = None
 
-    spectros = []
-    for spectro in data_spectro:
-        spectros.append(json.dumps(dict(data=spectro),
+    layout_spectro = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        showlegend=False,
+        # legend=dict(orientation='h'),
+        xaxis=dict(range=[start, now]),
+        hovermode='closest',
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        uirevision=True,
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+    )
+
+    for idx, spectro in enumerate(data_spectro):
+        data_spectro[idx] = json.dumps(dict(data=spectro, layout=layout_spectro),
                                    cls=plotly.utils.PlotlyJSONEncoder))
 
     client.close()
-    return graphJSON, spectros
+    return graphJSON, data_spectro
 
 
 def create_anomaly_iot(sensor, time):
