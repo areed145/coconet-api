@@ -97,7 +97,7 @@ def create_spectrogram_iot(sensor, time):
                     go.Heatmap(
                         x=t,
                         y=f,
-                        z=Sxx
+                        z=Sxx,
                         name=df_s['entity_id'].values[0],
                         line=dict(
                             shape='spline',
