@@ -128,8 +128,14 @@ def create_spectrogram_iot(sensor, time):
                                cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
+
+    spectros = []
+    for spectro in data_spectro:
+        spectros.append(json.dumps(dict(data=spectro),
+                                   cls=plotly.utils.PlotlyJSONEncoder))
+
     client.close()
-    return graphJSON
+    return graphJSON, spectros
 
 
 def create_anomaly_iot(sensor, time):
