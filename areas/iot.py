@@ -144,7 +144,7 @@ def create_spectrogram_iot(sensor, time):
 
     for idx, spectro in enumerate(data_spectro):
         data_spectro[idx] = json.dumps(dict(data=spectro, layout=layout_spectro),
-                                   cls=plotly.utils.PlotlyJSONEncoder))
+                                       cls=plotly.utils.PlotlyJSONEncoder)
 
     client.close()
     return graphJSON, data_spectro
