@@ -97,7 +97,7 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
 
 
 @app.get('/iot/anomaly')
-async def iot_anomaly(time_int: str, sensor_iot: List[str] = Query(None)):
+async def iot_anomaly(time_int: str, sensor_iot: str):
     graph = iot.create_anomaly_iot(sensor_iot, time_int)
     data = {}
     try:
