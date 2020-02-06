@@ -112,14 +112,13 @@ async def iot_anomaly(time_int: str, sensor_iot: List[str] = Query(None)):
 async def iot_spectro(time_int: str, sensor_iot: List[str] = Query(None)):
     graph, spectro = iot.create_spectrogram_iot(sensor_iot, time_int)
     data = {}
-    try:
-        data['graph'] = json.loads(graph)
-        spectros = []
-        for s in spectro:
-            spectros.append(s)
-        data['spectro'] = json.loads(spectros)
-    except:
-        pass
+    # try:
+    data['graph'] = json.loads(graph)
+    data['spectro'] = []
+    for s in spectro:
+        data['spectro'].append(json.loads(s))
+    # except:
+    #     pass
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
