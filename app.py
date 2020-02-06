@@ -114,9 +114,7 @@ async def iot_spectro(time_int: str, sensor_iot: List[str] = Query(None)):
     data = {}
     # try:
     data['graph'] = json.loads(graph)
-    data['spectro'] = []
-    for s in spectro:
-        data['spectro'].append(json.loads(s))
+    data['spectro'] = json.loads(spectro)
     # except:
     #     pass
     json_compatible_item_data = jsonable_encoder(data)

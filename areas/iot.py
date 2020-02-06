@@ -66,47 +66,42 @@ def create_spectrogram_iot(sensor, time):
     start, now = helpers.get_time_range(time)
     db = client.iot
     df = pd.DataFrame(
-        list(db.raw.find({'entity_id': {'$in': sensor}, 'timestamp_': {'$gt': start, '$lte': now}}).sort([('timestamp_', -1)])))
+        list(db.raw.find({'entity_id': sensor, 'timestamp_': {'$gt': start, '$lte': now}}).sort([('timestamp_', -1)])))
     if len(df) == 0:
         df = pd.DataFrame(list(db.raw.find(
-            {'entity_id': {'$in': sensor}}).limit(2).sort([('timestamp_', -1)])))
+            {'entity_id': sensor}).limit(2).sort([('timestamp_', -1)])))
 
     data = []
     data_spectro = []
-    for s in sensor:
-        # try:
-        df_s = df[df['entity_id'] == s]
-        df_s.index = pd.to_datetime(df_s['timestamp_'])
-        df_s['state'] = df_s['state'].astype(float)
-        df_s = df_s[['state']].resample('10S').mean()
-        df_s = df_s.interpolate()
-        data.append(
-            go.Scatter(
-                x=df_s.index,
-                y=df_s['state'],
-                name=s,
-                line=dict(
-                    shape='spline',
-                    smoothing=0.7,
-                    width=3
-                ),
-                mode='lines'
-            )
-        )
 
-        f, t, Sxx = signal.spectrogram(df_s['state'], fs=1/10)
-        data_spectro.extend(
-            [
-                go.Heatmap(
-                    x=t,
-                    y=f,
-                    z=Sxx,
-                    name=s,
-                )
-            ]
+    df_s = df
+    df_s.index = pd.to_datetime(df_s['timestamp_'])
+    df_s['state'] = df_s['state'].astype(float)
+    df_s = df_s[['state']].resample('10S').mean()
+    df_s = df_s.interpolate()
+    data.append(
+        go.Scatter(
+            x=df_s.index,
+            y=df_s['state'],
+            name=s,
+            line=dict(
+                shape='spline',
+                smoothing=0.7,
+                width=3
+            ),
+            mode='lines'
         )
-        # except:
-        #     pass
+    )
+
+    f, t, Sxx = signal.spectrogram(df_s['state'], fs=1/10)
+    data_spectro.append(
+        go.Heatmap(
+            x=t,
+            y=f,
+            z=Sxx,
+            name=s,
+        )
+    )
 
     layout = go.Layout(
         autosize=True,
@@ -122,7 +117,7 @@ def create_spectrogram_iot(sensor, time):
     )
     try:
         graphJSON = json.dumps(dict(data=data, layout=layout),
-                            cls=plotly.utils.PlotlyJSONEncoder)
+                               cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
 
@@ -138,9 +133,8 @@ def create_spectrogram_iot(sensor, time):
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
 
-    for idx, spectro in enumerate(data_spectro):
-        data_spectro[idx] = json.dumps(dict(data=spectro, layout=layout_spectro),
-                                    cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON_spectro = json.dumps(dict(data=spectro, layout=layout_spectro),
+                                   cls=plotly.utils.PlotlyJSONEncoder)
 
     client.close()
     return graphJSON, data_spectro
