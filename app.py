@@ -109,7 +109,7 @@ async def iot_anomaly(time_int: str, sensor_iot: List[str] = Query(None)):
 
 
 @app.get('/iot/spectrogram')
-async def iot_spectro(time_int: str, sensor_iot: List[str] = Query(None)):
+async def iot_spectro(time_int: str, sensor_iot: str):
     graph, spectro = iot.create_spectrogram_iot(sensor_iot, time_int)
     data = {}
     # try:
