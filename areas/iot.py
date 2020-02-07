@@ -356,7 +356,7 @@ def create_anomaly_iot(sensor, time):
 
     layout = go.Layout(
         autosize=True,
-        #     colorway=config.colorway,
+        colorway=config.colorway,
         font=dict(family='Ubuntu'),
         showlegend=True,
         legend=dict(orientation='h'),
