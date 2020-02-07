@@ -100,7 +100,7 @@ def create_spectrogram_iot(sensor, time):
     noverlap = int(nperseg-1)
 
     f, t, Sxx = signal.stft(
-        df_s['state'], window='hanning', nperseg=nperseg, noverlap=noverlap, fs=fs, detrend='constant'
+        df_s['state'], window='hanning', nperseg=nperseg, noverlap=noverlap, fs=fs, #detrend='constant'
         #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
     )
 
@@ -224,7 +224,7 @@ def create_anomaly_iot(sensor, time):
     noverlap = int(nperseg-1)
 
     f, t, Sxx = signal.stft(
-        df_s['state'], window='hanning', nperseg=nperseg, noverlap=noverlap, fs=fs, detrend='constant'
+        df_s['state'], window='hanning', nperseg=nperseg, noverlap=noverlap, fs=fs, #detrend='constant'
         #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
     )
 
@@ -282,7 +282,7 @@ def create_anomaly_iot(sensor, time):
             y=df_s['state'],
             name=sensor,
             line=dict(
-                color='#e3a622',
+                # color='#e3a622',
                 shape='spline',
                 smoothing=0.7,
                 width=3
