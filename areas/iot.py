@@ -96,18 +96,21 @@ def create_spectrogram_iot(sensor, time):
     )
 
     fs = 1/60
-    nperseg = np.minimum(len(df_s['state']), 128)
-    noverlap = int(7/8*nperseg)
+    nperseg = np.minimum(len(df_s['state']), 56)
+    noverlap = int(nperseg-1)
 
-    f, t, Sxx = signal.spectrogram(
-        df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
+    f, t, Sxx = signal.stft(
+        df_s['state'], window='hanning', nperseg=nperseg, noverlap=noverlap, fs=fs, detrend='constant'
+        #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
     )
+
+    Sxx = np.abs(Sxx)
 
     data_spectro.append(
         go.Heatmap(
             x=t,
             y=f,
-            z=np.log(Sxx),
+            z=Sxx,
             name=sensor,
             colorscale='Viridis',
         )
