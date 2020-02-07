@@ -98,10 +98,11 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
 
 @app.get('/iot/anomaly')
 async def iot_anomaly(time_int: str, sensor_iot: str):
-    graph = iot.create_anomaly_iot(sensor_iot, time_int)
+    graph, anomaly = iot.create_anomaly_iot(sensor_iot, time_int)
     data = {}
     try:
         data['graph'] = json.loads(graph)
+        data['anomaly'] = json.loads(anomaly)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
@@ -112,11 +113,11 @@ async def iot_anomaly(time_int: str, sensor_iot: str):
 async def iot_spectro(time_int: str, sensor_iot: str):
     graph, spectro = iot.create_spectrogram_iot(sensor_iot, time_int)
     data = {}
-    # try:
-    data['graph'] = json.loads(graph)
-    data['spectro'] = json.loads(spectro)
-    # except:
-    #     pass
+    try:
+        data['graph'] = json.loads(graph)
+        data['spectro'] = json.loads(spectro)
+    except:
+        pass
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 

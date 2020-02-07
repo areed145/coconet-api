@@ -209,8 +209,6 @@ def create_anomaly_iot(sensor, time):
         df = pd.DataFrame(list(db.raw.find(
             {'entity_id': sensor}).limit(2).sort([('timestamp_', -1)])))
 
-    data = []
-
     df_s = df
     df_s.index = pd.to_datetime(df_s['timestamp_'])
     df_s['state'] = df_s['state'].astype(float)
@@ -218,47 +216,66 @@ def create_anomaly_iot(sensor, time):
     df_s = df_s.interpolate()
 
     fs = 1/60
-    nperseg = np.minimum(len(df_s['state']), 128)
-    noverlap = int(7/8*nperseg)
-    ntrain = int(len(df_s['state'])/2)
+    nperseg = np.minimum(len(df_s['state']), 56)
+    noverlap = int(nperseg-1)
 
-    f, t, Sxx = signal.spectrogram(
-        df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
+    f, t, Sxx = signal.stft(
+        df_s['state'], window='hanning', nperseg=nperseg, noverlap=noverlap, fs=fs, detrend='constant'
+        #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
     )
+
+    Sxx = np.abs(Sxx)
+    # Sxx = np.log(Sxx)
 
     scaler = preprocessing.MinMaxScaler()
 
-    X_train = scaler.fit_transform(Sxx.T[:ntrain])
+    ntrain = int(len(Sxx.T)/2)
 
-    X_test = scaler.transform(Sxx.T[ntrain:])
+    X = pd.DataFrame(
+        Sxx.T,
+        index=t
+    )
+
+    X_train = scaler.fit_transform(X.iloc[:ntrain, :])
+
+    X_test = scaler.transform(X.iloc[ntrain:, :])
 
     pca = PCA(n_components=2, svd_solver='full')
 
     X_train_pca = pca.fit_transform(X_train)
     X_train_pca = pd.DataFrame(X_train_pca)
-    X_train_pca.index = X_train.index
+    X_train_pca.index = X.iloc[:ntrain, :].index
 
     X_test_pca = pca.transform(X_test)
     X_test_pca = pd.DataFrame(X_test_pca)
-    X_test_pca.index = X_test.index
+    X_test_pca.index = X.iloc[ntrain:, :].index
 
     data_train = np.array(X_train_pca.values)
     data_test = np.array(X_test_pca.values)
 
-    cov_matrix, inv_cov_matrix = cov_matrix(data_train)
+    cov_mx, inv_cov_mx = cov_matrix(data_train)
 
     mean_distr = data_train.mean(axis=0)
 
     dist_test = mahalanobis_dist(
-        inv_cov_matrix, mean_distr, data_test, verbose=False)
+        inv_cov_mx, mean_distr, data_test, verbose=False)
     dist_train = mahalanobis_dist(
-        inv_cov_matrix, mean_distr, data_train, verbose=False)
-    threshold = md_threshold(dist_test, extreme=True)
+        inv_cov_mx, mean_distr, data_train, verbose=False)
+
+    dist_all = np.concatenate([dist_train, dist_test], axis=0)
+    thresh = md_threshold(dist_all)
+
+    df_s['dist'] = dist_all[:len(df_s)]
+    df_s['thresh'] = thresh
+
+    data = []
+    data_anom = []
+    # data_hm = []
 
     data.append(
         go.Scatter(
-            x=df_s[:ntrain].index,
-            y=df_s[:ntrain]['state'],
+            x=df_s.index,
+            y=df_s['state'],
             name=sensor,
             line=dict(
                 shape='spline',
@@ -270,21 +287,21 @@ def create_anomaly_iot(sensor, time):
     )
     data.append(
         go.Scatter(
-            x=df_s[ntrain:].index,
-            y=df_s[ntrain:]['state'],
+            x=df_s[df_s['dist'] > thresh].index,
+            y=df_s[df_s['dist'] > thresh]['state'],
             name=sensor,
             line=dict(
                 shape='spline',
                 smoothing=0.7,
                 width=3
             ),
-            mode='lines'
+            mode='markers'
         )
     )
-    data.append(
+    data_anom.append(
         go.Scatter(
-            x=df_s[ntrain:].index,
-            y=threshold,
+            x=df_s.index,
+            y=df_s['dist'],
             name=sensor,
             line=dict(
                 shape='spline',
@@ -294,10 +311,46 @@ def create_anomaly_iot(sensor, time):
             mode='lines'
         )
     )
+    data_anom.append(
+        go.Scatter(
+            x=df_s.index,
+            y=df_s['thresh'],
+            name=sensor,
+            line=dict(
+                shape='spline',
+                smoothing=0.7,
+                width=3
+            ),
+            mode='lines'
+        )
+    )
+    data_anom.append(
+        go.Scatter(
+            x=df_s[df_s['dist'] > thresh].index,
+            y=df_s[df_s['dist'] > thresh]['dist'],
+            name=sensor,
+            line=dict(
+                shape='spline',
+                smoothing=0.7,
+                width=3
+            ),
+            mode='markers'
+        )
+    )
+
+    # data_hm.append(
+    #     go.Heatmap(
+    #         x=t,
+    #         y=f,
+    #         z=Sxx,
+    #         name=sensor,
+    #         colorscale='Viridis',
+    #     )
+    # )
 
     layout = go.Layout(
         autosize=True,
-        colorway=config.colorway,
+        #     colorway=config.colorway,
         font=dict(family='Ubuntu'),
         showlegend=True,
         legend=dict(orientation='h'),
@@ -307,11 +360,30 @@ def create_anomaly_iot(sensor, time):
         uirevision=True,
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
+
+    # layout_hm = go.Layout(
+    #     autosize=True,
+    #     font=dict(family='Ubuntu'),
+    #     showlegend=False,
+    #     # legend=dict(orientation='h'),
+    #     xaxis=dict(range=[start, now]),
+    #     hovermode='closest',
+    #     hoverlabel=dict(font=dict(family='Ubuntu')),
+    #     uirevision=True,
+    #     margin=dict(r=50, t=30, b=30, l=60, pad=0),
+    # )
+
     try:
         graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_anom = json.dumps(dict(data=data_anom, layout=layout),
+                                    cls=plotly.utils.PlotlyJSONEncoder)
+        # graphJSON_hm = json.dumps(dict(data=data_hm, layout=layout),
+        #                           cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
+        graphJSON_anom = None
+        # graphJSON_hm = None
 
     client.close()
-    return graphJSON
+    return graphJSON, graphJSON_anom
