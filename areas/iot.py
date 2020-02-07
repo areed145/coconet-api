@@ -138,6 +138,7 @@ def create_spectrogram_iot(sensor, time):
         autosize=True,
         font=dict(family='Ubuntu'),
         showlegend=False,
+        showscale=False,
         # legend=dict(orientation='h'),
         xaxis=dict(range=[start, now]),
         hovermode='closest',
