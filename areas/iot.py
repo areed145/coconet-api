@@ -112,7 +112,7 @@ def create_spectrogram_iot(sensor, time):
             y=f,
             z=Sxx,
             name=sensor,
-            colorscale='Viridis',
+            colorscale='Portland',
             showscale=False,
         )
     )
@@ -282,6 +282,7 @@ def create_anomaly_iot(sensor, time):
             y=df_s['state'],
             name=sensor,
             line=dict(
+                color='#e3a622',
                 shape='spline',
                 smoothing=0.7,
                 width=3
@@ -293,12 +294,10 @@ def create_anomaly_iot(sensor, time):
         go.Scatter(
             x=df_s[df_s['dist'] > thresh].index,
             y=df_s[df_s['dist'] > thresh]['state'],
-            name=sensor,
-            line=dict(
-                shape='spline',
-                smoothing=0.7,
-                width=3
-            ),
+            name='anomalies',
+            marker=dict(
+                color='#eb2369'
+            )
             mode='markers'
         )
     )
@@ -308,6 +307,7 @@ def create_anomaly_iot(sensor, time):
             y=df_s['dist'],
             name=sensor,
             line=dict(
+                color='#4823eb',
                 shape='spline',
                 smoothing=0.7,
                 width=3
@@ -321,6 +321,7 @@ def create_anomaly_iot(sensor, time):
             y=df_s['thresh'],
             name=sensor,
             line=dict(
+                color='#de1b4f',
                 shape='spline',
                 smoothing=0.7,
                 width=3
@@ -334,6 +335,7 @@ def create_anomaly_iot(sensor, time):
             y=df_s[df_s['dist'] > thresh]['dist'],
             name=sensor,
             line=dict(
+                color='#de1b4f',
                 shape='spline',
                 smoothing=0.7,
                 width=3
