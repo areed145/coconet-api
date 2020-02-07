@@ -96,7 +96,7 @@ def create_spectrogram_iot(sensor, time):
     )
 
     fs = 1/60
-    nperseg = np.minimum(len(df_s['state']), 56)
+    nperseg = np.minimum(len(df_s['state']), 128)
     noverlap = int(nperseg-1)
 
     f, t, Sxx = signal.stft(
@@ -219,7 +219,7 @@ def create_anomaly_iot(sensor, time):
     df_s = df_s.interpolate()
 
     fs = 1/60
-    nperseg = np.minimum(len(df_s['state']), 56)
+    nperseg = np.minimum(len(df_s['state']), 128)
     noverlap = int(nperseg-1)
 
     f, t, Sxx = signal.stft(
