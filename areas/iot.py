@@ -113,6 +113,7 @@ def create_spectrogram_iot(sensor, time):
             z=Sxx,
             name=sensor,
             colorscale='Viridis',
+            showscale=False,
         )
     )
 
@@ -138,7 +139,6 @@ def create_spectrogram_iot(sensor, time):
         autosize=True,
         font=dict(family='Ubuntu'),
         showlegend=False,
-        showscale=False,
         # legend=dict(orientation='h'),
         xaxis=dict(range=[start, now]),
         hovermode='closest',
