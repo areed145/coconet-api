@@ -297,7 +297,7 @@ def create_anomaly_iot(sensor, time):
             name='anomalies',
             marker=dict(
                 color='#eb2369'
-            )
+            ),
             mode='markers'
         )
     )
