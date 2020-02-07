@@ -19,6 +19,7 @@ origins = [
     'https://api.kk6gpv.net',
     'https://idpgis.ncep.noaa.gov',
     'https://nowcoast.noaa.gov',
+    'https://fosc-dev.azure.chevron.com',
     'http://localhost',
     'http://localhost:3000',
 ]
