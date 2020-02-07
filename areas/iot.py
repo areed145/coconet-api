@@ -319,7 +319,7 @@ def create_anomaly_iot(sensor, time):
         go.Scatter(
             x=df_s.index,
             y=df_s['thresh'],
-            name=sensor,
+            name='threshold',
             line=dict(
                 color='#de1b4f',
                 shape='spline',
@@ -333,7 +333,7 @@ def create_anomaly_iot(sensor, time):
         go.Scatter(
             x=df_s[df_s['dist'] > thresh].index,
             y=df_s[df_s['dist'] > thresh]['dist'],
-            name=sensor,
+            name='anomalies',
             line=dict(
                 color='#de1b4f',
                 shape='spline',
