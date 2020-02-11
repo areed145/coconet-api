@@ -113,30 +113,30 @@ def ci_plot(df_offsets, prop, api, c1, c2, c3):
     ]
 
 
-def get_offset_distributions(api, radius):
-    client = MongoClient(os.environ['MONGODB_CLIENT'])
-    db = client.petroleum
-    docs = db.doggr.find(
-        {'api': api}, {'api': 1, 'latitude': 1, 'longitude': 1})
-    for x in docs:
-        header = dict(x)
-    try:
-        r = radius/100
-        lat = header['latitude']
-        lon = header['longitude']
-        df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
-                                              'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
+# def get_offset_distributions(api, radius):
+#     client = MongoClient(os.environ['MONGODB_CLIENT'])
+#     db = client.petroleum
+#     docs = db.doggr.find(
+#         {'api': api}, {'api': 1, 'latitude': 1, 'longitude': 1})
+#     for x in docs:
+#         header = dict(x)
+#     try:
+#         r = radius/100
+#         lat = header['latitude']
+#         lon = header['longitude']
+#         df = pd.DataFrame(list(db.doggr.find({'latitude': {'$gt': lat-r, '$lt': lat+r},
+#                                               'longitude': {'$gt': lon-r, '$lt': lon+r}}, {'api': 1, 'latitude': 1, 'longitude': 1})))
 
-        df['dist'] = helpers.haversine_np(
-            lon, lat, df['longitude'], df['latitude'])
-        df = df[df['dist'] <= radius]
-        df.sort_values(by='dist', inplace=True)
-        df = df[:25]
-        offsets = df['api'].tolist()
-        dists = df['dist'].tolist()
+#         df['dist'] = helpers.haversine_np(
+#             lon, lat, df['longitude'], df['latitude'])
+#         df = df[df['dist'] <= radius]
+#         df.sort_values(by='dist', inplace=True)
+#         df = df[:25]
+#         offsets = df['api'].tolist()
+#         dists = df['dist'].tolist()
 
-        df_offsets = get_prodinj(offsets)
-        df_offsets['date'] = pd.to_datetime(df_offsets['date'])
+#         df_offsets = get_prodinj(offsets)
+#         df_offsets['date'] = pd.to_datetime(df_offsets['date'])
 
 
 def get_offsets_oilgas(api, radius, axis):
