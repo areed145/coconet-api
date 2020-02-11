@@ -127,7 +127,7 @@ def get_photo_rows(id, width):
             data=data,
             layout=layout
         ),
-        cls=plotly.utils.PlotlyjsonEncoder
+        cls=plotly.utils.PlotlyJSONEncoder
     )
     return rows, graphjson, gal['title'], gal['count_photos'], gal['count_views']
 
@@ -179,7 +179,7 @@ def get_photo(id):
                 data=data,
                 layout=layout
             ),
-            cls=plotly.utils.PlotlyjsonEncoder
+            cls=plotly.utils.PlotlyJSONEncoder
         )
     except:
         graphjson = None
