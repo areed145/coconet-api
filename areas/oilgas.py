@@ -230,48 +230,48 @@ def get_crm(api):
     docs = db.doggr.find({'api': api}, {'crm': 1})
     for x in docs:
         header = dict(x)
-    try:
-        df = pd.DataFrame(header['crm']['cons'])
-        df['gain'] = df['gain'].apply(lambda x: '%.3f' % x)
-        df['gain'] = df['gain'].astype(float)
-        df['dist'] = helpers.haversine_np(
-            df['x0'], df['y0'], df['x1'], df['y1'])
-        df['distapi'] = df.apply(lambda x: str(
-            np.round(x['dist'], 3))+' mi - '+str(x['to']), axis=1)
-        df = df.sort_values(by='distapi', ascending=True).reset_index()
-        xs = df['gain']
-        ys = df['distapi']
-        data = [
-            go.Bar(
-                y=ys,
-                x=xs,
-                name='crm_gains',
-                orientation='h',
-                marker=dict(
-                    color=xs,
-                    colorscale=config.cs_gnylrd,
-                    cmin=0,
-                    cmax=1,
-                )
+    # try:
+    df = pd.DataFrame(header['crm']['cons'])
+    df['gain'] = df['gain'].apply(lambda x: '%.3f' % x)
+    df['gain'] = df['gain'].astype(float)
+    df['dist'] = helpers.haversine_np(
+        df['x0'], df['y0'], df['x1'], df['y1'])
+    df['distapi'] = df.apply(lambda x: str(
+        np.round(x['dist'], 3))+' mi - '+str(x['to']), axis=1)
+    df = df.sort_values(by='distapi', ascending=True).reset_index()
+    xs = df['gain']
+    ys = df['distapi']
+    data = [
+        go.Bar(
+            y=ys,
+            x=xs,
+            name='crm_gains',
+            orientation='h',
+            marker=dict(
+                color=xs,
+                colorscale=config.cs_gnylrd,
+                cmin=0,
+                cmax=1,
             )
-        ]
-        layout = go.Layout(
-            autosize=True,
-            font=dict(family='Ubuntu'),
-            hoverlabel=dict(font=dict(family='Ubuntu')),
-            margin=dict(r=10, t=10, b=30, l=150, pad=0),
-            xaxis=dict(
-                # range=[0, 1],
-                categoryorder='array',
-                categoryarray=[x for _, x in sorted(zip(ys, xs))]
-            ),
-            yaxis=dict(autorange='reversed'),
-            showlegend=False,
         )
-        graphJSON_crm = json.dumps(
-            dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder)
-    except:
-        graphJSON_crm = None
+    ]
+    layout = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        margin=dict(r=10, t=10, b=30, l=150, pad=0),
+        xaxis=dict(
+            # range=[0, 1],
+            categoryorder='array',
+            categoryarray=[x for _, x in sorted(zip(ys, xs))]
+        ),
+        yaxis=dict(autorange='reversed'),
+        showlegend=False,
+    )
+    graphJSON_crm = json.dumps(
+        dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder)
+    # except:
+    #     graphJSON_crm = None
     client.close()
     return graphJSON_crm
 

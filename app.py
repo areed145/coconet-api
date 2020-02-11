@@ -218,10 +218,11 @@ async def oilgas_decline_graph(api: str, axis: str):
 async def oilgas_crm_graph(api: str):
     graph_crm = oilgas.get_crm(str(api))
     data = {}
-    try:
-        data['graph_crm'] = json.loads(graph_crm)
-    except:
-        pass
+    data['graph_crm'] = json.loads(graph_crm)
+    # try:
+    #     data['graph_crm'] = json.loads(graph_crm)
+    # except:
+    #     pass
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 
