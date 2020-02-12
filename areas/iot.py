@@ -307,7 +307,7 @@ def create_anomaly_iot(sensor, time):
         go.Scatter(
             x=df_s.index,
             y=df_s['dist'],
-            name=sensor,
+            name='distance',
             line=dict(
                 color='#4823eb',
                 shape='spline',
