@@ -351,7 +351,7 @@ def create_anomaly_iot(sensor, time):
             y=f,
             z=Sxx,
             name=sensor,
-            colorscale='Portland',
+            colorscale='Jet',
             showscale=False,
         )
     )
