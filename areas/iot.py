@@ -224,11 +224,16 @@ def create_anomaly_iot(sensor, time):
     nperseg = np.minimum(len(df_s['state']), 128)
     noverlap = int(nperseg-1)
 
-    f, t, Sxx = signal.stft(
-        # detrend='constant'
-        df_s['state'], window='blackmanharris', nperseg=nperseg, noverlap=noverlap, fs=fs,
-        #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
-    )
+    # f, t, Sxx = signal.stft(
+    #     # detrend='constant'
+    #     df_s['state'], window='blackmanharris', nperseg=nperseg, noverlap=noverlap, fs=fs,
+    #     #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
+    # )
+
+    f = np.arange(1, 31)
+    Sxx = signal.cwt(df_s['state'], signal.ricker, f)
+    t = df_s['timestamp_']
+
 
     Sxx = np.abs(Sxx)
     # Sxx = np.log(Sxx)
