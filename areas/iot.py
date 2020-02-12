@@ -232,7 +232,7 @@ def create_anomaly_iot(sensor, time):
 
     f = np.arange(1, 31)
     Sxx = signal.cwt(df_s['state'], signal.ricker, f)
-    t = df_s['timestamp_']
+    t = df_s.index
 
 
     Sxx = np.abs(Sxx)
