@@ -349,7 +349,7 @@ def create_anomaly_iot(sensor, time):
         go.Heatmap(
             x=t,
             y=f,
-            z=Sxx,
+            z=np.sqrt(Sxx),
             name=sensor,
             colorscale='Jet',
             showscale=False,
