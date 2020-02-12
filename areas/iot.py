@@ -100,7 +100,8 @@ def create_spectrogram_iot(sensor, time):
     noverlap = int(nperseg-1)
 
     f, t, Sxx = signal.stft(
-        df_s['state'], window='blackmanharris', nperseg=nperseg, noverlap=noverlap, fs=fs, #detrend='constant'
+        # detrend='constant'
+        df_s['state'], window='blackmanharris', nperseg=nperseg, noverlap=noverlap, fs=fs,
         #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
     )
 
@@ -224,7 +225,8 @@ def create_anomaly_iot(sensor, time):
     noverlap = int(nperseg-1)
 
     f, t, Sxx = signal.stft(
-        df_s['state'], window='blackmanharris', nperseg=nperseg, noverlap=noverlap, fs=fs, #detrend='constant'
+        # detrend='constant'
+        df_s['state'], window='blackmanharris', nperseg=nperseg, noverlap=noverlap, fs=fs,
         #     df_s['state'], window='hanning', mode='magnitude', nperseg=nperseg, noverlap=noverlap, fs=fs
     )
 
@@ -274,7 +276,7 @@ def create_anomaly_iot(sensor, time):
 
     data = []
     data_anom = []
-    # data_hm = []
+    data_spectro = []
 
     data.append(
         go.Scatter(
@@ -343,16 +345,16 @@ def create_anomaly_iot(sensor, time):
             mode='markers'
         )
     )
-
-    # data_hm.append(
-    #     go.Heatmap(
-    #         x=t,
-    #         y=f,
-    #         z=Sxx,
-    #         name=sensor,
-    #         colorscale='Viridis',
-    #     )
-    # )
+    data_spectro.append(
+        go.Heatmap(
+            x=t,
+            y=f,
+            z=Sxx,
+            name=sensor,
+            colorscale='Portland',
+            showscale=False,
+        )
+    )
 
     layout = go.Layout(
         autosize=True,
@@ -367,29 +369,29 @@ def create_anomaly_iot(sensor, time):
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
 
-    # layout_hm = go.Layout(
-    #     autosize=True,
-    #     font=dict(family='Ubuntu'),
-    #     showlegend=False,
-    #     # legend=dict(orientation='h'),
-    #     xaxis=dict(range=[start, now]),
-    #     hovermode='closest',
-    #     hoverlabel=dict(font=dict(family='Ubuntu')),
-    #     uirevision=True,
-    #     margin=dict(r=50, t=30, b=30, l=60, pad=0),
-    # )
+    layout_spectro = go.Layout(
+        autosize=True,
+        font=dict(family='Ubuntu'),
+        showlegend=False,
+        # legend=dict(orientation='h'),
+        xaxis=dict(range=[start, now]),
+        hovermode='closest',
+        hoverlabel=dict(font=dict(family='Ubuntu')),
+        uirevision=True,
+        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+    )
 
     try:
         graphJSON = json.dumps(dict(data=data, layout=layout),
                                cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON_anom = json.dumps(dict(data=data_anom, layout=layout),
                                     cls=plotly.utils.PlotlyJSONEncoder)
-        # graphJSON_hm = json.dumps(dict(data=data_hm, layout=layout),
-        #                           cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON_spectro = json.dumps(dict(data=data_spectro, layout=layout_spectro),
+                                       cls=plotly.utils.PlotlyJSONEncoder)
     except:
         graphJSON = None
         graphJSON_anom = None
-        # graphJSON_hm = None
+        graphJSON_spectro = None
 
     client.close()
-    return graphJSON, graphJSON_anom
+    return graphJSON, graphJSON_anom, graphJSON_spectro

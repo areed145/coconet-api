@@ -99,11 +99,12 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
 
 @app.get('/iot/anomaly')
 async def iot_anomaly(time_int: str, sensor_iot: str):
-    graph, anomaly = iot.create_anomaly_iot(sensor_iot, time_int)
+    graph, anomaly, spectro = iot.create_anomaly_iot(sensor_iot, time_int)
     data = {}
     try:
         data['graph'] = json.loads(graph)
         data['anomaly'] = json.loads(anomaly)
+        data['spectro'] = json.loads(spectro)
     except:
         pass
     json_compatible_item_data = jsonable_encoder(data)
