@@ -20,6 +20,9 @@ origins = [
     'https://idpgis.ncep.noaa.gov',
     'https://nowcoast.noaa.gov',
     'https://fosc-dev.azure.chevron.com',
+    'https://fosc-dev-dashboard.azurewebsites.net',
+    'https://fosc-dev-api.azurewebsites.net',
+    'http://localhost',
     'http://localhost',
     'http://localhost:3000',
 ]
