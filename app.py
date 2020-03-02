@@ -2,6 +2,7 @@ import os
 # import atexit
 import json
 import datetime
+import time
 
 from areas import aprs, flickr, iot, oilgas, weather
 from fastapi import FastAPI, Query, Form
@@ -65,8 +66,9 @@ def main():
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
-        dt = await datetime.datetime.utcnow()
+        dt = datetime.datetime.utcnow()
         await websocket.send_text(f"UTC is: {dt}")
+        time.sleep(1)
 
 
 @app.websocket('/ws/message')
