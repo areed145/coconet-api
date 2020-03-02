@@ -4,7 +4,8 @@ import json
 import datetime
 
 from areas import aprs, flickr, iot, oilgas, weather
-from fastapi import FastAPI, Query, Form, WebSocket
+from fastapi import FastAPI, Query, Form
+from starlette.websockets import WebSocket
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 import uvicorn
