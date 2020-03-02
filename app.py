@@ -4,7 +4,7 @@ import json
 import datetime
 
 from areas import aprs, flickr, iot, oilgas, weather
-from fastapi import FastAPI, Query, Form
+from fastapi import FastAPI, Query, Form, WebSocket
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 import uvicorn
@@ -12,7 +12,11 @@ from typing import List
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 
-app = FastAPI()
+app = FastAPI(
+    title="Coconet",
+    description="API supporting kk6gpv.net",
+    version="0.1",
+)
 
 origins = [
     'https://www.kk6gpv.net',
@@ -54,6 +58,14 @@ def myconverter(o):
 @app.get('/', tags=['status'])
 def main():
     return {'status': 'active'}
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
 
 
 @app.get('/aprs/latest', tags=['aprs', 'latest'])
