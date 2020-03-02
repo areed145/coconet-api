@@ -61,7 +61,15 @@ def main():
     return {'status': 'active'}
 
 
-@app.websocket("/ws")
+@app.websocket('/ws/time', tags=['websocket'])
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        dt = await datetime.datetime.utcnow()
+        await websocket.send_text(f"UTC is: {dt}")
+
+
+@app.websocket('/ws/message', tags=['websocket'])
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
