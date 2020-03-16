@@ -398,7 +398,7 @@ html = """
         <ul id='messages'>
         </ul>
         <script>
-            var ws = new WebSocket("ws://localhost:8000/ws");
+            var ws = new WebSocket("wss://kk6gpv-api.herokuapp.com/ws");
             ws.onmessage = function(event) {
                 var data = JSON.parse(event.data)
                 console.log(data);
