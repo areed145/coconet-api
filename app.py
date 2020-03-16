@@ -6,13 +6,17 @@ import time
 
 from areas import aprs, flickr, iot, oilgas, weather
 from fastapi import FastAPI, Query, Form
-from starlette.websockets import WebSocket
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 import uvicorn
 from typing import List
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
+
+from starlette.responses import HTMLResponse
+from starlette.websockets import WebSocket, WebSocketDisconnect
+import asyncio
+
 
 app = FastAPI(
     title="Coconet",
@@ -376,3 +380,135 @@ async def weather_soundings_images(sid: str):
     img = weather.get_image(sid)
     json_compatible_item_data = jsonable_encoder(img.decode('unicode_escape'))
     return JSONResponse(content=json_compatible_item_data)
+
+html = """
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body>
+        <h1>WebSocket Bus</h1>
+        <ul id='connections'>
+        </ul>
+        <form action="" onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" autocomplete="off"/>
+            <button>Send</button>
+        </form>
+        <ul id='messages'>
+        </ul>
+        <script>
+            var ws = new WebSocket("ws://localhost:8000/ws");
+            ws.onmessage = function(event) {
+                var data = JSON.parse(event.data)
+                console.log(data);
+
+                var messages = document.getElementById('messages')
+                var message = document.createElement('li')
+                var message_cont = document.createTextNode(data.type + ": " + data.val)
+                message.appendChild(message_cont)
+                messages.appendChild(message)
+
+                if (data.type === 'connections') {
+                    document.getElementById('connections').innerHTML = data.val + " connected"
+                }
+            };
+            function sendMessage(event) {
+                var input = document.getElementById("messageText")
+                ws.send(input.value)
+                input.value = ''
+                event.preventDefault()
+            }
+        </script>
+    </body>
+</html>
+"""
+
+
+@app.get("/chat", tags=['bus', 'websocket'])
+async def get():
+    return HTMLResponse(html)
+
+
+@app.websocket('/ws')
+async def websocket_endpoint(websocket: WebSocket):
+    await notifier.connect(websocket)
+    try:
+        while True:
+            message = await websocket.receive_text()
+            await notifier.push(f"{message}")
+    except WebSocketDisconnect:
+        notifier.remove(websocket)
+
+
+@app.get("/push/{message}", tags=['bus', 'websocket'])
+async def push_to_connected_websockets(message):
+    await notifier.push(f"{message}")
+
+
+@app.on_event("startup")
+async def startup():
+    # Prime the push notification generator
+    await notifier.generator.asend(None)
+
+
+class Notifier:
+    def __init__(self):
+        self.connections: List[WebSocket] = []
+        self.generator = self.get_notification_generator()
+        self.num_cons = 0
+        self.init = True
+
+    async def get_notification_generator(self):
+        while True:
+            message = yield
+            await self._notify(message)
+
+    async def push(self, msg):
+        print(msg)
+        data = {}
+        data['type'] = 'message'
+        data['val'] = msg
+        await self.generator.asend(jsonable_encoder(data))
+
+    async def timer(self):
+        while True:
+            data = {}
+            data['type'] = 'timer'
+            data['val'] = str(datetime.datetime.utcnow().isoformat())
+            await self.generator.asend(jsonable_encoder(data))
+            await asyncio.sleep(5)
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        if self.init == True:
+            print('first connection')
+            self.init = False
+            await self.timer()
+        self.connections.append(websocket)
+        self.num_cons = len(self.connections)
+        data = {}
+        data['type'] = 'connections'
+        data['val'] = str(self.num_cons)
+        await self.generator.asend(jsonable_encoder(data))
+
+    def remove(self, websocket: WebSocket):
+        self.connections.remove(websocket)
+
+    async def _notify(self, payload):
+        living_connections = []
+        while len(self.connections) > 0:
+            # Looping like this is necessary in case a disconnection is handled
+            # during await websocket.send_text(message)
+            websocket = self.connections.pop()
+            await websocket.send_json(payload)
+
+            living_connections.append(websocket)
+        self.connections = living_connections
+
+
+notifier = Notifier()
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
