@@ -31,6 +31,7 @@ origins = [
     'https://fosc-dev.azure.chevron.com',
     'https://fosc-dev-dashboard.azurewebsites.net',
     'https://fosc-dev-api.azurewebsites.net',
+    'http://www.kk6gpv.net',
     'http://localhost',
     'http://localhost',
     'http://localhost:3000',
