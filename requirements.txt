@@ -8,7 +8,7 @@ email-validator
 fastapi==0.45.0
 flickr-api==0.7.3
 gunicorn==19.9.0
-httplib2==0.13.1
+httplib2==0.18.0
 idna==2.8
 isort==4.3.21
 itsdangerous==1.1.0
