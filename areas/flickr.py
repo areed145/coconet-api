@@ -5,12 +5,11 @@ import numpy as np
 import plotly
 import plotly.graph_objs as go
 import json
-from utils import config, helpers
 
-client = MongoClient(os.environ['MONGODB_CLIENT'])
+client = MongoClient(os.environ["MONGODB_CLIENT"])
 db = client.flickr
 
-os.environ['MAPBOX_TOKEN'] = os.environ['MAPBOX_TOKEN']
+os.environ["MAPBOX_TOKEN"] = os.environ["MAPBOX_TOKEN"]
 
 
 def load_gals():
@@ -24,21 +23,21 @@ def get_gal_rows(width):
     frames = []
     idx = 1
     for gal in gals:
-        if (idx/width) != (idx//width):
+        if (idx / width) != (idx // width):
             frames.append(
                 {
-                    'caption': gal['title'] + ' - ' + str(gal['count_photos']),
-                    'thumb': gal['primary'],
-                    'kk6gpv_link': '/gallery/'+gal['id']
+                    "caption": gal["title"] + " - " + str(gal["count_photos"]),
+                    "thumb": gal["primary"],
+                    "kk6gpv_link": "/gallery/" + gal["id"],
                 },
             )
             idx += 1
         else:
             frames.append(
                 {
-                    'caption': gal['title'] + ' - ' + str(gal['count_photos']),
-                    'thumb': gal['primary'],
-                    'kk6gpv_link': '/gallery/'+gal['id']
+                    "caption": gal["title"] + " - " + str(gal["count_photos"]),
+                    "thumb": gal["primary"],
+                    "kk6gpv_link": "/gallery/" + gal["id"],
                 },
             )
             rows.append(frames)
@@ -49,37 +48,37 @@ def get_gal_rows(width):
 
 
 def get_photo_rows(id, width):
-    gal = list(db.galleries.find({'id': id}))[0]
+    gal = list(db.galleries.find({"id": id}))[0]
     rows = []
     frames = []
     lats = []
     lons = []
     idx = 1
-    for phid in gal['photos']:
-        if (idx/width) != (idx//width):
+    for phid in gal["photos"]:
+        if (idx / width) != (idx // width):
             frames.append(
                 {
-                    'thumb': gal['photos'][phid]['thumb'],
-                    'kk6gpv_link': '/photo/'+phid
+                    "thumb": gal["photos"][phid]["thumb"],
+                    "kk6gpv_link": "/photo/" + phid,
                 },
             )
             try:
-                lats.append(float(gal['photos'][phid]['latitude']))
-                lons.append(float(gal['photos'][phid]['longitude']))
-            except:
+                lats.append(float(gal["photos"][phid]["latitude"]))
+                lons.append(float(gal["photos"][phid]["longitude"]))
+            except Exception:
                 pass
             idx += 1
         else:
             frames.append(
                 {
-                    'thumb': gal['photos'][phid]['thumb'],
-                    'kk6gpv_link': '/photo/'+phid
+                    "thumb": gal["photos"][phid]["thumb"],
+                    "kk6gpv_link": "/photo/" + phid,
                 },
             )
             try:
-                lats.append(float(gal['photos'][phid]['latitude']))
-                lons.append(float(gal['photos'][phid]['longitude']))
-            except:
+                lats.append(float(gal["photos"][phid]["latitude"]))
+                lons.append(float(gal["photos"][phid]["longitude"]))
+            except Exception:
                 pass
             rows.append(frames)
             frames = []
@@ -93,94 +92,75 @@ def get_photo_rows(id, width):
         go.Scattermapbox(
             lat=lats,
             lon=lons,
-            mode='markers',
-            marker=dict(
-                size=10,
-                color='#2EF4F1',
-            )
+            mode="markers",
+            marker=dict(size=10, color="#2EF4F1",),
         )
     ]
     layout = go.Layout(
         autosize=True,
-        font=dict(family='Ubuntu'),
+        font=dict(family="Ubuntu"),
         showlegend=False,
-        hovermode='closest',
-        hoverlabel=dict(
-            font=dict(
-                family='Ubuntu'
-            )
-        ),
+        hovermode="closest",
+        hoverlabel=dict(font=dict(family="Ubuntu")),
         uirevision=True,
         margin=dict(r=0, t=0, b=0, l=0, pad=0),
         mapbox=dict(
             bearing=0,
             center=dict(lat=lat_c, lon=lon_c),
-            accesstoken=os.environ['MAPBOX_TOKEN'],
-            style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+            accesstoken=os.environ["MAPBOX_TOKEN"],
+            style="mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu",
             pitch=0,
-            zoom=4
-        )
+            zoom=4,
+        ),
     )
 
     graphjson = json.dumps(
-        dict(
-            data=data,
-            layout=layout
-        ),
-        cls=plotly.utils.PlotlyJSONEncoder
+        dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder
     )
-    return rows, graphjson, gal['title'], gal['count_photos'], gal['count_views']
+    return (
+        rows,
+        graphjson,
+        gal["title"],
+        gal["count_photos"],
+        gal["count_views"],
+    )
 
 
 def get_photo(id):
-    image = list(db.photos.find({'id': id}))[0]
-    image.pop('_id')
+    image = list(db.photos.find({"id": id}))[0]
+    image.pop("_id")
     try:
-        lat_c = float(image['location']['latitude'])
-        lon_c = float(image['location']['longitude'])
+        lat_c = float(image["location"]["latitude"])
+        lon_c = float(image["location"]["longitude"])
         data = [
             go.Scattermapbox(
                 lat=[lat_c],
                 lon=[lon_c],
-                mode='markers',
-                marker=dict(
-                    size=10,
-                    color='#2EF4F1',
-                )
+                mode="markers",
+                marker=dict(size=10, color="#2EF4F1",),
             )
         ]
         layout = go.Layout(
             autosize=True,
-            font=dict(family='Ubuntu'),
+            font=dict(family="Ubuntu"),
             showlegend=False,
-            hovermode='closest',
-            hoverlabel=dict(
-                font=dict(
-                    family='Ubuntu'
-                )
-            ),
+            hovermode="closest",
+            hoverlabel=dict(font=dict(family="Ubuntu")),
             uirevision=True,
             margin=dict(r=0, t=0, b=0, l=0, pad=0),
             mapbox=dict(
                 bearing=0,
-                center=dict(
-                    lat=lat_c,
-                    lon=lon_c
-                ),
-                accesstoken=os.environ['MAPBOX_TOKEN'],
-                style='mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu',
+                center=dict(lat=lat_c, lon=lon_c),
+                accesstoken=os.environ["MAPBOX_TOKEN"],
+                style="mapbox://styles/areed145/ck3j3ab8d0bx31dsp37rshufu",
                 pitch=0,
-                zoom=13
-            )
+                zoom=13,
+            ),
         )
 
         graphjson = json.dumps(
-            dict(
-                data=data,
-                layout=layout
-            ),
-            cls=plotly.utils.PlotlyJSONEncoder
+            dict(data=data, layout=layout), cls=plotly.utils.PlotlyJSONEncoder
         )
-    except:
+    except Exception:
         graphjson = None
     return image, graphjson
