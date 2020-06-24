@@ -1,5 +1,6 @@
 aprslib==0.6.46
 astroid==2.2.5
+aiocache
 certifi==2019.9.11
 chardet==3.0.4
 Click==7.0
