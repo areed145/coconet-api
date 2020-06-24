@@ -132,7 +132,7 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
 
 
 @app.get("/iot/anomaly", tags=["iot", "anomaly"])
-@cached(ttl=60*1)
+@cached(ttl=1)
 async def iot_anomaly(time_int: str, sensor_iot: str):
     graph, anomaly, spectro = iot.create_anomaly_iot(sensor_iot, time_int)
     data = {}
@@ -161,7 +161,7 @@ async def iot_spectro(time_int: str, sensor_iot: str):
 
 
 @app.get("/oilgas/tags/get", tags=["oilgas", "tags"])
-@cached(ttl=1)
+@cached(ttl=10)
 async def oilgas_tags_get(api: str):
     tags = oilgas.get_tags_oilgas(str(api))
     try:
@@ -184,7 +184,7 @@ async def oilgas_tags_set(api: str, tags: List[str] = Query(None)):
 
 
 @app.get("/oilgas/header/tags", tags=["oilgas", "tags"])
-@cached(ttl=1)
+@cached(ttl=10)
 async def oilgas_header_tags(tags: List[str] = Query(None)):
     headers = oilgas.get_header_tags_oilgas(tags)
     data = {}
@@ -229,7 +229,7 @@ async def oilgas_decline_solve(api: str):
 
 
 @app.get("/oilgas/decline/graph", tags=["oilgas", "reservoir", "graph"])
-@cached(ttl=1)
+@cached(ttl=20)
 async def oilgas_decline_graph(api: str, axis: str):
     graph_decline, graph_decline_cum = oilgas.get_decline_oilgas(
         str(api), axis
@@ -313,7 +313,7 @@ async def oilgas_offset_graph(api: str, axis: str):
 
 
 @app.get("/photos/galleries", tags=["photos"])
-@cached(ttl=1)
+@cached(ttl=60*60)
 async def photos_galleries():
     rows = flickr.get_gal_rows(5)
     data = {}
@@ -323,7 +323,7 @@ async def photos_galleries():
 
 
 @app.get("/photos/gallery", tags=["photos"])
-@cached(ttl=1)
+@cached(ttl=60*10)
 async def photos_gallery(id: str):
     rows, map_gal, title, count_photos, count_views = flickr.get_photo_rows(
         id, 5
@@ -339,7 +339,7 @@ async def photos_gallery(id: str):
 
 
 @app.get("/photos/photo", tags=["photos"])
-@cached(ttl=1)
+@cached(ttl=60)
 async def photos_photo(id: str):
     image, map_photo = flickr.get_photo(id)
     data = {}
