@@ -83,6 +83,7 @@ async def websocket_message(websocket: WebSocket):
 
 
 @app.get("/aprs/latest", tags=["aprs", "latest"])
+@cached(ttl=10)
 async def aprs_latest():
     last = aprs.get_aprs_latest()
     data = {}
@@ -92,6 +93,7 @@ async def aprs_latest():
 
 
 @app.get("/aprs/map", tags=["aprs", "map"])
+@cached(ttl=10)
 async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
     map_aprs, plot_speed, plot_alt, plot_course, rows = aprs.create_map_aprs(
         type_aprs, prop_aprs, time_int
@@ -107,6 +109,7 @@ async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
 
 
 @app.get("/aprs/igate_range", tags=["aprs", "graph"])
+@cached(ttl=60*5)
 async def aprs_igate_range(time_int: str):
     range_aprs = aprs.create_range_aprs(time_int)
     data = {}
@@ -116,6 +119,7 @@ async def aprs_igate_range(time_int: str):
 
 
 @app.get("/iot/graph", tags=["iot", "graph"])
+@cached(ttl=1)
 async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
     graph = iot.create_graph_iot(sensor_iot, time_int)
     data = {}
@@ -128,6 +132,7 @@ async def iot_graph(time_int: str, sensor_iot: List[str] = Query(None)):
 
 
 @app.get("/iot/anomaly", tags=["iot", "anomaly"])
+@cached(ttl=60*1)
 async def iot_anomaly(time_int: str, sensor_iot: str):
     graph, anomaly, spectro = iot.create_anomaly_iot(sensor_iot, time_int)
     data = {}
@@ -142,6 +147,7 @@ async def iot_anomaly(time_int: str, sensor_iot: str):
 
 
 @app.get("/iot/spectrogram", tags=["iot", "graph"])
+@cached(ttl=1)
 async def iot_spectro(time_int: str, sensor_iot: str):
     graph, spectro = iot.create_spectrogram_iot(sensor_iot, time_int)
     data = {}
@@ -155,6 +161,7 @@ async def iot_spectro(time_int: str, sensor_iot: str):
 
 
 @app.get("/oilgas/tags/get", tags=["oilgas", "tags"])
+@cached(ttl=1)
 async def oilgas_tags_get(api: str):
     tags = oilgas.get_tags_oilgas(str(api))
     try:
@@ -177,6 +184,7 @@ async def oilgas_tags_set(api: str, tags: List[str] = Query(None)):
 
 
 @app.get("/oilgas/header/tags", tags=["oilgas", "tags"])
+@cached(ttl=1)
 async def oilgas_header_tags(tags: List[str] = Query(None)):
     headers = oilgas.get_header_tags_oilgas(tags)
     data = {}
@@ -189,6 +197,7 @@ async def oilgas_header_tags(tags: List[str] = Query(None)):
 
 
 @app.get("/oilgas/header/details", tags=["oilgas", "header"])
+@cached(ttl=60)
 async def oilgas_header_details(api: str):
     header = oilgas.get_header_oilgas(str(api))
     data = {}
@@ -201,6 +210,7 @@ async def oilgas_header_details(api: str):
 
 
 @app.get("/oilgas/prodinj/graph", tags=["oilgas", "production", "graph"])
+@cached(ttl=60)
 async def oilgas_prodinj_graph(api: str, axis: str):
     graph_oilgas = oilgas.get_graph_oilgas(str(api), axis)
     data = {}
@@ -219,6 +229,7 @@ async def oilgas_decline_solve(api: str):
 
 
 @app.get("/oilgas/decline/graph", tags=["oilgas", "reservoir", "graph"])
+@cached(ttl=1)
 async def oilgas_decline_graph(api: str, axis: str):
     graph_decline, graph_decline_cum = oilgas.get_decline_oilgas(
         str(api), axis
@@ -234,6 +245,7 @@ async def oilgas_decline_graph(api: str, axis: str):
 
 
 @app.get("/oilgas/crm/graph", tags=["oilgas", "reservoir", "graph"])
+@cached(ttl=60)
 async def oilgas_crm_graph(api: str):
     graph_crm = oilgas.get_crm(str(api))
     data = {}
@@ -246,6 +258,7 @@ async def oilgas_crm_graph(api: str):
 
 
 @app.get("/oilgas/cyclic/graph", tags=["oilgas", "production", "graph"])
+@cached(ttl=60)
 async def oilgas_cyclic_graph(api: str):
     graph_cyclic_jobs = oilgas.get_cyclic_jobs(str(api))
     data = {}
@@ -258,6 +271,7 @@ async def oilgas_cyclic_graph(api: str):
 
 
 @app.get("/oilgas/offset/graphs", tags=["oilgas", "production", "graph"])
+@cached(ttl=60)
 async def oilgas_offset_graph(api: str, axis: str):
     (
         graph_offset_oil,
@@ -299,6 +313,7 @@ async def oilgas_offset_graph(api: str, axis: str):
 
 
 @app.get("/photos/galleries", tags=["photos"])
+@cached(ttl=1)
 async def photos_galleries():
     rows = flickr.get_gal_rows(5)
     data = {}
@@ -308,6 +323,7 @@ async def photos_galleries():
 
 
 @app.get("/photos/gallery", tags=["photos"])
+@cached(ttl=1)
 async def photos_gallery(id: str):
     rows, map_gal, title, count_photos, count_views = flickr.get_photo_rows(
         id, 5
@@ -323,6 +339,7 @@ async def photos_gallery(id: str):
 
 
 @app.get("/photos/photo", tags=["photos"])
+@cached(ttl=1)
 async def photos_photo(id: str):
     image, map_photo = flickr.get_photo(id)
     data = {}
@@ -336,6 +353,7 @@ async def photos_photo(id: str):
 
 
 @app.get("/station/history/graphs", tags=["weather", "graph"])
+@cached(ttl=60*2)
 async def station_history_graphs(time_int: str):
     (
         fig_td,
@@ -361,6 +379,7 @@ async def station_history_graphs(time_int: str):
 
 
 @app.get("/station/live/data", tags=["weather", "latest"])
+@cached(ttl=1)
 async def station_live_data():
     wx = weather.get_wx_latest(sid)
     data = {}
@@ -370,6 +389,7 @@ async def station_live_data():
 
 
 @app.get("/weather/aviation/map", tags=["weather", "map"])
+@cached(ttl=60)
 async def weather_aviation_map(
     prop_awc: str = "flight_category",
     lat: float = 29.78088,
@@ -407,6 +427,7 @@ async def weather_aviation_map(
 
 
 @app.get("/weather/soundings/image", tags=["weather", "image"])
+@cached(ttl=60)
 async def weather_soundings_images(sid: str):
     img = weather.get_image(sid)
     json_compatible_item_data = jsonable_encoder(img.decode("unicode_escape"))
