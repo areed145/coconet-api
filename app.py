@@ -3,6 +3,8 @@ import json
 import datetime
 import time
 
+from aiocache import cached
+
 from areas import aprs, flickr, iot, oilgas, weather
 from fastapi import FastAPI, Query
 from starlette.middleware.cors import CORSMiddleware
@@ -55,8 +57,12 @@ def myconverter(o):
 
 
 @app.get("/", tags=["status"])
-def main():
-    return {"status": "active"}
+@cached(ttl=60)
+async def main():
+    return {
+        "status": "active",
+        "timestamp": str(datetime.datetime.utcnow()),
+    }
 
 
 @app.websocket("/ws/time")
