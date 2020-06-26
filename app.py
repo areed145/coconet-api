@@ -109,7 +109,7 @@ async def aprs_map(type_aprs: str, prop_aprs: str, time_int: str):
 
 
 @app.get("/aprs/igate_range", tags=["aprs", "graph"])
-@cached(ttl=60*5)
+@cached(ttl=60 * 5)
 async def aprs_igate_range(time_int: str):
     range_aprs = aprs.create_range_aprs(time_int)
     data = {}
@@ -313,7 +313,7 @@ async def oilgas_offset_graph(api: str, axis: str):
 
 
 @app.get("/photos/galleries", tags=["photos"])
-@cached(ttl=60*60)
+@cached(ttl=60 * 60)
 async def photos_galleries():
     rows = flickr.get_gal_rows(5)
     data = {}
@@ -323,7 +323,7 @@ async def photos_galleries():
 
 
 @app.get("/photos/gallery", tags=["photos"])
-@cached(ttl=60*10)
+@cached(ttl=60 * 10)
 async def photos_gallery(id: str):
     rows, map_gal, title, count_photos, count_views = flickr.get_photo_rows(
         id, 5
@@ -353,7 +353,7 @@ async def photos_photo(id: str):
 
 
 @app.get("/station/history/graphs", tags=["weather", "graph"])
-@cached(ttl=60*2)
+@cached(ttl=60 * 2)
 async def station_history_graphs(time_int: str):
     (
         fig_td,
