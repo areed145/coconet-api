@@ -3,6 +3,7 @@ aiocache
 dnspython
 fastapi
 flickr-api
+gunicorn
 matplotlib
 numpy
 pandas
