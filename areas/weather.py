@@ -250,9 +250,9 @@ def create_map_awc(
                 below="traces",
                 sourcetype="raster",
                 source=[
-                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"\
-                    "NWS_Forecasts_Guidance_Warnings/NDFD_temp/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:1"\
+                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"
+                    "NWS_Forecasts_Guidance_Warnings/NDFD_temp/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:1"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -263,9 +263,9 @@ def create_map_awc(
                 below="traces",
                 sourcetype="raster",
                 source=[
-                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"\
-                    "NWS_Forecasts_Guidance_Warnings/wpc_precip_hazards/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:0"\
+                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"
+                    "NWS_Forecasts_Guidance_Warnings/wpc_precip_hazards/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:0"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -276,9 +276,9 @@ def create_map_awc(
                 below="traces",
                 sourcetype="raster",
                 source=[
-                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"\
-                    "NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:1"\
+                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"
+                    "NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:1"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -290,9 +290,9 @@ def create_map_awc(
                 # opacity=0.5,
                 sourcetype="raster",
                 source=[
-                    "https://nowcoast.noaa.gov/arcgis/rest/services/"\
-                    "nowcoast/sat_meteo_imagery_time/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:20,8"\
+                    "https://nowcoast.noaa.gov/arcgis/rest/services/"
+                    "nowcoast/sat_meteo_imagery_time/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:20,8"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -304,9 +304,9 @@ def create_map_awc(
                 # opacity=0.5,
                 sourcetype="raster",
                 source=[
-                    "https://nowcoast.noaa.gov/arcgis/rest/services/"\
-                    "nowcoast/sat_meteo_imagery_time/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:16"\
+                    "https://nowcoast.noaa.gov/arcgis/rest/services/"
+                    "nowcoast/sat_meteo_imagery_time/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:16"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -318,9 +318,9 @@ def create_map_awc(
                 # opacity=0.5,
                 sourcetype="raster",
                 source=[
-                    "https://services.arcgisonline.com/ArcGIS/rest/services/"\
-                    "Reference/World_Boundaries_and_Places/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&"\
+                    "https://services.arcgisonline.com/ArcGIS/rest/services/"
+                    "Reference/World_Boundaries_and_Places/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&"
                     "bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -331,9 +331,9 @@ def create_map_awc(
                 below="traces",
                 sourcetype="raster",
                 source=[
-                    "https://nowcoast.noaa.gov/arcgis/rest/services/"\
-                    "nowcoast/radar_meteo_imagery_nexrad_time/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:0"\
+                    "https://nowcoast.noaa.gov/arcgis/rest/services/"
+                    "nowcoast/radar_meteo_imagery_nexrad_time/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:0"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -344,9 +344,9 @@ def create_map_awc(
                 below="traces",
                 sourcetype="raster",
                 source=[
-                    "https://nowcoast.noaa.gov/arcgis/rest/services/"\
-                    "nowcoast/sat_meteo_emulated_imagery_lightningstrikedensity_goes_time/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:0"\
+                    "https://nowcoast.noaa.gov/arcgis/rest/services/"
+                    "nowcoast/sat_meteo_emulated_imagery_lightningstrikedensity_goes_time/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:0"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
@@ -356,9 +356,9 @@ def create_map_awc(
             dict(
                 sourcetype="raster",
                 source=[
-                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"\
-                    "NWS_Forecasts_Guidance_Warnings/natl_fcst_wx_chart/MapServer/"\
-                    "export?transparent=true&format=png32&dpi=300&layers=show:1,2"\
+                    "https://idpgis.ncep.noaa.gov/arcgis/rest/services/"
+                    "NWS_Forecasts_Guidance_Warnings/natl_fcst_wx_chart/MapServer/"
+                    "export?transparent=true&format=png32&dpi=300&layers=show:1,2"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
             )
