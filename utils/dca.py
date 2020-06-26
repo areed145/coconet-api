@@ -1,14 +1,10 @@
 import pandas as pd
 import numpy as np
 from pymongo import MongoClient
-from datetime import date, datetime, timedelta, time
-import json
 import random
 import os
-import plotly.graph_objects as go
 import scipy as sp
 from scipy import stats
-from bson import json_util
 
 
 class decline_curve:
@@ -40,8 +36,8 @@ class decline_curve:
         vals_use = vals_clean[vals_clean.index > lookback]
         nsamples = np.minimum(int(window / 2), int(len(vals_use) / 2))
         samples = vals_use.sample(nsamples)
-        x = np.array(samples.index.astype(float)) - lookback
-        y = samples.values
+#         x = np.array(samples.index.astype(float)) - lookback
+#         y = samples.values
         qi = vals_use.dropna().mean()
         d = 0.01 + (random.randint(0, 1000) - 500 / 1000)
         b = 0 + (random.randint(0, 1000) - 500 / 1000)
@@ -95,7 +91,7 @@ class decline_curve:
         roll_dt = roll.diff().dropna()
         self.streams[stream]["roll"] = roll.copy(deep=True)
         self.streams[stream]["roll_dt"] = roll_dt.copy(deep=True)
-        if lookback == None:
+        if lookback is None:
             lookback = roll_dt[roll_dt > 0][:-6].index.max()
         else:
             lookback = roll[lookback:-6].index.max()
@@ -132,14 +128,14 @@ class decline_curve:
     def decline_curve(self, stream, lookback_use=None):
         print(stream)
         vol_flag = self.clean_sample(stream)
-        if vol_flag == True:
+        if vol_flag is True:
             qis = []
             ds = []
             bs = []
             lookbacks = []
             exp = 2
             success = False
-            while success == False:
+            while success is False:
                 for i in range(2 * (10 ** exp)):
                     window = random.randint(7, 301)
                     try:
@@ -150,7 +146,7 @@ class decline_curve:
                         ds.append(d)
                         bs.append(b)
                         lookbacks.append(lookback)
-                    except:
+                    except Exception:
                         pass
                 try:
                     df_ = pd.DataFrame()
@@ -163,7 +159,7 @@ class decline_curve:
                     self.get_most_likely(stream=stream)
                     print(self.streams[stream]["params"])
                     success = True
-                except:
+                except Exception:
                     if exp == 4:
                         print("averaging")
                         qis = []
@@ -207,7 +203,7 @@ class decline_curve:
                     params[dict_value][v] = float(
                         round(params[dict_value][v], 3)
                     )
-                except:
+                except Exception:
                     pass
                 if isinstance(v, np.bool_):
                     params[dict_value][v] = bool(v)
