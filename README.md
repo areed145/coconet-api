@@ -1,7 +1,6 @@
 # kk6gpv-api
 goal will be to re-create kk6gpv.net as a fast-api
-
-[![build status](https://img.shields.io/circleci/build/gh/areed145/kk6gpv-flask)](https://circleci.com/gh/areed145/kk6gpv-flask)     [![size](https://img.shields.io/github/repo-size/areed145/kk6gpv-flask)](https://github.com/areed145/kk6gpv-flask)     [![Coverage Status](https://coveralls.io/repos/github/areed145/kk6gpv-flask/badge.svg?branch=master)](https://coveralls.io/github/areed145/kk6gpv-flask?branch=master)
+![Heroku](https://github.com/areed145/kk6gpv-api/workflows/Heroku/badge.svg)
 
 ## stack
 - python
@@ -39,16 +38,16 @@ goal will be to re-create kk6gpv.net as a fast-api
      - maps
 
 ## todo
-- UI
-- rebuild flickr photo gallery functionality
-- move gallery listing to db
-- details pages for APRS info
 - styling
 - optimize deployment
 - metpy incorporation
-- CRM modeling for oil & gas
 
 ## done
+- move gallery listing to db
+- details pages for APRS info
+- CRM modeling for oil & gas
+- UI
+- rebuild flickr photo gallery functionality
 - add old mongodb data (delete incorrect, load correct)
 - move to kubernetes cluster
 - incorporate fetchers
