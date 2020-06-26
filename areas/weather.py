@@ -345,7 +345,9 @@ def create_map_awc(
                 sourcetype="raster",
                 source=[
                     "https://nowcoast.noaa.gov/arcgis/rest/services/"
-                    "nowcoast/sat_meteo_emulated_imagery_lightningstrikedensity_goes_time/MapServer/"
+                    "nowcoast/"\
+                    "sat_meteo_emulated_imagery_lightningstrikedensity_goes_time/"\
+                    "MapServer/"
                     "export?transparent=true&format=png32&dpi=300&layers=show:0"
                     "&bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&f=image"
                 ],
