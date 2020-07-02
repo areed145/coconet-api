@@ -1,6 +1,8 @@
 # kk6gpv-api
+<p align="center">
+    ![Heroku](https://github.com/areed145/kk6gpv-api/workflows/Heroku/badge.svg)
+<p>
 goal will be to re-create kk6gpv.net as a fast-api
-![Heroku](https://github.com/areed145/kk6gpv-api/workflows/Heroku/badge.svg)
 
 ## stack
 - python
