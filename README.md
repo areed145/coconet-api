@@ -1,4 +1,4 @@
-# kk6gpv-api
+# coconet-api
 <p align="center">
   <img src="https://github.com/areed145/kk6gpv-api/workflows/Heroku/badge.svg">
 </p>
