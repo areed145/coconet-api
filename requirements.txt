@@ -12,3 +12,4 @@ pymongo
 scipy
 scikit-learn
 uvicorn
+pyfiglet

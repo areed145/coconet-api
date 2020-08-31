@@ -2,22 +2,25 @@ import os
 import json
 import datetime
 import time
-
+import uvicorn
 from aiocache import cached
-
-from areas import aprs, flickr, iot, oilgas, weather
 from fastapi import FastAPI, Query
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
-import uvicorn
 from typing import List
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
-
 from starlette.websockets import WebSocket
+from utils import info
+
+# from areas import aprs, flickr, iot, oilgas, weather
+
+meta = info.meta()
 
 app = FastAPI(
-    title="Coconet", description="API supporting kk6gpv.net", version="0.1",
+    title=meta["title"],
+    description=meta["description"],
+    version=meta["version"],
 )
 
 origins = [
