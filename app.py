@@ -12,8 +12,7 @@ from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 from starlette.websockets import WebSocket
 from utils import info
-
-# from areas import aprs, flickr, iot, oilgas, weather
+from areas import aprs, flickr, iot, oilgas, weather
 
 meta = info.meta()
 
