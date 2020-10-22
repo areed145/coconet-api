@@ -1,4 +1,3 @@
-import flickr_api as f
 from pymongo import MongoClient
 import os
 import numpy as np

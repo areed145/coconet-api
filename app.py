@@ -1,6 +1,6 @@
 import os
 import json
-import datetime
+from datetime import datetime, timezone
 import time
 import uvicorn
 from aiocache import cached
@@ -63,7 +63,7 @@ def myconverter(o):
 async def main():
     return {
         "status": "active",
-        "timestamp": str(datetime.datetime.utcnow()),
+        "timestamp": str(datetime.now(timezone.utc)),
     }
 
 
@@ -71,7 +71,7 @@ async def main():
 async def websocket_time(websocket: WebSocket):
     await websocket.accept()
     while True:
-        dt = datetime.datetime.utcnow()
+        dt = datetime.now(timezone.utc)
         await websocket.send_text(f"UTC is: {dt}")
         time.sleep(1)
 

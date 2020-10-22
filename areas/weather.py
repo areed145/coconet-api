@@ -6,7 +6,7 @@ import gridfs
 import plotly
 import plotly.graph_objs as go
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 import base64
 import re
 from utils import config, helpers
@@ -65,9 +65,9 @@ def create_map_awc(
             df["temp_dewpoint_spread"] = df["temp_c"] - df["dewpoint_c"]
 
         if prop == "age":
-            df["age"] = (datetime.utcnow() - df["observation_time"]).astype(
-                "timedelta64[m]"
-            )
+            df["age"] = (
+                datetime.now(timezone.utc) - df["observation_time"]
+            ).astype("timedelta64[m]")
 
         df.dropna(subset=[prop], inplace=True)
 

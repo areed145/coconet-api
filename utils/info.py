@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 from clint.textui import colored
 from pyfiglet import figlet_format
 
@@ -9,7 +9,7 @@ def meta():
     info["description"] = "API supporting kk6gpv.net"
     info["version"] = "v0.1"
     info["author"] = "Adam Reeder, KK6GPV"
-    info["date"] = datetime.datetime.utcnow()
+    info["date"] = datetime.now(timezone.utc)
     info["copyright"] = 2020
 
     print(figlet_format(info["title"] + " " + info["version"], font="slant"))

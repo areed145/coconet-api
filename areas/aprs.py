@@ -5,13 +5,10 @@ from pymongo import MongoClient
 import plotly
 import plotly.graph_objs as go
 import json
-from datetime import datetime, timedelta
-from matplotlib import cm
+from datetime import datetime, timezone
 from matplotlib.colors import (
-    ListedColormap,
     LinearSegmentedColormap,
     rgb2hex,
-    to_rgba,
 )
 from utils import config, helpers
 
@@ -332,7 +329,10 @@ def get_aprs_latest():
         .values[0]
     )
     time_ago = int(
-        (datetime.utcnow() - pd.to_datetime(df["timestamp_"].values[0]))
+        (
+            datetime.now(timezone.utc)
+            - pd.to_datetime(df["timestamp_"].values[0])
+        )
         / np.timedelta64(1, "s")
     )
     last["hour"], last["min"], last["sec"] = helpers.convert(time_ago)

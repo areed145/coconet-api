@@ -1,20 +1,15 @@
-import os
 import numpy as np
 import pandas as pd
 import plotly
 import plotly.graph_objs as go
-from plotly.subplots import make_subplots
 import json
-from datetime import datetime, timedelta
-import base64
-import re
-import math
+from datetime import datetime, timedelta, timezone
 
 
 def get_time_range(time):
     unit = time[0]
     val = int(time[2:])
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     if unit == "m":
         start = now - timedelta(minutes=val)
     if unit == "h":
