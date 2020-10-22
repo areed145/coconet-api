@@ -13,19 +13,19 @@ from utils import config, helpers
 
 
 def create_map_awc(
-    prop,
-    lat=38,
-    lon=-96,
-    zoom=3,
-    stations="1",
-    infrared="0",
-    radar="0",
-    lightning="0",
-    analysis="0",
-    precip="0",
-    watchwarn="0",
-    temp="0",
-    visible="0",
+    prop: str,
+    lat: float = 38,
+    lon: float = -96,
+    zoom: int = 3,
+    stations: str = "1",
+    infrared: str = "0",
+    radar: str = "0",
+    lightning: str = "0",
+    analysis: str = "0",
+    precip: str = "0",
+    watchwarn: str = "0",
+    temp: str = "0",
+    visible: str = "0",
 ):
     params = {
         "flight_category": [0, 0, 0, 0, ""],
@@ -396,7 +396,7 @@ def create_map_awc(
     return graphJSON
 
 
-def get_wx_latest(sid):
+def get_wx_latest(sid: str):
     client = MongoClient(os.environ["MONGODB_CLIENT"])
     db = client.wx
     wx = list(
@@ -407,7 +407,7 @@ def get_wx_latest(sid):
     return wx
 
 
-def create_wx_figs(time, sid):
+def create_wx_figs(time: str, sid: str):
     start, now = helpers.get_time_range(time)
     client = MongoClient(os.environ["MONGODB_CLIENT"])
     db = client.wx
@@ -428,7 +428,7 @@ def create_wx_figs(time, sid):
     for col in df_wx_raw.columns:
         try:
             df_wx_raw.loc[df_wx_raw[col] < -50, col] = pd.np.nan
-        except:
+        except Exception:
             pass
 
     df_wx_raw["cloudbase"] = (
@@ -499,7 +499,7 @@ def create_wx_figs(time, sid):
         for j in col:
             try:
                 wind_temp.loc[i, j] = wind.loc[str(i), j]
-            except:
+            except Exception:
                 pass
     wind_temp = wind_temp.fillna(0)
     wind_temp["calm"] = wind_temp["calm"].mean()
@@ -508,7 +508,7 @@ def create_wx_figs(time, sid):
             wind_temp.iloc[:, col] = (
                 wind_temp.iloc[:, col] + wind_temp.iloc[:, col - 1]
             )
-        except:
+        except Exception:
             pass
     wind_temp = np.round(wind_temp / ct * 100, 2)
     wind_temp["wind_cat"] = wind_temp.index

@@ -150,7 +150,7 @@ class decline_curve:
                         ds.append(d)
                         bs.append(b)
                         lookbacks.append(lookback)
-                    except:
+                    except Exception:
                         pass
                 try:
                     df_ = pd.DataFrame()
@@ -163,7 +163,7 @@ class decline_curve:
                     self.get_most_likely(stream=stream)
                     print(self.streams[stream]["params"])
                     success = True
-                except:
+                except Exception:
                     if exp == 4:
                         print("averaging")
                         qis = []
@@ -207,7 +207,7 @@ class decline_curve:
                     params[dict_value][v] = float(
                         round(params[dict_value][v], 3)
                     )
-                except:
+                except Exception:
                     pass
                 if isinstance(v, np.bool_):
                     params[dict_value][v] = bool(v)
