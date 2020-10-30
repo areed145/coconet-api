@@ -331,9 +331,10 @@ def get_aprs_latest():
     time_ago = int(
         (
             datetime.now(timezone.utc)
-            - pd.to_datetime(df["timestamp_"].values[0], utc=True)
-        )
-        / np.timedelta64(1, "s")
+            - datetime.strptime(
+                last["timestamp_"], "%Y-%m-%d %H:%M:%S"
+            ).replace(tzinfo=timezone.utc)
+        ).total_seconds()
     )
     last["hour"], last["min"], last["sec"] = helpers.convert(time_ago)
     last["latitude"] = df["latitude"].values[0]
