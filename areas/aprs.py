@@ -331,7 +331,7 @@ def get_aprs_latest():
     time_ago = int(
         (
             datetime.now(timezone.utc)
-            - pd.to_datetime(df["timestamp_"].values[0])
+            - pd.to_datetime(df["timestamp_"].values[0], utc=True)
         )
         / np.timedelta64(1, "s")
     )
