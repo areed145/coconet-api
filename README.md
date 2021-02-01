@@ -1,47 +1,52 @@
 # coconet-api <img src="https://github.com/areed145/kk6gpv-api/workflows/Heroku/badge.svg">
+
 goal will be to re-create kk6gpv.net as a fast-api
 
 ## stack
+
 - python
 - mongodb
 - flask
 - boostrap
 - plotly
 - mapbox
-- datashader (tbd)
+- datashader
 - mqtt
 
 ## structure
+
 - weather
-    - aviation
-    - station
-    - blips
-    - soundings
+  - aviation
+  - station
+  - blips
+  - soundings
 - iot
-    - home assistant
-    - vibration protocol
+  - home assistant
+  - vibration protocol
 - aprs
-    - prefix
-    - entry
-    - radius
+  - prefix
+  - entry
+  - radius
 - flying
-    - aircraft
-    - paragliding
-    - sailplane
-    - n5777v
+  - aircraft
+  - paragliding
+  - sailplane
+  - n5777v
 - photos
-    - travel
-    - flickr gallery
+  - travel
+  - flickr gallery
 - oil & gas
-     - summary
-     - maps
+  - summary
+  - maps
 
 ## todo
+
 - styling
 - optimize deployment
 - metpy incorporation
 
 ## done
+
 - move gallery listing to db
 - details pages for APRS info
 - CRM modeling for oil & gas
