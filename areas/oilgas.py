@@ -199,8 +199,8 @@ def get_offsets_oilgas(api, radius, axis):
 
         layout = go.Layout(
             autosize=True,
-            font=dict(family="Ubuntu"),
-            hoverlabel=dict(font=dict(family="Ubuntu")),
+            font=dict(family="Roboto Mono"),
+            hoverlabel=dict(font=dict(family="Roboto Mono")),
             margin=dict(r=10, t=10, b=30, l=150, pad=0),
             yaxis=dict(autorange="reversed"),
             showlegend=False,
@@ -208,8 +208,8 @@ def get_offsets_oilgas(api, radius, axis):
         if axis == "log":
             layout_ = go.Layout(
                 autosize=True,
-                font=dict(family="Ubuntu"),
-                hoverlabel=dict(font=dict(family="Ubuntu")),
+                font=dict(family="Roboto Mono"),
+                hoverlabel=dict(font=dict(family="Roboto Mono")),
                 showlegend=True,
                 legend=dict(orientation="h"),
                 yaxis=dict(type="log"),
@@ -218,8 +218,8 @@ def get_offsets_oilgas(api, radius, axis):
         else:
             layout_ = go.Layout(
                 autosize=True,
-                font=dict(family="Ubuntu"),
-                hoverlabel=dict(font=dict(family="Ubuntu")),
+                font=dict(family="Roboto Mono"),
+                hoverlabel=dict(font=dict(family="Roboto Mono")),
                 showlegend=True,
                 legend=dict(orientation="h"),
                 margin=dict(r=50, t=30, b=30, l=60, pad=0),
@@ -336,8 +336,8 @@ def get_crm(api):
         ]
         layout = go.Layout(
             autosize=True,
-            font=dict(family="Ubuntu"),
-            hoverlabel=dict(font=dict(family="Ubuntu")),
+            font=dict(family="Roboto Mono"),
+            hoverlabel=dict(font=dict(family="Roboto Mono")),
             margin=dict(r=10, t=10, b=30, l=150, pad=0),
             xaxis=dict(
                 # range=[0, 1],
@@ -424,7 +424,7 @@ def get_cyclic_jobs(api):
 
         fig_cyclic_jobs.update_layout(
             margin={"l": 0, "t": 0, "b": 0, "r": 0},
-            font=dict(family="Ubuntu"),
+            font=dict(family="Roboto Mono"),
         )
 
         graphJSON_cyclic_jobs = json.dumps(
@@ -629,9 +629,9 @@ def get_graph_oilgas(api, axis):
         if axis == "log":
             layout = go.Layout(
                 autosize=True,
-                font=dict(family="Ubuntu"),
+                font=dict(family="Roboto Mono"),
                 hovermode="closest",
-                hoverlabel=dict(font=dict(family="Ubuntu")),
+                hoverlabel=dict(font=dict(family="Roboto Mono")),
                 showlegend=True,
                 legend=dict(orientation="h"),
                 yaxis=dict(type="log"),
@@ -641,9 +641,9 @@ def get_graph_oilgas(api, axis):
         else:
             layout = go.Layout(
                 autosize=True,
-                font=dict(family="Ubuntu"),
+                font=dict(family="Roboto Mono"),
                 hovermode="closest",
-                hoverlabel=dict(font=dict(family="Ubuntu")),
+                hoverlabel=dict(font=dict(family="Roboto Mono")),
                 showlegend=True,
                 legend=dict(orientation="h"),
                 uirevision=True,
@@ -1091,9 +1091,9 @@ def get_decline_oilgas(api, axis):
         if axis == "log":
             layout = go.Layout(
                 autosize=True,
-                font=dict(family="Ubuntu"),
+                font=dict(family="Roboto Mono"),
                 hovermode="closest",
-                hoverlabel=dict(font=dict(family="Ubuntu")),
+                hoverlabel=dict(font=dict(family="Roboto Mono")),
                 showlegend=True,
                 legend=dict(orientation="h"),
                 yaxis=dict(type="log"),
@@ -1103,9 +1103,9 @@ def get_decline_oilgas(api, axis):
         else:
             layout = go.Layout(
                 autosize=True,
-                font=dict(family="Ubuntu"),
+                font=dict(family="Roboto Mono"),
                 hovermode="closest",
-                hoverlabel=dict(font=dict(family="Ubuntu")),
+                hoverlabel=dict(font=dict(family="Roboto Mono")),
                 showlegend=True,
                 legend=dict(orientation="h"),
                 uirevision=True,

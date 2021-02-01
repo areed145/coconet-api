@@ -68,7 +68,7 @@ def create_range_aprs(time):
 
     layout = go.Layout(
         autosize=True,
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         yaxis=dict(
             domain=[0.02, 0.98],
             type="log",
@@ -160,10 +160,10 @@ def create_map_aprs(script, prop, time):
         ]
     layout_map = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         showlegend=False,
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=0, t=0, b=0, l=0, pad=0),
         mapbox=dict(
@@ -189,7 +189,7 @@ def create_map_aprs(script, prop, time):
     layout_speed = go.Layout(
         autosize=True,
         height=200,
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Speed (mph)",
@@ -213,8 +213,8 @@ def create_map_aprs(script, prop, time):
 
     layout_alt = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         height=200,
         yaxis=dict(
             domain=[0.02, 0.98],
@@ -239,8 +239,8 @@ def create_map_aprs(script, prop, time):
 
     layout_course = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         height=200,
         yaxis=dict(
             domain=[0.02, 0.98],

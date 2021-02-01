@@ -372,11 +372,11 @@ def create_map_awc(
 
     layout = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         legend=dict(orientation="h"),
         showlegend=legend,
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=0, t=0, b=0, l=0, pad=0),
         mapbox=dict(
@@ -593,15 +593,15 @@ def create_wx_figs(time: str, sid: str):
 
     layout_td = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         height=200,
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Temperature (F)",
             range=[td_min, td_max],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(255, 95, 63)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(255, 95, 63)"),
         ),
         yaxis2=dict(
             domain=[0.02, 0.98],
@@ -610,7 +610,7 @@ def create_wx_figs(time: str, sid: str):
             side="right",
             range=[td_min, td_max],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(63, 127, 255)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(63, 127, 255)"),
         ),
         xaxis=dict(
             type="date",
@@ -655,14 +655,14 @@ def create_wx_figs(time: str, sid: str):
     layout_pr = go.Layout(
         autosize=True,
         height=200,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Pressure (inHg)",
             # range=[0,120],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(255, 127, 63)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(255, 127, 63)"),
         ),
         yaxis2=dict(
             domain=[0.02, 0.98],
@@ -671,7 +671,7 @@ def create_wx_figs(time: str, sid: str):
             side="right",
             # range=[0,120],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(127, 255, 63)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(127, 255, 63)"),
         ),
         xaxis=dict(
             type="date",
@@ -716,14 +716,14 @@ def create_wx_figs(time: str, sid: str):
     layout_pc = go.Layout(
         autosize=True,
         height=200,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Precip (in/hr)",
             # range=[0,120],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(31, 190, 255)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(31, 190, 255)"),
         ),
         yaxis2=dict(
             domain=[0.02, 0.98],
@@ -732,7 +732,7 @@ def create_wx_figs(time: str, sid: str):
             side="right",
             # range=[0,120],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(63, 255, 255)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(63, 255, 255)"),
         ),
         xaxis=dict(
             type="date",
@@ -763,14 +763,14 @@ def create_wx_figs(time: str, sid: str):
     layout_cb = go.Layout(
         autosize=True,
         height=200,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Minimum Cloudbase (ft)",
             # range=[0,120],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(90, 66, 245)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(90, 66, 245)"),
         ),
         xaxis=dict(
             type="date",
@@ -824,14 +824,14 @@ def create_wx_figs(time: str, sid: str):
     layout_wd = go.Layout(
         autosize=True,
         height=200,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Wind Direction (degrees)",
             range=[0, 360],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(190, 63, 255)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(190, 63, 255)"),
         ),
         yaxis2=dict(
             domain=[0.02, 0.98],
@@ -840,7 +840,7 @@ def create_wx_figs(time: str, sid: str):
             side="right",
             range=[0, df_wx_raw["wind_gust_mph"].max() * 0.869],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(127, 255, 31)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(127, 255, 31)"),
         ),
         xaxis=dict(
             type="date",
@@ -885,14 +885,14 @@ def create_wx_figs(time: str, sid: str):
     layout_su = go.Layout(
         autosize=True,
         height=200,
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Solar Radiation (W/m<sup>2</sup>)",
             # range=[0,120],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(255, 63, 127)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(255, 63, 127)"),
         ),
         yaxis2=dict(
             domain=[0.02, 0.98],
@@ -901,7 +901,7 @@ def create_wx_figs(time: str, sid: str):
             side="right",
             # range=[0,120],
             fixedrange=True,
-            titlefont=dict(family="Ubuntu", color="rgb(255, 190, 63)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(255, 190, 63)"),
         ),
         xaxis=dict(
             type="date",
@@ -964,8 +964,8 @@ def create_wx_figs(time: str, sid: str):
     data_wr = [t1, t2, t3, t4, t5, t6]
 
     layout_wr = go.Layout(
-        font=dict(family="Ubuntu"),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        font=dict(family="Roboto Mono"),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         polar=dict(
             radialaxis=dict(
                 # visible = False,

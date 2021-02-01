@@ -53,12 +53,12 @@ def create_graph_iot(sensor, time):
     layout = go.Layout(
         autosize=True,
         colorway=config.colorway,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         showlegend=True,
         legend=dict(orientation="h"),
         xaxis=dict(range=[start, now]),
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
@@ -144,12 +144,12 @@ def create_spectrogram_iot(sensor, time):
     layout = go.Layout(
         autosize=True,
         colorway=config.colorway,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         showlegend=True,
         legend=dict(orientation="h"),
         xaxis=dict(range=[start, now]),
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
@@ -162,12 +162,12 @@ def create_spectrogram_iot(sensor, time):
 
     layout_spectro = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         showlegend=False,
         # legend=dict(orientation='h'),
         xaxis=dict(range=[start, now]),
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
@@ -388,24 +388,24 @@ def create_anomaly_iot(sensor, time):
     layout = go.Layout(
         autosize=True,
         colorway=config.colorway,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         showlegend=True,
         legend=dict(orientation="h"),
         xaxis=dict(range=[start, now]),
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )
 
     layout_spectro = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         showlegend=False,
         # legend=dict(orientation='h'),
         xaxis=dict(range=[start, now]),
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
     )

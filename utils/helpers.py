@@ -58,25 +58,25 @@ def create_3d_plot(
     layout = go.Layout(
         autosize=True,
         margin=dict(r=10, t=10, b=10, l=10, pad=0),
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         scene={
             "aspectmode": "cube",
             "xaxis": {
                 "title": x_name,
-                "tickfont": {"family": "Ubuntu", "size": 10},
-                "titlefont": {"family": "Ubuntu", "color": x_color},
+                "tickfont": {"family": "Roboto Mono", "size": 10},
+                "titlefont": {"family": "Roboto Mono", "color": x_color},
                 "type": "linear",
             },
             "yaxis": {
                 "title": y_name,
-                "tickfont": {"family": "Ubuntu", "size": 10},
-                "titlefont": {"family": "Ubuntu", "color": y_color},
+                "tickfont": {"family": "Roboto Mono", "size": 10},
+                "titlefont": {"family": "Roboto Mono", "color": y_color},
                 "tickangle": 1,
             },
             "zaxis": {
                 "title": z_name,
-                "tickfont": {"family": "Ubuntu", "size": 10},
-                "titlefont": {"family": "Ubuntu", "color": z_color},
+                "tickfont": {"family": "Roboto Mono", "size": 10},
+                "titlefont": {"family": "Roboto Mono", "color": z_color},
             },
         },
     )

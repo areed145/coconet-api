@@ -97,10 +97,10 @@ def get_photo_rows(id, width):
     ]
     layout = go.Layout(
         autosize=True,
-        font=dict(family="Ubuntu"),
+        font=dict(family="Roboto Mono"),
         showlegend=False,
         hovermode="closest",
-        hoverlabel=dict(font=dict(family="Ubuntu")),
+        hoverlabel=dict(font=dict(family="Roboto Mono")),
         uirevision=True,
         margin=dict(r=0, t=0, b=0, l=0, pad=0),
         mapbox=dict(
@@ -141,10 +141,10 @@ def get_photo(id):
         ]
         layout = go.Layout(
             autosize=True,
-            font=dict(family="Ubuntu"),
+            font=dict(family="Roboto Mono"),
             showlegend=False,
             hovermode="closest",
-            hoverlabel=dict(font=dict(family="Ubuntu")),
+            hoverlabel=dict(font=dict(family="Roboto Mono")),
             uirevision=True,
             margin=dict(r=0, t=0, b=0, l=0, pad=0),
             mapbox=dict(
