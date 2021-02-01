@@ -11,6 +11,6 @@ plotly
 pymongo
 scipy
 scikit-learn
-uvicorn
+uvicorn[standard]
 pyfiglet
 clint
