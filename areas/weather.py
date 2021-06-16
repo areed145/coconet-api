@@ -1029,36 +1029,48 @@ def create_wx_figs(time: str, sid: str):
 
     freq = "1T"
     mult = 5
-    df_wx_lt = pd.DataFrame(
-        list(
-            db.lightning.find(
-                {"timestamp": {"$gt": start, "$lte": now},}
-            ).sort([("timestamp", -1)])
+    try:
+        df_wx_lt = pd.DataFrame(
+            list(
+                db.lightning.find(
+                    {"timestamp": {"$gt": start, "$lte": now},}
+                ).sort([("timestamp", -1)])
+            )
         )
-    )
-    client.close()
-    df_wx_lt = df_wx_lt[df_wx_lt["energy"] > 0]
-    df_wx_lt["distance"] = np.round(df_wx_lt["distance"] / mult, 0) * mult
-    df_wx_lt = df_wx_lt.drop(columns=["_id", "type", "energy"])
-    df_pivot = df_wx_lt.pivot_table(
-        index="timestamp", columns="distance", aggfunc=len
-    ).fillna(0)
-    df_pivot = df_pivot.resample(freq).sum()
-    df_pivotT = df_pivot.T
-    ymax = df_pivot.columns.max()
-    df_pivotT_reindexed = df_pivotT.reindex(
-        index=np.linspace(0, int(ymax), int(((1 / mult) * int(ymax)) + 1))
-    )
-    df_pivot = df_pivotT_reindexed.T.fillna(0)
-    idx = pd.date_range(
-        dt_min.replace(second=0, microsecond=0),
-        dt_max.replace(second=0, microsecond=0),
-        freq=freq,
-    )
-    df_fill = pd.DataFrame(index=idx, columns=df_pivot.columns).fillna(0)
-    df_fill = df_fill.tz_localize(None)
-    df_pivot.index.name = None
-    df_pivot = df_fill.add(df_pivot, fill_value=0)
+        client.close()
+        df_wx_lt = df_wx_lt[df_wx_lt["energy"] > 0]
+        df_wx_lt["distance"] = np.round(df_wx_lt["distance"] / mult, 0) * mult
+        df_wx_lt = df_wx_lt.drop(columns=["_id", "type", "energy"])
+        df_pivot = df_wx_lt.pivot_table(
+            index="timestamp", columns="distance", aggfunc=len
+        ).fillna(0)
+        df_pivot = df_pivot.resample(freq).sum()
+        df_pivotT = df_pivot.T
+        ymax = df_pivot.columns.max()
+        df_pivotT_reindexed = df_pivotT.reindex(
+            index=np.linspace(0, int(ymax), int(((1 / mult) * int(ymax)) + 1))
+        )
+        df_pivot = df_pivotT_reindexed.T.fillna(0)
+        idx = pd.date_range(
+            dt_min.replace(second=0, microsecond=0),
+            dt_max.replace(second=0, microsecond=0),
+            freq=freq,
+        )
+        df_fill = pd.DataFrame(index=idx, columns=df_pivot.columns).fillna(0)
+        df_fill = df_fill.tz_localize(None)
+        df_pivot.index.name = None
+        df_pivot = df_fill.add(df_pivot, fill_value=0)
+    except Exception:
+        idx = pd.date_range(
+            dt_min.replace(second=0, microsecond=0),
+            dt_max.replace(second=0, microsecond=0),
+            freq=freq,
+        )
+        df_fill = pd.DataFrame(
+            index=idx,
+            columns=np.linspace(0, int(50), int(((1 / mult) * int(50)) + 1)),
+        ).fillna(0)
+        df_pivot = df_fill.tz_localize(None)
 
     data_lt = [
         go.Heatmap(
