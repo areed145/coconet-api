@@ -1080,7 +1080,7 @@ def create_wx_figs(time: str, sid: str):
             x=df_pivot.index,
             y=df_pivot.columns,
             z=df_pivot.T.values,
-            colorscale="plasma",
+            colorscale=config.scl_lightning,
             zmax=np.nanquantile(df_pivot, 0.95),
             zmin=1,
             zauto=False,

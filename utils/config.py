@@ -1,10 +1,11 @@
-from matplotlib import cm
+# from matplotlib import cm
 from matplotlib.colors import (
-    ListedColormap,
+    # ListedColormap,
     LinearSegmentedColormap,
-    rgb2hex,
-    to_rgba,
+    # rgb2hex,
+    # to_rgba,
 )
+import numpy as np
 
 oilgas_params = {
     "oil": {"color": "#50bf37"},
@@ -388,6 +389,14 @@ scl_cyc = [
     [1.00, "#ffc300"],
 ]
 
+scl_lightning = [
+    [0.00, "#ffc800"],
+    [0.25, "#ff8000"],
+    [0.50, "#ff2200"],
+    [0.75, "#ff005d"],
+    [1.00, "#dd00ff"],
+]
+
 
 def time_cm(total):
     c0 = np.array([245 / 256, 200 / 256, 66 / 256, 1])
@@ -396,7 +405,6 @@ def time_cm(total):
     c3 = np.array([108 / 256, 201 / 256, 46 / 256, 1])
     c4 = np.array([82 / 256, 138 / 256, 45 / 256, 1])
     c5 = np.array([24 / 256, 110 / 256, 45 / 256, 1])
-    cm = LinearSegmentedColormap.from_list(
+    return LinearSegmentedColormap.from_list(
         "custom", [c0, c1, c2, c3, c4, c5], N=total
     )
-    return cm
