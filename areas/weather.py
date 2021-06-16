@@ -1097,7 +1097,7 @@ def create_wx_figs(time: str, sid: str):
             domain=[0.02, 0.98],
             title="Distance (km)",
             fixedrange=True,
-            titlefont=dict(family="Roboto Mono", color="rgb(255, 95, 63)"),
+            titlefont=dict(family="Roboto Mono", color="rgb(255, 210, 63)"),
         ),
         xaxis=dict(type="date", range=[dt_min, dt_max],),
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
