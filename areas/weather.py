@@ -1047,7 +1047,7 @@ def create_wx_figs(time: str, sid: str):
     df_pivotT = df_pivot.T
     ymax = df_pivot.columns.max()
     df_pivotT_reindexed = df_pivotT.reindex(
-        index=np.linspace(0, ymax, ((1 / mult) * ymax) + 1)
+        index=np.linspace(0, int(ymax), ((1 / mult) * ymax) + 1)
     )
     df_pivot = df_pivotT_reindexed.T.fillna(0)
     idx = pd.date_range(
