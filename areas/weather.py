@@ -1098,10 +1098,11 @@ def create_wx_figs(time: str, sid: str):
             range=[0, 30],
             domain=[0.02, 0.98],
             title="Distance (mi)",
+            ticks="",
             fixedrange=True,
             titlefont=dict(family="Roboto Mono", color="rgb(255, 210, 63)"),
         ),
-        xaxis=dict(type="date", range=[dt_min, dt_max],),
+        xaxis=dict(type="date", range=[dt_min, dt_max], ticks="",),
         margin=dict(r=50, t=30, b=35, l=60, pad=0),
         showlegend=False,
     )
