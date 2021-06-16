@@ -1091,18 +1091,14 @@ def create_wx_figs(time: str, sid: str):
         autosize=True,
         font=dict(family="Roboto Mono"),
         hoverlabel=dict(font=dict(family="Roboto Mono")),
-        height=200,
+        height=300,
         yaxis=dict(
             domain=[0.02, 0.98],
             title="Distance (km)",
             fixedrange=True,
             titlefont=dict(family="Roboto Mono", color="rgb(255, 95, 63)"),
         ),
-        xaxis=dict(
-            type="date",
-            # fixedrange=True,
-            range=[dt_min, dt_max],
-        ),
+        xaxis=dict(type="date", range=[dt_min, dt_max],),
         margin=dict(r=50, t=30, b=30, l=60, pad=0),
         showlegend=False,
     )
