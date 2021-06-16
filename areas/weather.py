@@ -1052,6 +1052,9 @@ def create_wx_figs(time: str, sid: str):
             index=np.linspace(0, int(ymax), int(((1 / mult) * int(ymax)) + 1))
         )
         df_pivot = df_pivotT_reindexed.T.fillna(0)
+        df_pivot = df_pivot.tz_localize("UTC")
+        df_pivot = df_pivot.tz_convert("US/Central")
+        df_pivot = df_pivot.tz_localize(None)
         idx = pd.date_range(
             dt_min.replace(second=0, microsecond=0),
             dt_max.replace(second=0, microsecond=0),
