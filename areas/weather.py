@@ -1038,7 +1038,8 @@ def create_wx_figs(time: str, sid: str):
             )
         )
         client.close()
-        df_wx_lt = df_wx_lt[df_wx_lt["energy"] > 0]
+        # df_wx_lt = df_wx_lt[df_wx_lt["energy"] > 0]
+        df_wx_lt["distance"] = 0.621 * df_wx_lt["distance"]
         df_wx_lt["distance"] = np.round(df_wx_lt["distance"] / mult, 0) * mult
         df_wx_lt = df_wx_lt.drop(columns=["_id", "type", "energy"])
         df_pivot = df_wx_lt.pivot_table(
@@ -1095,7 +1096,7 @@ def create_wx_figs(time: str, sid: str):
         height=300,
         yaxis=dict(
             domain=[0.02, 0.98],
-            title="Distance (km)",
+            title="Distance (mi)",
             fixedrange=True,
             titlefont=dict(family="Roboto Mono", color="rgb(255, 210, 63)"),
         ),
