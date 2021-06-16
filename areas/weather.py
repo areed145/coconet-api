@@ -1027,8 +1027,8 @@ def create_wx_figs(time: str, sid: str):
         "rgb(63, 127, 255)",
     )
 
-    freq = "1T"
-    mult = 5
+    freq = "2T"
+    mult = 2
     try:
         df_wx_lt = pd.DataFrame(
             list(
