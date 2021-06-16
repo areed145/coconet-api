@@ -1100,7 +1100,7 @@ def create_wx_figs(time: str, sid: str):
             titlefont=dict(family="Roboto Mono", color="rgb(255, 210, 63)"),
         ),
         xaxis=dict(type="date", range=[dt_min, dt_max],),
-        margin=dict(r=50, t=30, b=30, l=60, pad=0),
+        margin=dict(r=50, t=30, b=35, l=60, pad=0),
         showlegend=False,
     )
 
