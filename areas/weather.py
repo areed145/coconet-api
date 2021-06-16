@@ -1095,6 +1095,7 @@ def create_wx_figs(time: str, sid: str):
         hoverlabel=dict(font=dict(family="Roboto Mono")),
         height=300,
         yaxis=dict(
+            range=[0, 30],
             domain=[0.02, 0.98],
             title="Distance (mi)",
             fixedrange=True,
