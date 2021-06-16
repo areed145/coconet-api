@@ -1083,6 +1083,7 @@ def create_wx_figs(time: str, sid: str):
             zmax=np.nanquantile(df_pivot, 0.95),
             zmin=1,
             zauto=False,
+            showscale=False,
             # connectgaps=True,
         )
     ]
