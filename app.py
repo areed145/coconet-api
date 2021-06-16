@@ -366,6 +366,7 @@ async def station_history_graphs(time_int: str):
         fig_su,
         fig_wr,
         fig_thp,
+        fig_lt,
     ) = weather.create_wx_figs(time_int, sid)
     data = {}
     data["fig_td"] = json.loads(fig_td)
@@ -376,6 +377,7 @@ async def station_history_graphs(time_int: str):
     data["fig_su"] = json.loads(fig_su)
     data["fig_wr"] = json.loads(fig_wr)
     data["fig_thp"] = json.loads(fig_thp)
+    data["fig_lt"] = json.loads(fig_lt)
     json_compatible_item_data = jsonable_encoder(data)
     return JSONResponse(content=json_compatible_item_data)
 

@@ -6,7 +6,7 @@ import plotly
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 import math
 from utils import config, helpers, dca
 
