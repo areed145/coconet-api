@@ -1060,6 +1060,7 @@ def create_wx_figs(time: str, sid: str):
         df_fill = df_fill.tz_localize(None)
         df_pivot.index.name = None
         df_pivot = df_fill.add(df_pivot, fill_value=0)
+        df_pivot = df_pivot.replace(0, pd.np.nan)
     except Exception:
         idx = pd.date_range(
             dt_min.replace(second=0, microsecond=0),
@@ -1071,6 +1072,7 @@ def create_wx_figs(time: str, sid: str):
             columns=np.linspace(0, int(50), int(((1 / mult) * int(50)) + 1)),
         ).fillna(0)
         df_pivot = df_fill.tz_localize(None)
+        df_pivot = df_pivot.replace(0, pd.np.nan)
 
     data_lt = [
         go.Heatmap(
@@ -1078,9 +1080,10 @@ def create_wx_figs(time: str, sid: str):
             y=df_pivot.columns,
             z=df_pivot.T.values,
             colorscale="plasma",
-            zmax=5,
+            zmax=np.nanquantile(df_pivot, 0.95),
+            zmin=1,
             zauto=False,
-            connectgaps=True,
+            # connectgaps=True,
         )
     ]
 
