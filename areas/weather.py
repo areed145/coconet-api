@@ -1027,7 +1027,7 @@ def create_wx_figs(time: str, sid: str):
         "rgb(63, 127, 255)",
     )
 
-    freq = "1T"
+    freq = "5T"
     mult = 2
     try:
         df_wx_lt = pd.DataFrame(
@@ -1045,7 +1045,7 @@ def create_wx_figs(time: str, sid: str):
         df_pivot = df_wx_lt.pivot_table(
             index="timestamp", columns="distance", aggfunc=len
         ).fillna(0)
-        df_pivot = df_pivot.resample(freq).sum()
+        df_pivot = df_pivot.resample(freq, base=dt_min.minute).sum()
         df_pivotT = df_pivot.T
         ymax = df_pivot.columns.max()
         df_pivotT_reindexed = df_pivotT.reindex(
